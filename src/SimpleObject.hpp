@@ -29,6 +29,9 @@ class SimpleObject{
         Vertex *m_Vbuffer = m_Verticies.data();
         int m_VerticiesCount;
 
+        std::vector<int> m_Indecies;
+        int m_Indexcount;
+
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<VertexArray> m_VAO;
         std::unique_ptr<Shader> m_Shader;
@@ -55,15 +58,20 @@ class SimpleObject{
         // Depending how a quad is set 1 object can use Textures of other objects
 
         // This function needs to be rewriten to not take "target" from the user
+        // Should append to the indexbuffer
         std::vector<Vertex> Create2dQuad(std::vector<Vertex> *tartget, float X, float Y, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
 
 
-        // A function
+        // A function that takes a vector of vertexes and appends it to this objects (so one object can draw all objects like it)
+        // A function that takes in a vector of Vertex and replaces the current vector of Vertex
+        // in each of these it should recalculate the indexbuffe object
+
 
         // Layout what i want functions to do
 
         // Add Quad to object ( so an object can be multiple quads)
             // Remove Quad from object
+            // This would have to go back and remove stuff from the index buffer
         
         // Set Shader for object
         void SetShader();

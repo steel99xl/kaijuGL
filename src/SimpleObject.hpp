@@ -24,13 +24,15 @@ struct Vertex{
 
 class SimpleObject{
     private:
-        // Vectors a used so seach instance of an SimpleObject can have 10,000 verticies
+        // Vectors a used so seach instance of an SimpleObject can have (m_MaxQuads * 4) verticies and (m_MaxQuads * 6) 
         std::vector<Vertex> m_Verticies;
         Vertex *m_Vbuffer = m_Verticies.data();
         int m_VerticiesCount;
 
         std::vector<int> m_Indecies;
-        int m_Indexcount;
+        int m_IndecCount;
+
+        int m_MaxQuads, m_UsedQuads;
 
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<VertexArray> m_VAO;
@@ -59,7 +61,7 @@ class SimpleObject{
 
         // This function needs to be rewriten to not take "target" from the user
         // Should append to the indexbuffer
-        std::vector<Vertex> Create2dQuad(std::vector<Vertex> *tartget, float X, float Y, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
+        std::vector<Vertex> Create2dQuad(std::vector<Vertex> *tartget, float X, float Y,float Z, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
 
 
         // A function that takes a vector of vertexes and appends it to this objects (so one object can draw all objects like it)

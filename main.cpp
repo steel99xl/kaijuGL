@@ -186,7 +186,7 @@ int main(void){
         {
             ImGui::Begin("Simple Info Display");
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::DragFloat("Resolution scale", &ScalePixle, 0.01f, 0.25f, 4.0f, "%.03f Resolution Scale");
+            ImGui::DragFloat("Resolution scale", &ScalePixle, 0.01f, 0.25f, 10.0f, "%.03f Resolution Scale");
             ImGui::Text("Virtual Resolution of Window | %.3f width  %.3f height", (float)width*ScalePixle, (float)height*ScalePixle);
             ImGui::Text("Resolution of window | %d width    %d height", width, height);
             ImGui::End();

@@ -21,6 +21,7 @@ TestWorld::~TestWorld(){
 
 
 void TestWorld::Setup(){
+
             //glfwSetKeyCallback(window, KeyCallBack);        
 
         //v.Position = {0.0f ,0.0f};
@@ -40,7 +41,7 @@ void TestWorld::Setup(){
         */
 
 
-    const unsigned int MaxQuadCount = 10000;
+    const unsigned int MaxQuadCount = 10100;
     const unsigned int MaxVertexCount = MaxQuadCount * 4;
     const unsigned int MaxIndexCount = MaxQuadCount * 6;
 
@@ -141,10 +142,14 @@ void TestWorld::Setup(){
      // This has to match the bound texture buffer
 
         //m_Shader->SetUniform1i("u_Texture", 0);
-
+    m_pos = glm::vec3(0,0,0);
+    m_look = glm::vec3(0,0,0);
+    m_FOV = 75.0f;
         
 
-    m_View = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
+   
+
+    //glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
 
 }
 
@@ -183,6 +188,13 @@ Vertex *TestWorld::CreateQuad(Vertex *target, float X, float Y, float sizeX, flo
 
 void TestWorld::OnUpdate(float deltaTime){
         glfwPollEvents();
+
+        // This is only going here just so i have a clear spot for it
+        //m_View = glm::lookAt(
+        //m_pos, // Camera is at (4,3,3), in World Space
+        //m_look, // and looks at the origin
+        //glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+        //);
     }
 
 void TestWorld::Input(int key, int scancode, int action, int mods){
@@ -197,19 +209,32 @@ void TestWorld::Input(int key, int scancode, int action, int mods){
         if(action == GLFW_PRESS){
             switch(key){
                 case GLFW_KEY_W:
-                    m_QuadPos2[1] += 5 + SpeedStep;
+                    m_pos[2] += 5 + SpeedStep;
                     break;
 
                 case GLFW_KEY_S:
-                    m_QuadPos2[1] -= 5 + SpeedStep;
+                    m_pos[2] -= 5 + SpeedStep;
+                    break;
+
+                case GLFW_KEY_SPACE:
+                    m_pos[1] += 5 + SpeedStep;
+                    m_look[1] += 5 + SpeedStep;
+                    break;
+
+                
+                case GLFW_KEY_V:
+                    m_pos[1] -= 5 + SpeedStep;
+                    m_look[1] -= 5 + SpeedStep;
                     break;
 
                 case GLFW_KEY_A:
-                    m_QuadPos2[0] -= 5 + SpeedStep;
+                    m_pos[0] -= 5 + SpeedStep;
+                    m_look[0] -= 5 + SpeedStep;
                     break;
 
                 case GLFW_KEY_D:
-                    m_QuadPos2[0] += 5 + SpeedStep;
+                    m_pos[0] += 5 + SpeedStep;
+                    m_look[0] += 5 + SpeedStep;
                     break;
             }
         }
@@ -217,19 +242,32 @@ void TestWorld::Input(int key, int scancode, int action, int mods){
          if(action == GLFW_REPEAT){
             switch(key){
                 case GLFW_KEY_W:
-                    m_QuadPos2[1] += 5 + SpeedStep;
+                    m_pos[2] += 5 + SpeedStep;
                     break;
 
                 case GLFW_KEY_S:
-                    m_QuadPos2[1] -= 5 + SpeedStep;
+                    m_pos[2] -= 5 + SpeedStep;
+                    break;
+
+                case GLFW_KEY_SPACE:
+                    m_pos[1] += 5 + SpeedStep;
+                    m_look[1] += 5 + SpeedStep;
+                    break;
+
+                
+                case GLFW_KEY_V:
+                    m_pos[1] -= 5 + SpeedStep;
+                    m_look[1] -= 5 + SpeedStep;
                     break;
 
                 case GLFW_KEY_A:
-                    m_QuadPos2[0] -= 5 + SpeedStep;
+                    m_pos[0] -= 5 + SpeedStep;
+                    m_look[0] -= 5 + SpeedStep;
                     break;
 
                 case GLFW_KEY_D:
-                    m_QuadPos2[0] += 5 + SpeedStep;
+                    m_pos[0] += 5 + SpeedStep;
+                    m_look[0] += 5 + SpeedStep;
                     break;
             }
         }
@@ -239,7 +277,15 @@ void TestWorld::Input(int key, int scancode, int action, int mods){
 void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
 
-        m_Proj = glm::ortho(0.0f, (float)Width*ScaleFactor, 0.0f, (float) Height*ScaleFactor, -1.0f, 1.0f);
+        //m_Proj = glm::perspective(glm::radians(m_FOV), (float)Width / (float)Height, 0.1f, 10000.0f);
+        //m_Proj = glm::ortho(0.0f, 100.0f, 0.0f, 100.0f, -1.0f, 10000.0f);
+        //SimpleCam.Update(m_pos, ScaleFactor, Width, Height);
+        //m_Proj = SimpleCam.GetProj();
+        //m_View = SimpleCam.GetView();
+
+        AdvancedCam.Update(m_pos,m_look, glm::vec3(0.0f, 1.0f, 0.0f), (float)Width/Height, m_FOV);
+        m_Proj = AdvancedCam.GetProj();
+        m_View = AdvancedCam.GetView();
 
 
         /*float poss[] = {
@@ -263,8 +309,8 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         Vertex *test = vertAlt.data();
 
-        Object.Create2dQuad(&vertAlt, 200.0f,200.0f, 150.0f, 150.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-        Object.Create2dQuad(&vertAlt, 10.0f,10.0f, 120.0f, 130.0f, 0.0f,0.0f , 1.0f, 1.0f, 1.0f);
+        Object.Create2dQuad(&vertAlt, 200.0f,200.0f,50.0f, 150.0f, 150.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+        Object.Create2dQuad(&vertAlt, 10.0f,10.0f,20.0f, 120.0f, 130.0f, 0.0f,0.0f , 1.0f, 1.0f, 1.0f);
 
         //test = CreateQuad(test, 200.0f, 200.0f, 10.0f, 10.0f, 1.0f);
 
@@ -273,11 +319,11 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         Vertex *buffer = vertices.data();
 
-        for(int y  = 0; y < 5; y+= 1){
+        for(int y  = 0; y < 100; y+= 1){
             
-            for(int x = 0; x < 5; x+= 1)
+            for(int x = 0; x < 100; x+= 1)
             {
-                buffer = CreateQuad(buffer, (float)x*100, (float)y*100 , 100.f, 100.0f, (float)((x+y)%2));
+                buffer = CreateQuad(buffer, (float)x*10, (float)y*10 , 10.0f, 10.0f, (float)((x+y)%2));
                 VertexCount += 4;
             }
             
@@ -326,8 +372,8 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         //m_Shader->Bind();
         //GLCall(glUseProgram(m_Shader->GetRenderID()));
 
-
-        glm::mat4 modle = glm::translate(glm::mat4(1.0f), m_pos);
+        // Keesp the world drawn modle at its origin
+        glm::mat4 modle = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,0));
         glm::mat4 mvp = m_Proj * m_View * modle;
 
         //auto loc = m_Shader->GetUniformLocation("u_MVP");
@@ -358,7 +404,9 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         ImGui::Begin("Batch Render");   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
             ImGui::Text("This test draws multiple quads in one draw call");
             //ImGui::SliderFloat3("Relative Possiton", &m_pos.x , -600.0f, 600.0f);
-            ImGui::DragFloat3("Relative Possiton", &m_pos.x , 1.0f);
+            ImGui::DragFloat3("Camera Pos", &m_pos.x , 0.5f);
+            ImGui::DragFloat3("Camera View", &m_look.x, 0.5f);
+            ImGui::DragFloat("FOV", &m_FOV, 1.0f, 10.0f, 200.0f, "%.03f Camera FOV");
             ImGui::DragFloat3("Second square poss and size", m_QuadPos2, 1.0f);
             ImGui::Checkbox("Toggle live effect", &m_Effect);
             ImGui::End();

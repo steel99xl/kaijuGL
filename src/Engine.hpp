@@ -21,3 +21,4 @@
 #include "Shader.hpp"
 #include "Renderer.hpp"
 #include "SimpleObject.hpp"
+#include "Camera.hpp"

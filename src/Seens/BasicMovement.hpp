@@ -27,7 +27,8 @@ class TestWorld{
     private:
         GLuint Tex1, Tex2, Tex3;
         bool m_Effect;
-        glm::vec3 m_pos;
+        glm::vec3 m_pos, m_look;
+        float m_FOV;
 
         int m_Width, m_Height;
 
@@ -41,6 +42,9 @@ class TestWorld{
         std::unique_ptr<Texture> m_Texture;
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         SimpleObject Object;
+
+        Camera2D SimpleCam = Camera2D(glm::vec3(0.0f,0.0f,0.0f) , 1.0f, 200.0f, 200.0f, 100.0f );
+        Camera3D AdvancedCam = Camera3D(glm::vec3(0.0, 0.0, 1.0f), glm::vec3(0.0, 0.0, 1.0f), glm::vec3(0.0, 0.0, 1.0f), 1.0f, 75.0f, 10000.0f );
 
     public:
              

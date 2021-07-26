@@ -10,7 +10,7 @@
 
     
 
-TestWorld::TestWorld() : m_running(false), m_Effect(false), m_pos(0,0,0), m_Width(800), m_Height(680){
+TestWorld::TestWorld() : m_running(false), m_Effect(false), m_Width(800), m_Height(680){
 // This is just to set some basic vars
 
 }
@@ -22,37 +22,16 @@ TestWorld::~TestWorld(){
 
 void TestWorld::Setup(){
 
-            //glfwSetKeyCallback(window, KeyCallBack);        
-
-        //v.Position = {0.0f ,0.0f};
-        /*float poss[] = {
-                    // set position values for vertexes (more info can be added)
-                     0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                     200.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-                     200.0f, 200.0f, 1.0f, 1.0f, 0.0f,
-                     0.0f, 200.0f, 0.0f, 1.0f, 0.0f,
-                    
-                    // Second square with texter map data
-                     210.0f, 210.0f, 0.0f, 0.0f, 1.0f,
-                     410.0f, 210.0f, 1.0f, 0.0f, 1.0f,
-                     410.0f, 410.0f, 1.0f, 1.0f, 1.0f,
-                     210.0f, 410.0f, 0.0f, 1.0f, 1.0f
-                     };
-        */
+    AdvancedCam.SetHorizontalSensitivity(0.1f);
+    AdvancedCam.SetVerticalSensitivity(0.08f);
+    AdvancedCam.InvertVertical();
 
 
     const unsigned int MaxQuadCount = 10100;
     const unsigned int MaxVertexCount = MaxQuadCount * 4;
     const unsigned int MaxIndexCount = MaxQuadCount * 6;
 
-        /*unsigned int SqIndex[12] ={
-                //tells what points to draw in what order
-                0,1,2,2,3,0,
-                
-                // Draws second square
-                4,5,6,6,7,4
-                };*/
-
+      
     unsigned int indices[MaxIndexCount];
     int offset = 0;
 
@@ -69,11 +48,6 @@ void TestWorld::Setup(){
         offset += 4;
 
     }
-
-        //std::cout << indices[0] << indices[6] << ind
-
-        //std::cout << "ok so its atlest not this... " << std::endl;
-        //std::cout << sizeof(indices) << std::endl;
 
 
         //Take info and put it in a vertex
@@ -99,13 +73,7 @@ void TestWorld::Setup(){
     GLCall(glActiveTexture(GL_TEXTURE0 + 2));
     GLCall(glBindTexture(GL_TEXTURE_2D, Tex3));
 
-
-        //VertexArray va;
-
-        // The second optionhas to be the total difrent points not the amount...
-        //m_VertexBuffer = std::make_unique<VertexBuffer>(poss, m_IBO->Unquie() * 5 * sizeof(float));
-        //m_VertexBuffer = std::make_unique<VertexBuffer>(poss, sizeof(poss));
-
+    
     // This sets the max amout of things in the vertex buffer
     m_VertexBuffer = std::make_unique<VertexBuffer>(nullptr, sizeof(Vertex) * MaxVertexCount);
 
@@ -142,8 +110,6 @@ void TestWorld::Setup(){
      // This has to match the bound texture buffer
 
         //m_Shader->SetUniform1i("u_Texture", 0);
-    m_pos = glm::vec3(0,0,0);
-    m_look = glm::vec3(0,0,0);
     m_FOV = 75.0f;
         
 
@@ -188,6 +154,7 @@ Vertex *TestWorld::CreateQuad(Vertex *target, float X, float Y, float sizeX, flo
 
 void TestWorld::OnUpdate(float deltaTime){
         glfwPollEvents();
+        m_DeltaTime = deltaTime;
 
         // This is only going here just so i have a clear spot for it
         //m_View = glm::lookAt(
@@ -197,11 +164,12 @@ void TestWorld::OnUpdate(float deltaTime){
         //);
     }
 
-void TestWorld::Input(int key, int scancode, int action, int mods){
-        int SpeedStep = 0;
+void TestWorld::KeyInput(int key, int scancode, int action, int mods){
+        float SpeedStep = 1.78f;
 
         if(mods == 1){
-            SpeedStep = 30;
+            //SpeedStep = 12.51f *m_DeltaTime;
+            SpeedStep = 50.0f;
         }
 
         std::cout << key << std::endl;
@@ -209,32 +177,59 @@ void TestWorld::Input(int key, int scancode, int action, int mods){
         if(action == GLFW_PRESS){
             switch(key){
                 case GLFW_KEY_W:
-                    m_pos[2] += 5 + SpeedStep;
+                    m_pos2D[2] -= 5 + SpeedStep;
+                    AdvancedCam.Move(FORWARD, SpeedStep);
                     break;
 
                 case GLFW_KEY_S:
-                    m_pos[2] -= 5 + SpeedStep;
+                    m_pos2D[2] += 5 + SpeedStep;
+                    AdvancedCam.Move(BACK, SpeedStep);
                     break;
 
                 case GLFW_KEY_SPACE:
-                    m_pos[1] += 5 + SpeedStep;
-                    m_look[1] += 5 + SpeedStep;
+                    m_pos2D[1] += 5 + SpeedStep;
+                    AdvancedCam.Move(UP, SpeedStep);
+                    //_look[1] += 5 + SpeedStep;
                     break;
 
                 
                 case GLFW_KEY_V:
-                    m_pos[1] -= 5 + SpeedStep;
-                    m_look[1] -= 5 + SpeedStep;
+                    m_pos2D[1] -= 5 + SpeedStep;
+                    AdvancedCam.Move(DOWN, SpeedStep);
+                    //m_look[1] -= 5 + SpeedStep;
                     break;
 
                 case GLFW_KEY_A:
-                    m_pos[0] -= 5 + SpeedStep;
-                    m_look[0] -= 5 + SpeedStep;
+                    m_pos2D[0] -= 5 + SpeedStep;
+                    AdvancedCam.Move(LEFT, SpeedStep);
+                    //m_look[0] -= 5 + SpeedStep;
                     break;
 
                 case GLFW_KEY_D:
-                    m_pos[0] += 5 + SpeedStep;
-                    m_look[0] += 5 + SpeedStep;
+                    m_pos2D[0] += 5 + SpeedStep;
+                    AdvancedCam.Move(RIGHT, SpeedStep);
+                    //m_look[0] += 5 + SpeedStep;
+                    break;
+
+                case GLFW_KEY_MINUS:
+                    m_FOV -= 1.0f;
+                    if(m_FOV <= 20.0f){
+                        m_FOV = 20.0f;
+                    }
+                    break;
+
+                case GLFW_KEY_EQUAL:
+                    m_FOV += 1.0f;
+                    if(m_FOV >= 120.0f){
+                        m_FOV = 120.0f;
+                    }
+                    break;
+                
+                case GLFW_KEY_L:
+                    AdvancedCam.InvertVertical();
+                    break;
+                case GLFW_KEY_K:
+                    AdvancedCam.UnInvertVertical();
                     break;
             }
         }
@@ -242,88 +237,96 @@ void TestWorld::Input(int key, int scancode, int action, int mods){
          if(action == GLFW_REPEAT){
             switch(key){
                 case GLFW_KEY_W:
-                    m_pos[2] += 5 + SpeedStep;
+                    m_pos2D[2] -= 5 + SpeedStep;
+                    AdvancedCam.Move(FORWARD, SpeedStep);
                     break;
 
                 case GLFW_KEY_S:
-                    m_pos[2] -= 5 + SpeedStep;
+                    m_pos2D[2] += 5 + SpeedStep;
+                    AdvancedCam.Move(BACK, SpeedStep);
                     break;
 
                 case GLFW_KEY_SPACE:
-                    m_pos[1] += 5 + SpeedStep;
-                    m_look[1] += 5 + SpeedStep;
+                    m_pos2D[1] += 5 + SpeedStep;
+                    AdvancedCam.Move(UP, SpeedStep);
+                    //_look[1] += 5 + SpeedStep;
                     break;
 
                 
                 case GLFW_KEY_V:
-                    m_pos[1] -= 5 + SpeedStep;
-                    m_look[1] -= 5 + SpeedStep;
+                    m_pos2D[1] -= 5 + SpeedStep;
+                    AdvancedCam.Move(DOWN, SpeedStep);
+                    //m_look[1] -= 5 + SpeedStep;
                     break;
 
                 case GLFW_KEY_A:
-                    m_pos[0] -= 5 + SpeedStep;
-                    m_look[0] -= 5 + SpeedStep;
+                    m_pos2D[0] -= 5 + SpeedStep;
+                    AdvancedCam.Move(LEFT, SpeedStep);
+                    //m_look[0] -= 5 + SpeedStep;
                     break;
 
                 case GLFW_KEY_D:
-                    m_pos[0] += 5 + SpeedStep;
-                    m_look[0] += 5 + SpeedStep;
+                    m_pos2D[0] += 5 + SpeedStep;
+                    AdvancedCam.Move(RIGHT, SpeedStep);
+                    //m_look[0] += 5 + SpeedStep;
+                    break;
+
+                case GLFW_KEY_MINUS:
+                    m_FOV -= 1.0f;
+                    if(m_FOV <= 20.0f){
+                        m_FOV = 20.0f;
+                    }
+                    break;
+
+                case GLFW_KEY_EQUAL:
+                    m_FOV += 1.0f;
+                    if(m_FOV >= 120.0f){
+                        m_FOV = 120.0f;
+                    }
                     break;
             }
         }
 
-    }
+}
+
+void TestWorld::MouseInput(double xpos, double ypos){
+
+    AdvancedCam.LookRelative(xpos,ypos);    
+
+}
+
+
 
 void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
 
-        //m_Proj = glm::perspective(glm::radians(m_FOV), (float)Width / (float)Height, 0.1f, 10000.0f);
-        //m_Proj = glm::ortho(0.0f, 100.0f, 0.0f, 100.0f, -1.0f, 10000.0f);
-        //SimpleCam.Update(m_pos, ScaleFactor, Width, Height);
-        //m_Proj = SimpleCam.GetProj();
-        //m_View = SimpleCam.GetView();
 
-        AdvancedCam.Update(m_pos,m_look, glm::vec3(0.0f, 1.0f, 0.0f), (float)Width/Height, m_FOV);
-        m_Proj = AdvancedCam.GetProj();
-        m_View = AdvancedCam.GetView();
+        AdvancedCam.Update(m_DeltaTime, (float)Width/Height, m_FOV);
 
 
-        /*float poss[] = {
-                    // set position values for vertexes (more info can be added)
-                     0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                     200.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-                     200.0f, 200.0f, 1.0f, 1.0f, 0.0f,
-                     0.0f, 200.0f, 0.0f, 1.0f, 0.0f,
-                    
-                    // Second square with texter map data
-                     210.0f, 210.0f, 0.0f, 0.0f, 1.0f,
-                     410.0f, 210.0f, 1.0f, 0.0f, 1.0f,
-                     410.0f, 410.0f, 1.0f, 1.0f, 1.0f,
-                     210.0f, 410.0f, 0.0f, 1.0f, 1.0f
-                     };*/
+      
 
         //Keeping track of used verticies seperatly allows the buffer to be bigger than needed and not cause rendering errors
-        std::array<Vertex, 100000> vertices;
 
-        std::vector<Vertex> vertAlt;
+        std::vector<Vertex> verticies;
+        int VertexCount = 0;
 
-        Vertex *test = vertAlt.data();
+        Vertex *test = verticies.data();
 
-        Object.Create2dQuad(&vertAlt, 200.0f,200.0f,50.0f, 150.0f, 150.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-        Object.Create2dQuad(&vertAlt, 10.0f,10.0f,20.0f, 120.0f, 130.0f, 0.0f,0.0f , 1.0f, 1.0f, 1.0f);
-
+        Object.Create2dQuad(&verticies, 200.0f,200.0f,50.0f, 150.0f, 150.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+        Object.Create2dQuad(&verticies, 10.0f,10.0f,20.0f, 120.0f, 130.0f, 0.0f,0.0f , 1.0f, 1.0f, 1.0f);
+        VertexCount += 8;
         //test = CreateQuad(test, 200.0f, 200.0f, 10.0f, 10.0f, 1.0f);
 
 
-        int VertexCount = 0;
+       int QuadCount = 50; 
 
-        Vertex *buffer = vertices.data();
-
-        for(int y  = 0; y < 100; y+= 1){
+        for(int y  = 0; y < QuadCount; y+= 1){
             
-            for(int x = 0; x < 100; x+= 1)
+            for(int x = 0; x < QuadCount; x+= 1)
             {
-                buffer = CreateQuad(buffer, (float)x*10, (float)y*10 , 10.0f, 10.0f, (float)((x+y)%2));
+                //buffer = CreateQuad(buffer, (float)x*1.0f, (float)y*1.0f , 1.0f, 1.0f, (float)((x+y)%2));
+                Object.Create2dQuad(&verticies, (float) x*1.0f,(float)y*1.0f,0.0f,  1.0f, 1.0f, 0.0f,0.0f, 1.0f, 1.0f, (float)((x+y)%2));
                 VertexCount += 4;
             }
             
@@ -337,7 +340,8 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         
         //buffer = CreateQuad(buffer, 0.0f,0.0f, 200.0f, 0.0f);
-        buffer = CreateQuad(buffer, m_QuadPos2[0], m_QuadPos2[1], m_QuadPos2[2],m_QuadPos2[2], 2.0f);
+        //buffer = CreateQuad(buffer, m_QuadPos2[0], m_QuadPos2[1], m_QuadPos2[2],m_QuadPos2[2], 2.0f);
+        Object.Create2dQuad(&verticies, m_QuadPos2[0],m_QuadPos2[1],m_QuadPos2[2],  10.0f, 10.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
         VertexCount += 4;
 
         //buffer = CreateQuad(buffer, 200.0f, 200.0f, 150.0f, 175.0f, 1.0f);
@@ -357,13 +361,13 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         // Dynamic Vertex Buffer!!!!
         m_VertexBuffer->Bind();
-        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, VertexCount * sizeof(Vertex), vertices.data()));
+        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, VertexCount * sizeof(Vertex), verticies.data()));
 
         // if the offset is not correct it wont draw, will messup a draw
         
         // You have to have a second vertex buffer object set up on the same Vertex array object
 
-        GLCall(glBufferSubData(GL_ARRAY_BUFFER, VertexCount * sizeof(Vertex), 8 * sizeof(Vertex), vertAlt.data()));
+        //GLCall(glBufferSubData(GL_ARRAY_BUFFER, VertexCount * sizeof(Vertex), 8 * sizeof(Vertex), vertAlt.data()));
 
         Renderer renderer;
 
@@ -374,7 +378,7 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         // Keesp the world drawn modle at its origin
         glm::mat4 modle = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,0));
-        glm::mat4 mvp = m_Proj * m_View * modle;
+        glm::mat4 mvp = AdvancedCam.GetProj() * AdvancedCam.GetView() * modle;
 
         //auto loc = m_Shader->GetUniformLocation("u_MVP");
         //GLCall(glUniformMatrix4fv(loc, 1, GL_FALSE, &mvp[0][0]));
@@ -385,6 +389,8 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
             GLCall(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
             GLCall(glClear(GL_COLOR_BUFFER_BIT));
         }
+
+        
 
         renderer.Draw(*m_VAO, *m_IBO, *m_Shader);
 
@@ -404,8 +410,6 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         ImGui::Begin("Batch Render");   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
             ImGui::Text("This test draws multiple quads in one draw call");
             //ImGui::SliderFloat3("Relative Possiton", &m_pos.x , -600.0f, 600.0f);
-            ImGui::DragFloat3("Camera Pos", &m_pos.x , 0.5f);
-            ImGui::DragFloat3("Camera View", &m_look.x, 0.5f);
             ImGui::DragFloat("FOV", &m_FOV, 1.0f, 10.0f, 200.0f, "%.03f Camera FOV");
             ImGui::DragFloat3("Second square poss and size", m_QuadPos2, 1.0f);
             ImGui::Checkbox("Toggle live effect", &m_Effect);

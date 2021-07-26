@@ -16,28 +16,41 @@
 // Test 
 TestWorld World;
 
+
+bool CursorLock = false;
+
 void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mods){
     //std::cout << key << std::endl;
+    World.KeyInput(key, scancode, action, mods);
 
-    World.Input(key, scancode, action, mods);
-
-    //std::cout << "key : " << (char)key << "| scancode : " << scancode << "| action : " << action << "| mods : " << mods << std::endl;
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
+        std::cout << "Toggling Cursor Lock" << std::endl;
+        CursorLock = !CursorLock;
+        if(!CursorLock){
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        } else {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+    }
     
-    /*
-    if(key == GLFW_KEY_B && action == GLFW_PRESS){
-        std::cout << "...boo" << std::endl;
-    }
-    if(key == GLFW_KEY_B && action == GLFW_REPEAT){
-        std::cout << "oooooo";
-    }
 
-    if(key == GLFW_KEY_B && action == GLFW_RELEASE){
-        std::cout << "oop..." << std::endl;
+}
+
+void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
+
+    if(CursorLock){
+        World.MouseInput(xpos, ypos);
     }
-    */
+    
+    // Why does this work..
+    //World.Test(xpos, ypos);
+
 }
 
 int main(void){
+    float deltaTime, lastFrame = 0.0f;
+
+    
     
     int width = 720;
     int height = 480;
@@ -157,6 +170,7 @@ int main(void){
     World.Setup();
 
     glfwSetKeyCallback(window, KeyCallBack);
+    glfwSetCursorPosCallback(window, MousePosCallBack);
 
     
 
@@ -165,6 +179,9 @@ int main(void){
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;  
 
         glfwPollEvents();
         glfwGetWindowSize(window, &width, &height);
@@ -178,7 +195,7 @@ int main(void){
         ImGui::NewFrame();
         // Set Shader, Draw Object
 
-        World.OnUpdate(0.0f);
+        World.OnUpdate(deltaTime);
         World.OnImGui();
         World.OnRender(width, height, ScalePixle);
 

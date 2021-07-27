@@ -13,6 +13,7 @@
 TestWorld::TestWorld() : m_running(false), m_Effect(false), m_Width(800), m_Height(680){
 // This is just to set some basic vars
 
+
 }
 
 TestWorld::~TestWorld(){
@@ -22,60 +23,98 @@ TestWorld::~TestWorld(){
 
 void TestWorld::Setup(){
 
+    m_VAO = std::make_unique<VertexArray>();
+    m_Shader = std::make_unique<Shader>();
+    m_IBO = std::make_unique<IndexBuffer>();
+    m_Texture = std::make_unique<Texture>();
+    m_VertexBuffer = std::make_unique<VertexBuffer>();
+    
+
+
     AdvancedCam.SetHorizontalSensitivity(0.1f);
     AdvancedCam.SetVerticalSensitivity(0.08f);
     AdvancedCam.InvertVertical();
 
 
-    const unsigned int MaxQuadCount = 10100;
-    const unsigned int MaxVertexCount = MaxQuadCount * 4;
-    const unsigned int MaxIndexCount = MaxQuadCount * 6;
+    //const unsigned int MaxQuadCount = 100000;
+    //const unsigned int MaxVertexCount = MaxQuadCount * 4;
+    //const unsigned int MaxIndexCount = MaxQuadCount * 6;
 
       
-    unsigned int indices[MaxIndexCount];
-    int offset = 0;
+    //unsigned int indices[MaxIndexCount];
+   
 
-    for (int i = 0; i < MaxIndexCount; i += 6){
 
-        indices[i + 0] =  0 + offset;
-        indices[i + 1] =  1 + offset;
-        indices[i + 2] =  2 + offset;
 
-        indices[i + 3] =  2 + offset;
-        indices[i + 4] =  3 + offset;
-        indices[i + 5] =  0 + offset; 
 
-        offset += 4;
+    //Object.Create2dQuad(200.0f,200.0f,0.0f, 150.0f, 150.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+    //Object.Create2dQuad(10.0f,10.0f,0.0f, 120.0f, 130.0f, 0.0f,0.0f , 1.0f, 1.0f, 1.0f);
+        //test = CreateQuad(test, 200.0f, 200.0f, 10.0f, 10.0f, 1.0f);
 
-    }
+    
+       //int QuadCount = 1000; 
+
+
+        for(int y  = 0; y < 100; y+= 1){
+            
+            for(int x = 0; x < 100; x+= 1)
+            {
+                //buffer = CreateQuad(buffer, (float)x*1.0f, (float)y*1.0f , 1.0f, 1.0f, (float)((x+y)%2));
+               Object.Create2dQuad((float) x*2.0f,(float)y*2.0f,0.0f,  1.0f, 1.0f, 0.0f,0.0f, 1.0f, 1.0f, (float)((x+y)%2));
+            }
+            
+        }
+
+    Object.Create2dQuad(2.0f,1.0f,0.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
+
+   // Object.Create2dQuad(1.0f,3.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
+   // Object.Create2dQuad(1.0f,1.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
+
+    //Object.Create2dQuad(3.0f,1.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
+
 
 
         //Take info and put it in a vertex
-    m_VAO = std::make_unique<VertexArray>();
-    m_IBO = std::make_unique<IndexBuffer>(indices,sizeof(indices));
+
+    std::cout << Object.GetVerticiesCount() << std::endl;
+
+
+    m_IBO->MakeBuffer(Object.GetIndices().data(), Object.GetIndicCount());
+    m_IBO->Bind();
+    std::cout << m_IBO->GetCount() << std::endl;
     std::cout << "set index buffer" << std::endl;
-    m_Shader = std::make_unique<Shader>("assets/Shaders/MultiImg.shader");
-    m_Texture = std::make_unique<Texture>("assets/Textures/Box.png");
+    
+    m_Shader->SetShader("assets/Shaders/MultiImg.shader");
+    std::cout << "Set Shader" << std::endl;
+    //m_Texture = std::make_unique<Texture>("assets/Textures/Box.png");
 
 
-    Tex1 = m_Texture->LoadTexture("assets/Textures/Box.png");
-    Tex2 = m_Texture->LoadTexture("assets/Textures/Logo.jpeg");
-    Tex3 = m_Texture->LoadTexture("assets/Textures/OtherBox.png");
+    //Tex1 = m_Texture->LoadTexture("assets/Textures/Box.png");
+    //Tex2 = m_Texture->LoadTexture("assets/Textures/Logo.jpeg");
+    //Tex3 = m_Texture->LoadTexture("assets/Textures/OtherBox.png");
+    m_Texture->LoadTexture("assets/Textures/Box.png");
+    m_Texture->LoadTexture("assets/Textures/Logo.jpeg",1);
+    m_Texture->LoadTexture("assets/Textures/OtherBox.png",2);
+
+    m_Texture->Bind(0);
+    m_Texture->Bind(1);
+    m_Texture->Bind(2);
 
         //std::cout << "bound texture 1" << std::endl;
-    GLCall(glActiveTexture(GL_TEXTURE0 + 0));
-    GLCall(glBindTexture(GL_TEXTURE_2D, Tex1));
+    //GLCall(glActiveTexture(GL_TEXTURE0 + 0));
+    //GLCall(glBindTexture(GL_TEXTURE_2D, Tex1));
 
         //std::cout << "bound texture 2 " << std::endl;
-    GLCall(glActiveTexture(GL_TEXTURE0 + 1));
-    GLCall(glBindTexture(GL_TEXTURE_2D, Tex2));
+    //GLCall(glActiveTexture(GL_TEXTURE0 + 1));
+    //GLCall(glBindTexture(GL_TEXTURE_2D, Tex2));
 
-    GLCall(glActiveTexture(GL_TEXTURE0 + 2));
-    GLCall(glBindTexture(GL_TEXTURE_2D, Tex3));
+    //GLCall(glActiveTexture(GL_TEXTURE0 + 2));
+    //GLCall(glBindTexture(GL_TEXTURE_2D, Tex3));
 
     
     // This sets the max amout of things in the vertex buffer
-    m_VertexBuffer = std::make_unique<VertexBuffer>(nullptr, sizeof(Vertex) * MaxVertexCount);
+    //m_VertexBuffer = std::make_unique<VertexBuffer>(nullptr, sizeof(Vertex) * 100);
+    m_VertexBuffer->MakeBuffer(Object.GetVerticies().data(), sizeof(Vertex) * Object.GetVerticiesCount());
 
 
 
@@ -94,6 +133,7 @@ void TestWorld::Setup(){
         //IndexBuffer ibo(SqIndex,6);
         //GLCall(glUseProgram(m_Shader->GetRenderID()));
 
+    //m_Shader->Bind();
     m_Shader->Bind();
 
     std::cout << "Shader set" << std::endl;
@@ -102,6 +142,7 @@ void TestWorld::Setup(){
     int samplers[3] = {0 ,1,2};
         //GLsizei size = 2;
         //GLCall(glUniform1iv(loc, size, samplers));
+    //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
     m_Shader->SetUniform1iv("u_Textures", 3, samplers);
 
         //Shader shader("assets/Shaders/ImgLoad.shader");
@@ -111,11 +152,17 @@ void TestWorld::Setup(){
 
         //m_Shader->SetUniform1i("u_Texture", 0);
     m_FOV = 75.0f;
-        
 
+
+    std::cout << m_Shader->GetRenderID() << std::endl;
    
 
-    //glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
+    
+
+    //std::cout << "Total Verticies Sent = " << Object.GetVerticiesCount() << std::endl;
+  //  std::cout << "Total Squares = " << Object.GetVerticiesCount()/4 << std::endl;
+   // std::cout << "Total Verticies Drawn = " << (Object.GetVerticiesCount()/4)*6 << std::endl;
+
 
 }
 
@@ -172,7 +219,6 @@ void TestWorld::KeyInput(int key, int scancode, int action, int mods){
             SpeedStep = 50.0f;
         }
 
-        std::cout << key << std::endl;
 
         if(action == GLFW_PRESS){
             switch(key){
@@ -308,29 +354,9 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         //Keeping track of used verticies seperatly allows the buffer to be bigger than needed and not cause rendering errors
 
-        std::vector<Vertex> verticies;
-        int VertexCount = 0;
-
-        Vertex *test = verticies.data();
-
-        Object.Create2dQuad(&verticies, 200.0f,200.0f,50.0f, 150.0f, 150.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-        Object.Create2dQuad(&verticies, 10.0f,10.0f,20.0f, 120.0f, 130.0f, 0.0f,0.0f , 1.0f, 1.0f, 1.0f);
-        VertexCount += 8;
-        //test = CreateQuad(test, 200.0f, 200.0f, 10.0f, 10.0f, 1.0f);
 
 
-       int QuadCount = 50; 
-
-        for(int y  = 0; y < QuadCount; y+= 1){
-            
-            for(int x = 0; x < QuadCount; x+= 1)
-            {
-                //buffer = CreateQuad(buffer, (float)x*1.0f, (float)y*1.0f , 1.0f, 1.0f, (float)((x+y)%2));
-                Object.Create2dQuad(&verticies, (float) x*1.0f,(float)y*1.0f,0.0f,  1.0f, 1.0f, 0.0f,0.0f, 1.0f, 1.0f, (float)((x+y)%2));
-                VertexCount += 4;
-            }
-            
-        }
+        
 
         //std::cout << vertices.size() << std::endl;
 
@@ -341,8 +367,7 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         
         //buffer = CreateQuad(buffer, 0.0f,0.0f, 200.0f, 0.0f);
         //buffer = CreateQuad(buffer, m_QuadPos2[0], m_QuadPos2[1], m_QuadPos2[2],m_QuadPos2[2], 2.0f);
-        Object.Create2dQuad(&verticies, m_QuadPos2[0],m_QuadPos2[1],m_QuadPos2[2],  10.0f, 10.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
-        VertexCount += 4;
+        //Object.Create2dQuad(m_QuadPos2[0],m_QuadPos2[1],m_QuadPos2[2],  10.0f, 10.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
 
         //buffer = CreateQuad(buffer, 200.0f, 200.0f, 150.0f, 175.0f, 1.0f);
         //VertexCount += 4;
@@ -360,9 +385,12 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         //memcpy(poss + q0.size(), q1.data(), q1.size() * sizeof(Vertex2D));
 
         // Dynamic Vertex Buffer!!!!
-        m_VertexBuffer->Bind();
-        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, VertexCount * sizeof(Vertex), verticies.data()));
-
+        //m_VertexBuffer->Bind();
+        //GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, Object.GetVerticiesCount() * sizeof(Vertex), Object.GetVerticies().data()));
+        
+        //m_IBO->Bind();
+        //GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, Object.GetIndicCount() * sizeof(unsigned int), Object.GetIndices().data()));
+        
         // if the offset is not correct it wont draw, will messup a draw
         
         // You have to have a second vertex buffer object set up on the same Vertex array object
@@ -383,7 +411,8 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         //auto loc = m_Shader->GetUniformLocation("u_MVP");
         //GLCall(glUniformMatrix4fv(loc, 1, GL_FALSE, &mvp[0][0]));
 
-        m_Shader->SetUniformMat4f("u_MVP", mvp);
+        //m_Shader->SetUniformMat4f("u_MVP", mvp);
+        m_Shader->SetUniformMat4f("u_MVP", mvp); 
 
         if(m_Effect){
             GLCall(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
@@ -391,7 +420,6 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         }
 
         
-
         renderer.Draw(*m_VAO, *m_IBO, *m_Shader);
 
 

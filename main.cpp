@@ -18,10 +18,14 @@ TestWorld World;
 
 
 bool CursorLock = false;
+double lastX = 0;
+double lastY = 0;
 
 void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mods){
     //std::cout << key << std::endl;
     World.KeyInput(key, scancode, action, mods);
+
+    // This is only done for an example of out of "world" controls
 
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
         std::cout << "Toggling Cursor Lock" << std::endl;
@@ -29,6 +33,7 @@ void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mod
         if(!CursorLock){
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         } else {
+            glfwSetCursorPos(window,lastX,lastY);
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
     }
@@ -40,6 +45,8 @@ void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
 
     if(CursorLock){
         World.MouseInput(xpos, ypos);
+        lastX = xpos;
+        lastY = ypos;
     }
     
     // Why does this work..

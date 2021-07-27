@@ -10,8 +10,10 @@ private:
     unsigned int m_Count;
     unsigned int m_Unquie;
 public:
-    IndexBuffer(const unsigned int *data, unsigned int count);
+    IndexBuffer();
     ~IndexBuffer();
+
+    void MakeBuffer(const unsigned int *data, unsigned int count);
 
     void Bind() const;
     void UnBind() const;

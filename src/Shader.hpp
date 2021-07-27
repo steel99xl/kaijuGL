@@ -20,8 +20,10 @@ private:
 
 
 public:
-    Shader(const std::string &filePath);
+    Shader();
     ~Shader();
+
+    void SetShader(const std::string &filePath);
 
     void Bind() const;
     void UnBind();

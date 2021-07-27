@@ -1,17 +1,22 @@
 #include "Shader.hpp"
 
 
-Shader::Shader(const std::string &filePath) : m_FilePath(filePath), m_RenderID(0){
+Shader::Shader() : m_RenderID(0){
 
-    ShaderProgramSource source = ParseShader();
-    m_RenderID = CreateShader(source.vertexSource, source.fragmentSource);
-
+    
 
 }
 
 Shader::~Shader(){
 
     GLCall(glDeleteProgram(m_RenderID));
+
+}
+
+void Shader::SetShader(const std::string &filePath){
+    m_FilePath = filePath;
+    ShaderProgramSource source = ParseShader();
+    m_RenderID = CreateShader(source.vertexSource, source.fragmentSource);
 
 }
 

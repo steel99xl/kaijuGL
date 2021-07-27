@@ -24,20 +24,30 @@ struct Vertex{
 
 class SimpleObject{
     private:
+        int m_MaxQuadCount;
+
         // Vectors a used so seach instance of an SimpleObject can have (m_MaxQuads * 4) verticies and (m_MaxQuads * 6) 
         std::vector<Vertex> m_Verticies;
-        Vertex *m_Vbuffer = m_Verticies.data();
-        int m_VerticiesCount;
+        unsigned int m_VerticiesMax, m_VerticiesCount;
 
-        std::vector<int> m_Indecies;
-        int m_IndecCount;
+        std::vector<unsigned int> m_Indices;
+        unsigned int m_IndicMax, m_IndicCount;
+        unsigned int m_IndicOffset;
 
         int m_MaxQuads, m_UsedQuads;
+
+        //VertexBuffer m_VertexBuffer(nullptr, sizeof(Vertex) * 4);
+        //VertexArray m_VAO();
 
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<VertexArray> m_VAO;
         std::unique_ptr<Shader> m_Shader;
         std::unique_ptr<IndexBuffer> m_IBO;
+
+        //VertexBuffer *m_VertexBuffer;
+        //VertexArray *m_VAO;
+        //Shader *m_Shader;
+        //IndexBuffer *m_IBO;
         
         //std::unique_ptr<Texture> m_Texture;
         
@@ -48,7 +58,7 @@ class SimpleObject{
 
     public:
 
-        SimpleObject();
+        SimpleObject(int MaxQuads = 10000);
         ~SimpleObject();
 
         // This will be used my the shader to place the "object" in the world
@@ -61,8 +71,9 @@ class SimpleObject{
 
         // This function needs to be rewriten to not take "target" from the user
         // Should append to the indexbuffer
-        std::vector<Vertex> Create2dQuad(std::vector<Vertex> *tartget, float X, float Y,float Z, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
+        void Create2dQuad(float X, float Y,float Z, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
 
+        
 
         // A function that takes a vector of vertexes and appends it to this objects (so one object can draw all objects like it)
         // A function that takes in a vector of Vertex and replaces the current vector of Vertex
@@ -87,7 +98,11 @@ class SimpleObject{
 
 
         inline std::vector<Vertex> GetVerticies(){ return m_Verticies;}
-        inline int GetVerticiesCount() {return m_VerticiesCount;}
+        inline unsigned int GetVerticiesCount() {return m_VerticiesCount;}
+        inline std::vector<unsigned int> GetIndices(){return m_Indices;}
+        inline unsigned int GetIndicCount() {return m_IndicCount;};
+        inline int GetMaxQuadCound() {return m_MaxQuadCount;}
+        inline int GetUsedQuads() {return m_UsedQuads;}
 
 
 };

@@ -1,25 +1,6 @@
 #pragma once
 #include "../Engine.hpp"
 
-
-
-struct Vertex2DPos{
-    float X;
-    float Y;
-    float Z;
-};
-
-struct Vertex2DTexCord{
-    float X;
-    float Y;
-};
-
-struct Vertex2D{
-                Vertex2DPos Pos;
-                Vertex2DTexCord TexCord;
-                float TexID;
-             };
-
   
     
 class TestWorld{
@@ -37,16 +18,17 @@ class TestWorld{
 
         float m_QuadPos2[3] = {200.0f,210.0f,200.0f};
 
+
+       // VertexArray m_TestVAO;
+        
         std::unique_ptr<VertexArray> m_VAO;
-        //VertexArray *m_VAO;
-        std::unique_ptr<Shader> m_Shader;
-        //Shader *m_Shader;
+        //std::unique_ptr<VertexArray> m_TestVAO;
         std::unique_ptr<IndexBuffer> m_IBO;
-        //IndexBuffer *m_IBO;
+
+    
         std::unique_ptr<Texture> m_Texture;
-        //Texture *m_Texture;
+        std::unique_ptr<Shader> m_Shader;
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
-        //VertexBuffer *m_VertexBuffer;
 
         SimpleObject Object;
 

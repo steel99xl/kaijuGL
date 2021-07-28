@@ -33,8 +33,8 @@ void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mod
         if(!CursorLock){
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         } else {
-            glfwSetCursorPos(window,lastX,lastY);
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetCursorPos(window,lastX,lastY);
         }
     }
     
@@ -178,6 +178,8 @@ int main(void){
 
     glfwSetKeyCallback(window, KeyCallBack);
     glfwSetCursorPosCallback(window, MousePosCallBack);
+    glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+
 
     
 

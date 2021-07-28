@@ -39,7 +39,6 @@ void Shader::SetUniform1i(const std::string &name, int value){
 }
 
 void Shader::SetUniform1iv(const std::string &name, GLsizei size, const GLint *array){
-
     GLCall(glUniform1iv(GetUniformLocation(name), size, array));
 }
 

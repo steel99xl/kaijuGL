@@ -48,7 +48,7 @@ public:
 
     void Clear() const;
 
-    void Draw(const class VertexArray &va, const class IndexBuffer &ib, const class Shader &shader);
+    void Draw(class VertexArray &va, class IndexBuffer &ib, class Shader &shader);
 
 };
 

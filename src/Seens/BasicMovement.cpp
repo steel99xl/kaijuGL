@@ -18,11 +18,15 @@ TestWorld::TestWorld() : m_running(false), m_Effect(false), m_Width(800), m_Heig
 
 TestWorld::~TestWorld(){
 
+    
+    //m_TestVAO = std::make_unique<VertexArray>();
+
 }
 
 
 void TestWorld::Setup(){
 
+   
     m_VAO = std::make_unique<VertexArray>();
     m_Shader = std::make_unique<Shader>();
     m_IBO = std::make_unique<IndexBuffer>();
@@ -34,6 +38,8 @@ void TestWorld::Setup(){
     AdvancedCam.SetHorizontalSensitivity(0.1f);
     AdvancedCam.SetVerticalSensitivity(0.08f);
     AdvancedCam.InvertVertical();
+
+    Object.Setup();
 
 
     //const unsigned int MaxQuadCount = 100000;
@@ -60,12 +66,13 @@ void TestWorld::Setup(){
             for(int x = 0; x < 10; x+= 1)
             {
                 //buffer = CreateQuad(buffer, (float)x*1.0f, (float)y*1.0f , 1.0f, 1.0f, (float)((x+y)%2));
-               Object.Create2dQuad((float) x*2.0f,(float)y*2.0f,0.0f,  1.0f, 1.0f, 0.0f,0.0f, 1.0f, 1.0f, (float)((x+y)%2));
+               //Object.Create2dQuad((float) x*2.0f,(float)y*2.0f,0.0f,  1.0f, 1.0f, 0.0f,0.0f, 1.0f, 1.0f, (float)((x+y)%2));
             }
             
         }
 
-    Object.Create2dQuad(0.0f,0.0f,1.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
+    Object.Create2dQuad(0.0f,0.0f,0.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
+    Object.Create2dQuad(0.0f,1.0f,0.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
 
    // Object.Create2dQuad(1.0f,3.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
    // Object.Create2dQuad(1.0f,1.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
@@ -79,12 +86,24 @@ void TestWorld::Setup(){
 
 
     //m_IBO->MakeBuffer(Object.GetIndices().data(), Object.GetIndicCount() );
-    m_IBO->MakeBuffer(NULL, Object.GetIndicCount() );
+    m_IBO->MakeBuffer(NULL, (Object.GetMaxQuadCound() * 4) * 6);
     std::cout << "Index information " << std::endl; 
-    m_IBO->Bind();
+    //m_IBO->Bind();
     std::cout << "set index buffer" << std::endl;
-    
+
+    Object.SetShader("assets/Shaders/MultiImg.shader"); 
     m_Shader->SetShader("assets/Shaders/MultiImg.shader");
+    m_Shader->Bind();
+
+    std::cout << "Shader set" << std::endl;
+
+        //auto loc = m_Shader->GetUniformLocation("u_Textures");
+    int samplers[3] = {0 ,1,2};
+        //GLsizei size = 2;
+        //GLCall(glUniform1iv(loc, size, samplers));
+    m_Shader->SetUniform1iv("u_Textures", 3, samplers);
+    //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
+    
     std::cout << "Set Shader" << std::endl;
     //m_Texture = std::make_unique<Texture>("assets/Textures/Box.png");
 
@@ -92,6 +111,11 @@ void TestWorld::Setup(){
     //Tex1 = m_Texture->LoadTexture("assets/Textures/Box.png");
     //Tex2 = m_Texture->LoadTexture("assets/Textures/Logo.jpeg");
     //Tex3 = m_Texture->LoadTexture("assets/Textures/OtherBox.png");
+
+    //Object.AddTexture("assets/Textures/Box.png");
+    //Object.AddTexture("assets/Textures/Logo.jpeg",1);
+    //Object.AddTexture("assets/Textures/OtherBox.png",2);
+
     m_Texture->LoadTexture("assets/Textures/Box.png");
     m_Texture->LoadTexture("assets/Textures/Logo.jpeg",1);
     m_Texture->LoadTexture("assets/Textures/OtherBox.png",2);
@@ -99,6 +123,7 @@ void TestWorld::Setup(){
     m_Texture->Bind(0);
     m_Texture->Bind(1);
     m_Texture->Bind(2);
+
 
         //std::cout << "bound texture 1" << std::endl;
     //GLCall(glActiveTexture(GL_TEXTURE0 + 0));
@@ -115,7 +140,7 @@ void TestWorld::Setup(){
     // This sets the max amout of things in the vertex buffer
     //m_VertexBuffer = std::make_unique<VertexBuffer>(nullptr, sizeof(Vertex) * 100);
 
-    m_VertexBuffer->MakeBuffer(NULL, sizeof(Vertex) * Object.GetVerticiesCount());
+   m_VertexBuffer->MakeBuffer(NULL, sizeof(Vertex) * (Object.GetMaxQuadCound() * 4 ));
 
 
 
@@ -126,7 +151,7 @@ void TestWorld::Setup(){
     layout.Push(3,"float");
     layout.Push(2,"float");
     layout.Push(1,"float");
-        //layout.Push(1,"float");
+    //layout.Push(1,"float");
     m_VAO->AddBuffer(*m_VertexBuffer,layout);    
 
         //std::cout << "Seting shader program" << std::endl;
@@ -135,16 +160,7 @@ void TestWorld::Setup(){
         //GLCall(glUseProgram(m_Shader->GetRenderID()));
 
     //m_Shader->Bind();
-    m_Shader->Bind();
-
-    std::cout << "Shader set" << std::endl;
-
-        //auto loc = m_Shader->GetUniformLocation("u_Textures");
-    int samplers[3] = {0 ,1,2};
-        //GLsizei size = 2;
-        //GLCall(glUniform1iv(loc, size, samplers));
-    //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
-    m_Shader->SetUniform1iv("u_Textures", 3, samplers);
+ 
 
         //Shader shader("assets/Shaders/ImgLoad.shader");
         //m_Shader->Bind();
@@ -155,7 +171,6 @@ void TestWorld::Setup(){
     m_FOV = 75.0f;
 
 
-    std::cout << m_Shader->GetRenderID() << std::endl;
    
 
     
@@ -349,6 +364,9 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
 
         AdvancedCam.Update(m_DeltaTime, (float)Width/Height, m_FOV);
+        glm::mat4 Projection = AdvancedCam.GetProj();
+        glm::mat4 View = AdvancedCam.GetView();
+
 
 
       
@@ -387,9 +405,13 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         // Dynamic Vertex Buffer!!!!
         m_VertexBuffer->Bind();
+        //Object.BindVertexBuffer();
         GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, Object.GetVerticiesCount() * sizeof(Vertex), Object.GetVerticies().data()));
-        
+
+        Object.BindBufferData(); 
+
         m_IBO->Bind();
+        //Object.BindIndexBuffer();
         GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, Object.GetIndicCount(), Object.GetIndices().data()));
         
         // if the offset is not correct it wont draw, will messup a draw
@@ -406,14 +428,25 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         //GLCall(glUseProgram(m_Shader->GetRenderID()));
 
         // Keesp the world drawn modle at its origin
-        glm::mat4 modle = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,0));
-        glm::mat4 mvp = AdvancedCam.GetProj() * AdvancedCam.GetView() * modle;
-
+        
+        glm::mat4 modle = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,-1.0f));
+        glm::mat4 mvp = Projection * View * modle;
+        m_Shader->SetUniformMat4f("u_MVP", mvp); 
+        m_Shader->SetUniform4f("u_Color", 0.0f, 0.0f, 0.0f, 0.0f);
         //auto loc = m_Shader->GetUniformLocation("u_MVP");
         //GLCall(glUniformMatrix4fv(loc, 1, GL_FALSE, &mvp[0][0]));
 
+        renderer.Draw(*m_VAO, *m_IBO, *m_Shader);
+
+        // Evrything else still needed for a seperate draw call
+
+        modle = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,0));
+        mvp = Projection * View * modle;
+
+        Object.SetPosition(mvp);
+
         //m_Shader->SetUniformMat4f("u_MVP", mvp);
-        m_Shader->SetUniformMat4f("u_MVP", mvp); 
+        //m_Shader->SetUniformMat4f("u_MVP", mvp); 
 
         if(m_Effect){
             GLCall(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
@@ -421,7 +454,23 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         }
 
         
-        renderer.Draw(*m_VAO, *m_IBO, *m_Shader);
+        Object.Paint();
+
+
+        modle = glm::translate(glm::mat4(1.0f), glm::vec3(1,0,0));
+        mvp = Projection * View * modle;
+
+        Object.SetPosition(mvp);
+        Object.Paint();
+
+        //
+
+        modle = glm::translate(glm::mat4(1.0f), glm::vec3(-1,0,0));
+        mvp = Projection * View * modle;
+
+        Object.SetPosition(mvp);
+        Object.Paint();
+        
 
 
         

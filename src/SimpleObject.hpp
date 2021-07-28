@@ -1,6 +1,7 @@
 #pragma once
 //#include "VertexBuffer.hpp"
 //#include "VertexBufferLayout.hpp"
+#include "Texture.hpp"
 #include "Engine.hpp"
 
 
@@ -36,23 +37,16 @@ class SimpleObject{
 
         int m_MaxQuads, m_UsedQuads;
 
-        //VertexBuffer m_VertexBuffer(nullptr, sizeof(Vertex) * 4);
-        //VertexArray m_VAO();
-
-        std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<VertexArray> m_VAO;
-        std::unique_ptr<Shader> m_Shader;
-        std::unique_ptr<IndexBuffer> m_IBO;
-        
+
+        //Astd::unique_ptr<Texture> m_Texture;
         //Texture m_Texture;
 
-        //VertexBuffer *m_VertexBuffer;
-        //VertexArray *m_VAO;
-        //Shader *m_Shader;
-        //IndexBuffer *m_IBO;
-        
-        //std::unique_ptr<Texture> m_Texture;
-        
+        std::unique_ptr<VertexBuffer> m_VertexBuffer;
+        std::unique_ptr<Shader> m_Shader;
+        std::unique_ptr<IndexBuffer> m_IBO;
+
+
 
 
 
@@ -63,12 +57,13 @@ class SimpleObject{
         SimpleObject(int MaxQuads = 10000);
         ~SimpleObject();
 
+        void Setup();
+
         // This will be used my the shader to place the "object" in the world
         glm::vec3 m_Pos;
 
 
         // Each object can store a texture, and each object will be able to bind a texture 
-        GLuint m_Texture;
         // Depending how a quad is set 1 object can use Textures of other objects
 
         // This function needs to be rewriten to not take "target" from the user
@@ -106,6 +101,24 @@ class SimpleObject{
         inline int GetIndicCount() {return (m_UsedQuads*4)*6;}; const
         inline int GetMaxQuadCound() {return m_MaxQuadCount;}
         inline int GetUsedQuads() {return m_UsedQuads;}
+
+        void SetShader(const std::string &filePath);
+
+        void SetPosition(glm::mat4 MVP);
+
+
+
+        void AddTexture(const std::string &filePath, unsigned int slot = 0);
+
+        void BindBufferData();
+
+        void BindVertexBuffer();
+        void BindIndexBuffer();
+
+
+        //inline std::unique_ptr<VertexArray> GetVertexArray() {return m_VAO;}
+        //inline std::unique_ptr<IndexBuffer> GetIndexObject() {return m_IBO;}
+        //inline std::unique_ptr<Shader> GetShader() {return m_Shader;}
 
 
 };

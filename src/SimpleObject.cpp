@@ -5,13 +5,45 @@ SimpleObject::SimpleObject(int MaxQuads){
         m_VerticiesMax = MaxQuads * 4;
         m_IndicOffset = 0;
 
-        //m_VertexBuffer.MakeBuffer(nullptr, sizeof(Vertex) * m_IndicMax);
- 
+
+      
+
+        //std::cout << "really.. " << std::endl;
+       
+       
+
+
+
+       
+          
 
 }
 
 SimpleObject::~SimpleObject(){
 
+}
+
+void SimpleObject::Setup(){
+        //
+        m_VAO = std::make_unique<VertexArray>();
+        m_VertexBuffer = std::make_unique<VertexBuffer>();
+        m_Shader = std::make_unique<Shader>();
+        m_IBO = std::make_unique<IndexBuffer>();
+        //m_Texture = std::make_unique<Texture>();
+
+        std::cout << m_MaxQuadCount << std::endl;
+
+        m_IBO->MakeBuffer(NULL, (m_MaxQuadCount*4)*6 );
+        m_VertexBuffer->MakeBuffer(NULL, sizeof(Vertex) * (m_MaxQuadCount*4));
+        m_Shader->SetShader("assets/Shaders/MultiImg.shader");
+
+        VertexBufferLayout layout;
+        // This defines the layout 
+        layout.Push(3,"float");
+        layout.Push(2,"float");
+        layout.Push(1,"float");
+        //layout.Push(1,"float");
+        m_VAO->AddBuffer(*m_VertexBuffer,layout); 
 }
 
 void SimpleObject::Create2dQuad(float X, float Y, float Z, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID){
@@ -42,6 +74,8 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float sizeX, float si
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
+
+        std::cout << "Texture ID " << TextureID << std::endl;
         
 
 
@@ -66,4 +100,53 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float sizeX, float si
 
         //m_IndicCount += 6;
 
+}
+
+
+void SimpleObject::Paint(){
+        Renderer renderer;
+
+        renderer.Draw(*m_VAO, *m_IBO, *m_Shader);
+}
+
+
+void SimpleObject::SetShader(const std::string &filePath){
+        m_Shader->SetShader(filePath);
+        
+        // this is just for testing
+        int samplers[] = {0, 1, 2};
+        //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
+        //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
+        //m_Shader->SetUniform1i("u_Texture", 0);
+}
+
+
+void SimpleObject::SetPosition(glm::mat4 MVP){
+        m_Shader->SetUniformMat4f("u_MVP", MVP); 
+        m_Shader->SetUniform4f("u_Color", 0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+
+
+void SimpleObject::AddTexture(const std::string &filePath, unsigned int slot){
+        //m_Texture.LoadTexture(filePath, slot);
+
+        //m_Texture.Bind(slot);
+}
+
+
+void SimpleObject::BindBufferData(){ 
+        m_VertexBuffer->Bind();
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (m_UsedQuads*4) * sizeof(Vertex), m_Verticies.data());
+
+        m_IBO->Bind();
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, (m_UsedQuads*4)*6, m_Indices.data());
+}
+
+void SimpleObject::BindVertexBuffer(){
+        m_VertexBuffer->Bind();
+}
+
+void SimpleObject::BindIndexBuffer(){
+        m_IBO->Bind();
 }

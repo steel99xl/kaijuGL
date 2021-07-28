@@ -3,10 +3,11 @@
 SimpleObject::SimpleObject(int MaxQuads){
         m_MaxQuadCount = MaxQuads;
         m_VerticiesMax = MaxQuads * 4;
-        m_IndicCount = MaxQuads*6;
         m_IndicOffset = 0;
 
         //m_VertexBuffer.MakeBuffer(nullptr, sizeof(Vertex) * m_IndicMax);
+ 
+
 }
 
 SimpleObject::~SimpleObject(){
@@ -43,7 +44,6 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float sizeX, float si
         m_Verticies.push_back(Temp);
         
 
-        m_VerticiesCount += 4;
 
 
 

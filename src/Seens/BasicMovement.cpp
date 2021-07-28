@@ -55,9 +55,9 @@ void TestWorld::Setup(){
        //int QuadCount = 1000; 
 
 
-        for(int y  = 0; y < 100; y+= 1){
+        for(int y  = 0; y < 10; y+= 1){
             
-            for(int x = 0; x < 100; x+= 1)
+            for(int x = 0; x < 10; x+= 1)
             {
                 //buffer = CreateQuad(buffer, (float)x*1.0f, (float)y*1.0f , 1.0f, 1.0f, (float)((x+y)%2));
                Object.Create2dQuad((float) x*2.0f,(float)y*2.0f,0.0f,  1.0f, 1.0f, 0.0f,0.0f, 1.0f, 1.0f, (float)((x+y)%2));
@@ -65,7 +65,7 @@ void TestWorld::Setup(){
             
         }
 
-    Object.Create2dQuad(2.0f,1.0f,0.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
+    Object.Create2dQuad(0.0f,0.0f,1.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
 
    // Object.Create2dQuad(1.0f,3.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
    // Object.Create2dQuad(1.0f,1.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
@@ -76,12 +76,12 @@ void TestWorld::Setup(){
 
         //Take info and put it in a vertex
 
-    std::cout << Object.GetVerticiesCount() << std::endl;
 
 
-    m_IBO->MakeBuffer(Object.GetIndices().data(), Object.GetIndicCount());
+    //m_IBO->MakeBuffer(Object.GetIndices().data(), Object.GetIndicCount() );
+    m_IBO->MakeBuffer(NULL, Object.GetIndicCount() );
+    std::cout << "Index information " << std::endl; 
     m_IBO->Bind();
-    std::cout << m_IBO->GetCount() << std::endl;
     std::cout << "set index buffer" << std::endl;
     
     m_Shader->SetShader("assets/Shaders/MultiImg.shader");
@@ -114,7 +114,8 @@ void TestWorld::Setup(){
     
     // This sets the max amout of things in the vertex buffer
     //m_VertexBuffer = std::make_unique<VertexBuffer>(nullptr, sizeof(Vertex) * 100);
-    m_VertexBuffer->MakeBuffer(Object.GetVerticies().data(), sizeof(Vertex) * Object.GetVerticiesCount());
+
+    m_VertexBuffer->MakeBuffer(NULL, sizeof(Vertex) * Object.GetVerticiesCount());
 
 
 
@@ -385,11 +386,11 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         //memcpy(poss + q0.size(), q1.data(), q1.size() * sizeof(Vertex2D));
 
         // Dynamic Vertex Buffer!!!!
-        //m_VertexBuffer->Bind();
-        //GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, Object.GetVerticiesCount() * sizeof(Vertex), Object.GetVerticies().data()));
+        m_VertexBuffer->Bind();
+        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, Object.GetVerticiesCount() * sizeof(Vertex), Object.GetVerticies().data()));
         
-        //m_IBO->Bind();
-        //GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, Object.GetIndicCount() * sizeof(unsigned int), Object.GetIndices().data()));
+        m_IBO->Bind();
+        GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, Object.GetIndicCount(), Object.GetIndices().data()));
         
         // if the offset is not correct it wont draw, will messup a draw
         

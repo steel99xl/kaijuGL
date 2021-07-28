@@ -16,7 +16,7 @@ void IndexBuffer::MakeBuffer(const unsigned int *data, unsigned int count){
 
 		GLCall(glGenBuffers(1, &m_RenderID));
 		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RenderID));
-		GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count , data, GL_STATIC_DRAW));
+		GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count , data, GL_DYNAMIC_DRAW));
 
 }
 

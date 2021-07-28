@@ -28,10 +28,10 @@ class SimpleObject{
 
         // Vectors a used so seach instance of an SimpleObject can have (m_MaxQuads * 4) verticies and (m_MaxQuads * 6) 
         std::vector<Vertex> m_Verticies;
-        unsigned int m_VerticiesMax, m_VerticiesCount;
+        unsigned int m_VerticiesMax;
 
         std::vector<unsigned int> m_Indices;
-        unsigned int m_IndicMax, m_IndicCount;
+        unsigned int m_IndicMax;
         unsigned int m_IndicOffset;
 
         int m_MaxQuads, m_UsedQuads;
@@ -43,6 +43,8 @@ class SimpleObject{
         std::unique_ptr<VertexArray> m_VAO;
         std::unique_ptr<Shader> m_Shader;
         std::unique_ptr<IndexBuffer> m_IBO;
+        
+        //Texture m_Texture;
 
         //VertexBuffer *m_VertexBuffer;
         //VertexArray *m_VAO;
@@ -92,15 +94,16 @@ class SimpleObject{
 
         // Draw object
         // It is called paint for right now cause Renderer has a .Draw function
+        // if all things drawn only read data, then the drawing could me moved to a seperate thread
         void Paint();
 
 
 
 
         inline std::vector<Vertex> GetVerticies(){ return m_Verticies;}
-        inline unsigned int GetVerticiesCount() {return m_VerticiesCount;}
+        inline int GetVerticiesCount() {return m_UsedQuads*4;} const
         inline std::vector<unsigned int> GetIndices(){return m_Indices;}
-        inline unsigned int GetIndicCount() {return m_IndicCount;};
+        inline int GetIndicCount() {return (m_UsedQuads*4)*6;}; const
         inline int GetMaxQuadCound() {return m_MaxQuadCount;}
         inline int GetUsedQuads() {return m_UsedQuads;}
 

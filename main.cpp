@@ -179,9 +179,10 @@ int main(void){
     glfwSetKeyCallback(window, KeyCallBack);
     glfwSetCursorPosCallback(window, MousePosCallBack);
     glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-
-
-   GLCall(glEnable(GL_DEPTH_TEST));
+    
+    //Temp Fixes/Places
+    glEnable(GL_CULL_FACE);
+    GLCall(glEnable(GL_DEPTH_TEST));
  
 
    

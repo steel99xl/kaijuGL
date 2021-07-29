@@ -75,14 +75,18 @@ void TestWorld::Setup(){
             
         }
 
+
+    // Yes the FaceDir matters based on where you want it to be visible
     Object.Create2dQuad(0.0f,0.0f,0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
+    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_DOWN ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
 
     Object.Create2dQuad(0.0f,0.0f,0.5f, F_NORTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
-    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_NORTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
+    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_SOUTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
 
     Object.Create2dQuad(0.0f,0.0f,0.5f, F_EAST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
-    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_EAST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
+    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_WEST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
+
+    Object.Create2dQuad(0.0f,0.0f,-5.0f, F_UP, 3.0f,3.0f, 0.0f,0.0f, 1.0f,1.0f, 2.0f);
 
 
    // Object.Create2dQuad(1.0f,3.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
@@ -470,7 +474,7 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         ImGui::Begin("Batch Render");   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
             ImGui::Text("This test draws multiple quads in one draw call");
             //ImGui::SliderFloat3("Relative Possiton", &m_pos.x , -600.0f, 600.0f);
-            ImGui::DragFloat("FOV", &m_FOV, 1.0f, 10.0f, 200.0f, "%.03f Camera FOV");
+            ImGui::DragFloat("FOV", &m_FOV, 1.0f, 10.0f, 150.0f, "%.03f Camera FOV");
             ImGui::ColorEdit3("Color", (float *)&m_Color);
             ImGui::Checkbox("Toggle live effect", &m_Effect);
             ImGui::End();

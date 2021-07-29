@@ -52,6 +52,35 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, FaceDir Direction, fl
 
         switch(Direction){
                 case F_UP:
+                        
+                        Temp.Pos = {(0.5f *sizeX) + X, Z, (-0.5f * sizeY) + Y};
+                        Temp.TexCord = {tX, tY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+        
+
+                        Temp.Pos = {(-0.5f*sizeX) + X, Z, (-0.5f * sizeY) + Y};
+                        Temp.TexCord = {TX, tY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+                        
+                        Temp.Pos = { (-0.5f * sizeX) + X, Z, (0.5f * sizeY)+ Y};
+                        Temp.TexCord = {TX, TY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+
+                        Temp.Pos = { (0.5f * sizeX) +X , Z, (0.5f * sizeY) + Y};
+                        Temp.TexCord = {tX, TY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+                        break;
                 case F_DOWN:
 
                         Temp.Pos = {(-0.5f*sizeX) + X, Z, (-0.5f * sizeY) + Y};
@@ -82,10 +111,8 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, FaceDir Direction, fl
 
                         break;
 
-                        break;
 
                 case F_NORTH:
-                case F_SOUTH:
 
                         Temp.Pos = {(-0.5f*sizeX) + X, (-0.5f * sizeY) + Y, Z};
                         Temp.TexCord = {tX, tY};
@@ -115,7 +142,65 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, FaceDir Direction, fl
 
                         break;
 
+                
+                case F_SOUTH:
+                        Temp.Pos = {(0.5f *sizeX) + X, (-0.5f * sizeY) + Y, Z};
+                        Temp.TexCord = {tX, tY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+        
+
+                        Temp.Pos = {(-0.5f*sizeX) + X, (-0.5f * sizeY) + Y, Z};
+                        Temp.TexCord = {TX, tY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+                        
+                        Temp.Pos = { (-0.5f * sizeX) + X, (0.5f * sizeY)+ Y, Z};
+                        Temp.TexCord = {TX, TY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+                        Temp.Pos = { (0.5f * sizeX) +X , (0.5f * sizeY) + Y, Z};
+                        Temp.TexCord = {tX, TY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+                        break;
+
+
                 case F_EAST:
+                        Temp.Pos = {Z , (-0.5f * sizeY) + Y, (0.5f *sizeX) + X};
+                        Temp.TexCord = {tX, tY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+        
+
+                        Temp.Pos = {Z, (-0.5f * sizeY) + Y, (-0.5f*sizeX) + X};
+                        Temp.TexCord = {TX, tY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+                        Temp.Pos = { Z, (0.5f * sizeY)+ Y, (-0.5f * sizeX) +X};
+                        Temp.TexCord = {TX, TY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+
+                        Temp.Pos = { Z , (0.5f * sizeY) + Y, (0.5f * sizeX) +X};
+                        Temp.TexCord = {tX, TY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+                        break;
                 case F_WEST:
 
                         Temp.Pos = {Z, (-0.5f * sizeY) + Y, (-0.5f*sizeX) + X};
@@ -143,8 +228,6 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, FaceDir Direction, fl
                         Temp.TexID = TextureID;
 
                         m_Verticies.push_back(Temp);
-
-                        break;
 
                         break;
         }

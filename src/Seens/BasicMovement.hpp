@@ -12,11 +12,11 @@ class TestWorld{
         glm::vec3 m_pos2D;
         float m_FOV;
 
+        ImVec4 m_Color;
+
         //float m_yaw, m_pitch, m_lastX, m_lastY;
 
         int m_Width, m_Height;
-
-        float m_QuadPos2[3] = {200.0f,210.0f,200.0f};
 
 
        // VertexArray m_TestVAO;

@@ -181,7 +181,8 @@ int main(void){
     glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
 
-    
+   GLCall(glEnable(GL_DEPTH_TEST));
+ 
 
    
 // Draw LOOP
@@ -228,6 +229,8 @@ int main(void){
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     }
 

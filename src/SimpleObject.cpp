@@ -46,34 +46,110 @@ void SimpleObject::Setup(){
         m_VAO->AddBuffer(*m_VertexBuffer,layout); 
 }
 
-void SimpleObject::Create2dQuad(float X, float Y, float Z, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID){
+void SimpleObject::Create2dQuad(float X, float Y, float Z, FaceDir Direction, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID){
 
         Vertex Temp;
-        Temp.Pos = {(-0.5f*sizeX) + X, (-0.5f * sizeY) + Y, Z};
-        Temp.TexCord = {tX, tY};
-        Temp.TexID = TextureID;
 
-        m_Verticies.push_back(Temp);
+        switch(Direction){
+                case F_UP:
+                case F_DOWN:
+
+                        Temp.Pos = {(-0.5f*sizeX) + X, Z, (-0.5f * sizeY) + Y};
+                        Temp.TexCord = {tX, tY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
         
 
-        Temp.Pos = {(0.5f *sizeX) + X, (-0.5f * sizeY) + Y, Z};
-        Temp.TexCord = {TX, tY};
-        Temp.TexID = TextureID;
+                        Temp.Pos = {(0.5f *sizeX) + X, Z, (-0.5f * sizeY) + Y};
+                        Temp.TexCord = {TX, tY};
+                        Temp.TexID = TextureID;
 
-        m_Verticies.push_back(Temp);
+                        m_Verticies.push_back(Temp);
 
-        Temp.Pos = { (0.5f * sizeX) +X , (0.5f * sizeY) + Y, Z};
-        Temp.TexCord = {TX, TY};
-        Temp.TexID = TextureID;
+                        Temp.Pos = { (0.5f * sizeX) +X , Z, (0.5f * sizeY) + Y};
+                        Temp.TexCord = {TX, TY};
+                        Temp.TexID = TextureID;
 
-        m_Verticies.push_back(Temp);
+                        m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = { (-0.5f * sizeX) + X, (0.5f * sizeY)+ Y, Z};
-        Temp.TexCord = {tX, TY};
-        Temp.TexID = TextureID;
+                        Temp.Pos = { (-0.5f * sizeX) + X, Z, (0.5f * sizeY)+ Y};
+                        Temp.TexCord = {tX, TY};
+                        Temp.TexID = TextureID;
 
-        m_Verticies.push_back(Temp);
+                        m_Verticies.push_back(Temp);
+
+                        break;
+
+                        break;
+
+                case F_NORTH:
+                case F_SOUTH:
+
+                        Temp.Pos = {(-0.5f*sizeX) + X, (-0.5f * sizeY) + Y, Z};
+                        Temp.TexCord = {tX, tY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+        
+
+                        Temp.Pos = {(0.5f *sizeX) + X, (-0.5f * sizeY) + Y, Z};
+                        Temp.TexCord = {TX, tY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+                        Temp.Pos = { (0.5f * sizeX) +X , (0.5f * sizeY) + Y, Z};
+                        Temp.TexCord = {TX, TY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+
+                        Temp.Pos = { (-0.5f * sizeX) + X, (0.5f * sizeY)+ Y, Z};
+                        Temp.TexCord = {tX, TY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+                        break;
+
+                case F_EAST:
+                case F_WEST:
+
+                        Temp.Pos = {Z, (-0.5f * sizeY) + Y, (-0.5f*sizeX) + X};
+                        Temp.TexCord = {tX, tY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+        
+
+                        Temp.Pos = {Z , (-0.5f * sizeY) + Y, (0.5f *sizeX) + X};
+                        Temp.TexCord = {TX, tY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+                        Temp.Pos = { Z , (0.5f * sizeY) + Y, (0.5f * sizeX) +X};
+                        Temp.TexCord = {TX, TY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+
+                        Temp.Pos = { Z, (0.5f * sizeY)+ Y, (-0.5f * sizeX) +X};
+                        Temp.TexCord = {tX, TY};
+                        Temp.TexID = TextureID;
+
+                        m_Verticies.push_back(Temp);
+
+                        break;
+
+                        break;
+        }
+
+        
 
         std::cout << "Texture ID " << TextureID << std::endl;
         
@@ -114,16 +190,26 @@ void SimpleObject::SetShader(const std::string &filePath){
         m_Shader->SetShader(filePath);
         
         // this is just for testing
-        int samplers[] = {0, 1, 2};
+        //int samplers[] = {0, 1, 2};
+        int samplers[] = {0};
         //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
         //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
         //m_Shader->SetUniform1i("u_Texture", 0);
+        m_Shader->SetUniform1i("u_Texture0", 1);
+        //                      u_Texture0
+        m_Shader->SetUniform1i("u_Texture1", 1);
+        m_Shader->SetUniform1i("u_Texture2", 2);
+
+
 }
 
 
 void SimpleObject::SetPosition(glm::mat4 MVP){
         m_Shader->SetUniformMat4f("u_MVP", MVP); 
-        m_Shader->SetUniform4f("u_Color", 0.0f, 0.0f, 0.0f, 1.0f);
+}        
+
+void SimpleObject::SetColor(float r, float g, float b, float a){
+        m_Shader->SetUniform4f("u_Color", r, g, b, a);
 }
 
 

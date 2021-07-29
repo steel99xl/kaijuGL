@@ -26,12 +26,16 @@ TestWorld::~TestWorld(){
 
 void TestWorld::Setup(){
 
+    std::cout << "Press the K key to uninvert the camera" << std::endl;
+
    
     m_VAO = std::make_unique<VertexArray>();
     m_Shader = std::make_unique<Shader>();
     m_IBO = std::make_unique<IndexBuffer>();
     m_Texture = std::make_unique<Texture>();
     m_VertexBuffer = std::make_unique<VertexBuffer>();
+
+    
     
 
 
@@ -71,8 +75,15 @@ void TestWorld::Setup(){
             
         }
 
-    Object.Create2dQuad(0.0f,0.0f,0.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-    Object.Create2dQuad(0.0f,1.0f,0.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
+    Object.Create2dQuad(0.0f,0.0f,0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
+    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
+
+    Object.Create2dQuad(0.0f,0.0f,0.5f, F_NORTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
+    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_NORTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
+
+    Object.Create2dQuad(0.0f,0.0f,0.5f, F_EAST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
+    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_EAST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
+
 
    // Object.Create2dQuad(1.0f,3.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
    // Object.Create2dQuad(1.0f,1.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
@@ -92,8 +103,8 @@ void TestWorld::Setup(){
     std::cout << "set index buffer" << std::endl;
 
     Object.SetShader("assets/Shaders/MultiImg.shader"); 
-    m_Shader->SetShader("assets/Shaders/MultiImg.shader");
-    m_Shader->Bind();
+    //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
+    //m_Shader->Bind();
 
     std::cout << "Shader set" << std::endl;
 
@@ -101,10 +112,9 @@ void TestWorld::Setup(){
     int samplers[3] = {0 ,1,2};
         //GLsizei size = 2;
         //GLCall(glUniform1iv(loc, size, samplers));
-    m_Shader->SetUniform1iv("u_Textures", 3, samplers);
+    ///m_Shader->SetUniform1iv("u_Textures", 3, samplers);
     //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
     
-    std::cout << "Set Shader" << std::endl;
     //m_Texture = std::make_unique<Texture>("assets/Textures/Box.png");
 
 
@@ -369,50 +379,17 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
 
 
-      
-
-        //Keeping track of used verticies seperatly allows the buffer to be bigger than needed and not cause rendering errors
-
-
-
-        
-
-        //std::cout << vertices.size() << std::endl;
-
-        //vertices.data() = buffer;
-
-
-
-        
-        //buffer = CreateQuad(buffer, 0.0f,0.0f, 200.0f, 0.0f);
-        //buffer = CreateQuad(buffer, m_QuadPos2[0], m_QuadPos2[1], m_QuadPos2[2],m_QuadPos2[2], 2.0f);
-        //Object.Create2dQuad(m_QuadPos2[0],m_QuadPos2[1],m_QuadPos2[2],  10.0f, 10.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
-
-        //buffer = CreateQuad(buffer, 200.0f, 200.0f, 150.0f, 175.0f, 1.0f);
-        //VertexCount += 4;
-
-        //std::cout << vertices.data() << std::endl;
-
-        //buffer = CreateQuad(buffer, 0.0f,201.0f, 20.0f, 1.0f);
-        //buffer = CreateQuad(buffer, 0.0f,221.0f, 20.0f, 0.0f);
-        //buffer = CreateQuad(buffer, 0.0f,241.0f, 20.0f, 1.0f);
-        //buffer = CreateQuad(buffer, 0.0f,261.0f, 20.0f, 0.0f);
-
-
-        ///Vertex2D poss[8];
-        //memcpy(poss, q0.data(), q0.size() * sizeof(Vertex2D));
-        //memcpy(poss + q0.size(), q1.data(), q1.size() * sizeof(Vertex2D));
 
         // Dynamic Vertex Buffer!!!!
-        m_VertexBuffer->Bind();
+        //m_VertexBuffer->Bind();
         //Object.BindVertexBuffer();
-        GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, Object.GetVerticiesCount() * sizeof(Vertex), Object.GetVerticies().data()));
+        //GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, Object.GetVerticiesCount() * sizeof(Vertex), Object.GetVerticies().data()));
 
         Object.BindBufferData(); 
 
-        m_IBO->Bind();
+       //m_IBO->Bind();
         //Object.BindIndexBuffer();
-        GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, Object.GetIndicCount(), Object.GetIndices().data()));
+        //GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, Object.GetIndicCount(), Object.GetIndices().data()));
         
         // if the offset is not correct it wont draw, will messup a draw
         
@@ -420,8 +397,7 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         //GLCall(glBufferSubData(GL_ARRAY_BUFFER, VertexCount * sizeof(Vertex), 8 * sizeof(Vertex), vertAlt.data()));
 
-        Renderer renderer;
-
+        //Renderer renderer;
 
 
         //m_Shader->Bind();
@@ -429,21 +405,22 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         // Keesp the world drawn modle at its origin
         
-        glm::mat4 modle = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,-1.0f));
+        glm::mat4 modle = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,0));
         glm::mat4 mvp = Projection * View * modle;
-        m_Shader->SetUniformMat4f("u_MVP", mvp); 
-        m_Shader->SetUniform4f("u_Color", 0.0f, 0.0f, 0.0f, 0.0f);
+        //m_Shader->SetUniformMat4f("u_MVP", mvp); 
+        //m_Shader->SetUniform4f("u_Color", 0.0f, 0.0f, 0.0f, 0.0f);
         //auto loc = m_Shader->GetUniformLocation("u_MVP");
         //GLCall(glUniformMatrix4fv(loc, 1, GL_FALSE, &mvp[0][0]));
 
-        renderer.Draw(*m_VAO, *m_IBO, *m_Shader);
+        //renderer.Draw(*m_VAO, *m_IBO, *m_Shader);
 
         // Evrything else still needed for a seperate draw call
 
-        modle = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,0));
+        modle = glm::translate(glm::mat4(1.0f), glm::vec3(0,1,0));
         mvp = Projection * View * modle;
 
         Object.SetPosition(mvp);
+        Object.SetColor(m_Color.x, m_Color.y, m_Color.z, m_Color.w);
 
         //m_Shader->SetUniformMat4f("u_MVP", mvp);
         //m_Shader->SetUniformMat4f("u_MVP", mvp); 
@@ -457,7 +434,7 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         Object.Paint();
 
 
-        modle = glm::translate(glm::mat4(1.0f), glm::vec3(1,0,0));
+        modle = glm::translate(glm::mat4(1.0f), glm::vec3(2,0,0));
         mvp = Projection * View * modle;
 
         Object.SetPosition(mvp);
@@ -465,11 +442,16 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         //
 
-        modle = glm::translate(glm::mat4(1.0f), glm::vec3(-1,0,0));
+        modle = glm::translate(glm::mat4(1.0f), glm::vec3(-2,0,0));
         mvp = Projection * View * modle;
 
         Object.SetPosition(mvp);
         Object.Paint();
+
+
+
+
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
 
 
@@ -489,7 +471,7 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
             ImGui::Text("This test draws multiple quads in one draw call");
             //ImGui::SliderFloat3("Relative Possiton", &m_pos.x , -600.0f, 600.0f);
             ImGui::DragFloat("FOV", &m_FOV, 1.0f, 10.0f, 200.0f, "%.03f Camera FOV");
-            ImGui::DragFloat3("Second square poss and size", m_QuadPos2, 1.0f);
+            ImGui::ColorEdit3("Color", (float *)&m_Color);
             ImGui::Checkbox("Toggle live effect", &m_Effect);
             ImGui::End();
 

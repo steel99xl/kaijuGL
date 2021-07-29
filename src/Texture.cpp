@@ -55,8 +55,6 @@ void Texture::LoadTexture(const std::string &filePath, unsigned int slot){
     //std::cout << TempTexture << std::endl;
     m_CurrentTexture[slot] = TempTexture;
 
-    std::cout << slot << std::endl;
-
 
     GLCall(glActiveTexture(GL_TEXTURE0 + slot));
 

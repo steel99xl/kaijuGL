@@ -22,6 +22,8 @@ struct Vertex{
                 float TexID;
 };
 
+enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH};
+
 
 class SimpleObject{
     private:
@@ -68,7 +70,7 @@ class SimpleObject{
 
         // This function needs to be rewriten to not take "target" from the user
         // Should append to the indexbuffer
-        void Create2dQuad(float X, float Y,float Z, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
+        void Create2dQuad(float X,float Y,float Z, FaceDir Direction, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
 
         
 
@@ -105,6 +107,8 @@ class SimpleObject{
         void SetShader(const std::string &filePath);
 
         void SetPosition(glm::mat4 MVP);
+
+        void SetColor(float r, float g, float b, float a);
 
 
 

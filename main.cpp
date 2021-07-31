@@ -54,10 +54,11 @@ void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
 
 }
 
+
+
 int main(void){
     float deltaTime, lastFrame = 0.0f;
 
-    
     
     int width = 720;
     int height = 480;
@@ -196,6 +197,9 @@ int main(void){
 
         glfwPollEvents();
         glfwGetWindowSize(window, &width, &height);
+    
+        // Dont use on mac
+       //glViewport(0,0, width*2, height*2);
        
         /* Render here */
         renderer.Clear();

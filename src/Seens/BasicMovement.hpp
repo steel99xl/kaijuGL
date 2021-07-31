@@ -12,7 +12,7 @@ class TestWorld{
         glm::vec3 m_pos2D;
         float m_FOV;
 
-        ImVec4 m_Color;
+        ImVec4 m_Color, m_Color2, m_Color3;
 
         //float m_yaw, m_pitch, m_lastX, m_lastY;
 
@@ -31,6 +31,7 @@ class TestWorld{
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
 
         SimpleObject Object;
+        SimpleObject Land;
 
         // Literaly just to show that you can set your own size
 

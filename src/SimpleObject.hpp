@@ -22,7 +22,7 @@ struct Vertex{
                 float TexID;
 };
 
-enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH};
+enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
 
 
 class SimpleObject{
@@ -49,6 +49,12 @@ class SimpleObject{
         std::unique_ptr<IndexBuffer> m_IBO;
 
 
+        glm::vec3 Rotatex(glm::vec3 Start, float Angle);
+        glm::vec3 Rotatey(glm::vec3 Start, float Angle);
+        glm::vec3 Rotatez(glm::vec3 Start, float Angle);
+        
+
+
 
 
 
@@ -71,6 +77,8 @@ class SimpleObject{
         // This function needs to be rewriten to not take "target" from the user
         // Should append to the indexbuffer
         void Create2dQuad(float X,float Y,float Z, FaceDir Direction, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
+
+        void CreateCube(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float SizeX, float SizeY, float SizeZ, float tX, float tY, float TX, float TY, float TexuteID);
 
         
 

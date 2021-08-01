@@ -76,7 +76,7 @@ class SimpleObject{
 
         // This function needs to be rewriten to not take "target" from the user
         // Should append to the indexbuffer
-        void Create2dQuad(float X,float Y,float Z, FaceDir Direction, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
+        void Create2dQuad(float X,float Y,float Z, float AngleX, float AngleY, float AngleZ, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
 
         void CreateCube(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float SizeX, float SizeY, float SizeZ, float tX, float tY, float TX, float TY, float TexuteID);
 

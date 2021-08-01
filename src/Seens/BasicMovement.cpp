@@ -47,50 +47,25 @@ void TestWorld::Setup(){
     Land.Setup();
 
 
-    //const unsigned int MaxQuadCount = 100000;
-    //const unsigned int MaxVertexCount = MaxQuadCount * 4;
-    //const unsigned int MaxIndexCount = MaxQuadCount * 6;
-
-      
-    //unsigned int indices[MaxIndexCount];
-   
-
-
-
-
-    //Object.Create2dQuad(200.0f,200.0f,0.0f, 150.0f, 150.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-    //Object.Create2dQuad(10.0f,10.0f,0.0f, 120.0f, 130.0f, 0.0f,0.0f , 1.0f, 1.0f, 1.0f);
-        //test = CreateQuad(test, 200.0f, 200.0f, 10.0f, 10.0f, 1.0f);
-
-    
-       //int QuadCount = 1000; 
-
-
-       // for(int y  = 0; y < 10; y+= 1){
-            
-        //    for(int x = 0; x < 10; x+= 1)
-        //    {
-                //buffer = CreateQuad(buffer, (float)x*1.0f, (float)y*1.0f , 1.0f, 1.0f, (float)((x+y)%2));
-               //Object.Create2dQuad((float) x*2.0f,(float)y*2.0f,0.0f,  1.0f, 1.0f, 0.0f,0.0f, 1.0f, 1.0f, (float)((x+y)%2));
-        //    }
-       //     
-      //  }
 
     // This add 1 quad to the land object
-    Land.CreateCube(0.0f,0.0f,0.0f, 45.0f,0.0f,45.0f, 1.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-    //Land.Create2dQuad(0.0f,0.0f,0.0f, F_NONE, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+    //Land.CreateCube(0.0f,0.0f,0.0f, 45.0f,0.0f,45.0f, 1.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+   // Land.Create2dQuad(0.0f,0.0f,0.0f, F_NONE, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
     //Land.Create2dQuad(0.0f,10.0f,-10.0f, F_NORTH, 20.0f,20.0f, 0.0f,0.0f, 0.0f, 0.0f, 0.0f);
 
+    Land.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,30.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f,1.0f, 1.0f);
 
+
+    Object.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 0.0f,0.0f,1.0f,1.0f, 1.0f);
     // Yes the FaceDir matters based on where you want it to be visible
-    Object.Create2dQuad(0.0f,0.0f,0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_DOWN ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
+    //Object.Create2dQuad(0.0f,0.0f,0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
+    //Object.Create2dQuad(0.0f,0.0f,-0.5f, F_DOWN ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
 
-    Object.Create2dQuad(0.0f,0.0f,0.5f, F_NORTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
-    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_SOUTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
+    //Object.Create2dQuad(0.0f,0.0f,0.5f, F_NORTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
+    //Object.Create2dQuad(0.0f,0.0f,-0.5f, F_SOUTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
 
-    Object.Create2dQuad(0.0f,0.0f,0.5f, F_EAST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
-    Object.Create2dQuad(0.0f,0.0f,-0.5f, F_WEST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
+    //Object.Create2dQuad(0.0f,0.0f,0.5f, F_EAST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
+    //Object.Create2dQuad(0.0f,0.0f,-0.5f, F_WEST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
     // If i want to be able to rotate the squares it the cube face would have to be like this
     //North Face(positive X from origin) Object.Create2dQuad(0.5f, 0.5f, 0.0f, )
 
@@ -118,7 +93,7 @@ void TestWorld::Setup(){
     //std::cout << "set index buffer" << std::endl;
 
     Object.SetShader("assets/Shaders/MultiImg.shader"); 
-    Land.SetShader("assets/Shaders/MultiImg.shader");
+    Land.SetShader("assets/Shaders/ColorImg.shader");
     //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
     //m_Shader->Bind();
 

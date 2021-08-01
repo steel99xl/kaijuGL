@@ -9,6 +9,8 @@ out vec2 v_TexCord;
 out float v_TexIndex;
 uniform mat4 u_MVP;
 
+
+
 void main(){
 gl_Position = u_MVP * position;
 v_TexCord  = texCord;

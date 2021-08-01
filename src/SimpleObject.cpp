@@ -86,199 +86,15 @@ glm::vec3 SimpleObject::Rotatez(glm::vec3 Start, float Angle){
     return Buffer;
 }
 
-void SimpleObject::Create2dQuad(float X, float Y, float Z, FaceDir Direction, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID){
+void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID){
 
         Vertex Temp;
 
-        switch(Direction){
-                case F_UP:
-                        
-                        Temp.Pos = {(0.5f *sizeX) + X, Z, (-0.5f * sizeY) + Y};
-                        Temp.TexCord = {tX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-        
-
-                        Temp.Pos = {(-0.5f*sizeX) + X, Z, (-0.5f * sizeY) + Y};
-                        Temp.TexCord = {TX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        
-                        Temp.Pos = { (-0.5f * sizeX) + X, Z, (0.5f * sizeY)+ Y};
-                        Temp.TexCord = {TX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-
-                        Temp.Pos = { (0.5f * sizeX) +X , Z, (0.5f * sizeY) + Y};
-                        Temp.TexCord = {tX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        break;
-
-                case F_DOWN:
-
-                        Temp.Pos = {(-0.5f*sizeX) + X, Z, (-0.5f * sizeY) + Y};
-                        Temp.TexCord = {tX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-        
-
-                        Temp.Pos = {(0.5f *sizeX) + X, Z, (-0.5f * sizeY) + Y};
-                        Temp.TexCord = {TX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        Temp.Pos = { (0.5f * sizeX) +X , Z, (0.5f * sizeY) + Y};
-                        Temp.TexCord = {TX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-
-                        Temp.Pos = { (-0.5f * sizeX) + X, Z, (0.5f * sizeY)+ Y};
-                        Temp.TexCord = {tX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        break;
-
-
-                case F_NORTH:
-
-                        Temp.Pos = {(-0.5f*sizeX) + X, (-0.5f * sizeY) + Y, Z};
-                        Temp.TexCord = {tX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-        
-
-                        Temp.Pos = {(0.5f *sizeX) + X, (-0.5f * sizeY) + Y, Z};
-                        Temp.TexCord = {TX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        Temp.Pos = { (0.5f * sizeX) +X , (0.5f * sizeY) + Y, Z};
-                        Temp.TexCord = {TX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-
-                        Temp.Pos = { (-0.5f * sizeX) + X, (0.5f * sizeY)+ Y, Z};
-                        Temp.TexCord = {tX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        break;
-
-                
-                case F_SOUTH:
-                        Temp.Pos = {(0.5f *sizeX) + X, (-0.5f * sizeY) + Y, Z};
-                        Temp.TexCord = {tX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-        
-
-                        Temp.Pos = {(-0.5f*sizeX) + X, (-0.5f * sizeY) + Y, Z};
-                        Temp.TexCord = {TX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        
-                        Temp.Pos = { (-0.5f * sizeX) + X, (0.5f * sizeY)+ Y, Z};
-                        Temp.TexCord = {TX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        Temp.Pos = { (0.5f * sizeX) +X , (0.5f * sizeY) + Y, Z};
-                        Temp.TexCord = {tX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        break;
-
-
-                case F_EAST:
-                        Temp.Pos = {Z , (-0.5f * sizeY) + Y, (0.5f *sizeX) + X};
-                        Temp.TexCord = {tX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-        
-
-                        Temp.Pos = {Z, (-0.5f * sizeY) + Y, (-0.5f*sizeX) + X};
-                        Temp.TexCord = {TX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        Temp.Pos = { Z, (0.5f * sizeY)+ Y, (-0.5f * sizeX) +X};
-                        Temp.TexCord = {TX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-
-                        Temp.Pos = { Z , (0.5f * sizeY) + Y, (0.5f * sizeX) +X};
-                        Temp.TexCord = {tX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        break;
-                case F_WEST:
-
-                        Temp.Pos = {Z, (-0.5f * sizeY) + Y, (-0.5f*sizeX) + X};
-                        Temp.TexCord = {tX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-        
-
-                        Temp.Pos = {Z , (-0.5f * sizeY) + Y, (0.5f *sizeX) + X};
-                        Temp.TexCord = {TX, tY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        Temp.Pos = { Z , (0.5f * sizeY) + Y, (0.5f * sizeX) +X};
-                        Temp.TexCord = {TX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-
-                        Temp.Pos = { Z, (0.5f * sizeY)+ Y, (-0.5f * sizeX) +X};
-                        Temp.TexCord = {tX, TY};
-                        Temp.TexID = TextureID;
-
-                        m_Verticies.push_back(Temp);
-
-                        break;
-
-                case F_NONE:
-                        float sizeZ = 1.0f;
-                        glm::vec3 TempVec(X,Y,Z);
-                        glm::vec3 SqrPt1(-0.5*sizeX, -0.5*sizeY, 0.5);
-                        glm::vec3 SqrPt2(0.5*sizeX, -0.5*sizeY, 0.5);
-                        glm::vec3 SqrPt3(0.5*sizeX, 0.5*sizeY, 0.5);
-                        glm::vec3 SqrPt4(-0.5*sizeX, 0.5*sizeY, 0.5);
+        glm::vec3 TempVec(X,Y,Z);
+        glm::vec3 SqrPt1(-0.5*sizeX, -0.5*sizeY, 0.0);
+        glm::vec3 SqrPt2(0.5*sizeX, -0.5*sizeY, 0.0);
+        glm::vec3 SqrPt3(0.5*sizeX, 0.5*sizeY, 0.0);
+        glm::vec3 SqrPt4(-0.5*sizeX, 0.5*sizeY, 0.0);
 
                         //std::cout << print()
 
@@ -289,12 +105,21 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, FaceDir Direction, fl
                         //SqrPt3 = Rotatex(SqrPt3,-28.0f);
                         //SqrPt4 = Rotatex(SqrPt4,-28.0f);
 
+        SqrPt1 = Rotatex(SqrPt1,AngleX);
+        SqrPt2 = Rotatex(SqrPt2,AngleX);
+        SqrPt3 = Rotatex(SqrPt3,AngleX);
+        SqrPt4 = Rotatex(SqrPt4,AngleX);
+
+        SqrPt1 = Rotatey(SqrPt1,AngleY);
+        SqrPt2 = Rotatey(SqrPt2,AngleY);
+        SqrPt3 = Rotatey(SqrPt3,AngleY);
+        SqrPt4 = Rotatey(SqrPt4,AngleY);
 
 
-                        SqrPt1 = Rotatex(SqrPt1,45.0f);
-                        SqrPt2 = Rotatex(SqrPt2,45.0f);
-                        SqrPt3 = Rotatex(SqrPt3,45.0f);
-                        SqrPt4 = Rotatex(SqrPt4,45.0f);
+        SqrPt1 = Rotatez(SqrPt1,AngleZ);
+        SqrPt2 = Rotatez(SqrPt2,AngleZ);
+        SqrPt3 = Rotatez(SqrPt3,AngleZ);
+        SqrPt4 = Rotatez(SqrPt4,AngleZ);
 
                         //SqrPt1 = Rotatez(SqrPt1,90.0f);
                         //SqrPt2 = Rotatez(SqrPt2,90.0f);
@@ -302,35 +127,31 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, FaceDir Direction, fl
                         //SqrPt4 = Rotatez(SqrPt4,90.0f);
 
 
-                        Temp.Pos = {SqrPt1.x + TempVec.x, SqrPt1.y + TempVec.y, SqrPt1.z + TempVec.z};
-                        Temp.TexCord = {tX, tY};
-                        Temp.TexID = TextureID;
+        Temp.Pos = {SqrPt1.x + TempVec.x, SqrPt1.y + TempVec.y, SqrPt1.z + TempVec.z};
+        Temp.TexCord = {tX, tY};
+        Temp.TexID = TextureID;
 
-                        m_Verticies.push_back(Temp);
+        m_Verticies.push_back(Temp);
         
 
-                        Temp.Pos = {SqrPt2.x + TempVec.x, SqrPt2.y + TempVec.y, SqrPt2.z + TempVec.z};
-                        Temp.TexCord = {TX, tY};
-                        Temp.TexID = TextureID;
+        Temp.Pos = {SqrPt2.x + TempVec.x, SqrPt2.y + TempVec.y, SqrPt2.z + TempVec.z};
+        Temp.TexCord = {TX, tY};
+        Temp.TexID = TextureID;
 
-                        m_Verticies.push_back(Temp);
+        m_Verticies.push_back(Temp);
 
-                        Temp.Pos = {SqrPt3.x + TempVec.x, SqrPt3.y + TempVec.y, SqrPt3.z + TempVec.z};
-                        Temp.TexCord = {TX, TY};
-                        Temp.TexID = TextureID;
+        Temp.Pos = {SqrPt3.x + TempVec.x, SqrPt3.y + TempVec.y, SqrPt3.z + TempVec.z};
+        Temp.TexCord = {TX, TY};
+        Temp.TexID = TextureID;
 
-                        m_Verticies.push_back(Temp);
+        m_Verticies.push_back(Temp);
 
 
-                        Temp.Pos = {SqrPt4.x + TempVec.x, SqrPt4.y + TempVec.y, SqrPt4.z + TempVec.z};
-                        Temp.TexCord = {tX, TY};
-                        Temp.TexID = TextureID;
+        Temp.Pos = {SqrPt4.x + TempVec.x, SqrPt4.y + TempVec.y, SqrPt4.z + TempVec.z};
+        Temp.TexCord = {tX, TY};
+        Temp.TexID = TextureID;
 
-                        m_Verticies.push_back(Temp);
-
-                        break;
-
-        }
+        m_Verticies.push_back(Temp);
 
         
 

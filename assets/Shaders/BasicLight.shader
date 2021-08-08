@@ -37,11 +37,6 @@ in float v_TexIndex;
 
 uniform vec4 u_Color;
 
-uniform vec3 u_lightPos;
-uniform vec3 u_lightColor;
-
-uniform vec3 u_camPos;
-
 uniform sampler2D u_Texture0;
 uniform sampler2D u_Texture1;
 uniform sampler2D u_Texture2;
@@ -50,23 +45,6 @@ void main(){
     vec4 texColor;
     vec4 ObjectColor;
     int index  = int(v_TexIndex);
-
-    float ambientStrength = 0.1;
-    float specularStrength = 0.5;
-
-    vec3 ambient = ambientStrength * u_lightColor;
-
-    vec3 norm = normalize(v_Normalized);
-    vec3 lightDir = normalize(u_lightPos - v_FragPos);
-
-    vec3 viewDir = normalize(u_camPos - v_FragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    vec3 specular = specularStrength * spec * u_lightColor;
-
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * u_lightColor;
 
     if(index == 1){
         texColor = texture(u_Texture0, v_TexCord); 
@@ -83,6 +61,5 @@ void main(){
         ObjectColor = texColor + u_Color;
     }
 
-
-    color = vec4((ambient+ diffuse+ specular), 1.0) * ObjectColor;
+    color = ObjectColor;
 }

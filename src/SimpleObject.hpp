@@ -11,6 +11,12 @@ struct VertexPos{
     float Z;
 };
 
+struct VertexNormalPos{
+    float X;
+    float Y;
+    float Z;
+};
+
 struct VertexTexCord{
     float X;
     float Y;
@@ -18,6 +24,7 @@ struct VertexTexCord{
 
 struct Vertex{
                 VertexPos Pos;
+                VertexNormalPos NormalPos;
                 VertexTexCord TexCord;
                 float TexID;
 };
@@ -38,6 +45,9 @@ class SimpleObject{
         unsigned int m_IndicOffset;
 
         int m_MaxQuads, m_UsedQuads;
+
+        float m_X, m_Y, m_Z;
+        float m_R, m_G, m_B;
 
         std::unique_ptr<VertexArray> m_VAO;
 
@@ -112,13 +122,16 @@ class SimpleObject{
         inline int GetMaxQuadCound() {return m_MaxQuadCount;}
         inline int GetUsedQuads() {return m_UsedQuads;}
 
+        inline glm::vec3 GetLightColor() { return glm::vec3(m_R, m_G, m_B);}
+        inline glm::vec3 GetPos() {return glm::vec3(m_X, m_Y, m_Z);}
+
         void SetShader(const std::string &filePath);
 
-        void SetPosition(glm::mat4 MVP);
+        void SetPosition(float X, float Y, float Z, glm::mat4 &Projection, glm::mat4 &View);
 
         void SetColor(float r, float g, float b, float a);
 
-
+        void SetLight(glm::vec3 lightColor, glm::vec3 lightPos, glm::vec3 camPos);
 
         void AddTexture(const std::string &filePath, unsigned int slot = 0);
 

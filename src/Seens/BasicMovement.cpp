@@ -45,6 +45,7 @@ void TestWorld::Setup(){
 
     Object.Setup();
     Land.Setup();
+    Sun.Setup();
 
 
 
@@ -53,10 +54,12 @@ void TestWorld::Setup(){
    // Land.Create2dQuad(0.0f,0.0f,0.0f, F_NONE, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
     //Land.Create2dQuad(0.0f,10.0f,-10.0f, F_NORTH, 20.0f,20.0f, 0.0f,0.0f, 0.0f, 0.0f, 0.0f);
 
-    Land.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,30.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f,1.0f, 1.0f);
+    Land.Create2dQuad(0.0f,-1.0f,0.0f, -90.0f,45.0f,0.0f, 10.0f,10.0f, 0.0f,0.0f, 1.0f,1.0f, 1.0f);
 
+    Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    Object.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 0.0f,0.0f,1.0f,1.0f, 1.0f);
+    Object.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,45.0f, 1.0f,1.0f,1.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+
     // Yes the FaceDir matters based on where you want it to be visible
     //Object.Create2dQuad(0.0f,0.0f,0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
     //Object.Create2dQuad(0.0f,0.0f,-0.5f, F_DOWN ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
@@ -91,9 +94,11 @@ void TestWorld::Setup(){
    // std::cout << "Index information " << std::endl; 
     //m_IBO->Bind();
     //std::cout << "set index buffer" << std::endl;
-
+    Land.SetShader("assets/Shaders/MultiImg.shader");
     Object.SetShader("assets/Shaders/MultiImg.shader"); 
-    Land.SetShader("assets/Shaders/ColorImg.shader");
+    //TestObject.SetShader("assets/Shaders/MultiImg.shader");
+    
+    Sun.SetShader("assets/Shaders/BasicLight.shader");
     //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
     //m_Shader->Bind();
 
@@ -220,6 +225,8 @@ void TestWorld::OnUpdate(float deltaTime){
         glfwPollEvents();
         m_DeltaTime = deltaTime;
         AdvancedCam.Update(m_DeltaTime, (float)m_Width/m_Height, m_FOV);
+        m_Projection = AdvancedCam.GetProj();
+        m_View = AdvancedCam.GetView();
 
         // This is only going here just so i have a clear spot for it
         //m_View = glm::lookAt(
@@ -366,16 +373,29 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         m_Width = Width;
         m_Height = Height;
-        glm::mat4 Projection = AdvancedCam.GetProj();
-        glm::mat4 View = AdvancedCam.GetView();
 
-        glm::mat4 modle = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,0));
-        glm::mat4 mvp = Projection * View * modle;
+        glm::vec3 camPos = AdvancedCam.GetCurrentPos();
+
+
+
+        Sun.BindBufferData();
+        //Sun.SetColor(1.0f,0.9059f,0.0f, 1.0f);
+        Sun.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+        Sun.SetPosition(15.0f,20.0f,-15.0f, m_Projection, m_View);
+        //Sun.SetLight(Sun.GetLightColor(), Sun.GetPos());
+        Sun.Paint();
+
+
 
         Land.BindBufferData();
-        Land.SetColor(m_Color.x, m_Color.y, m_Color.z, 1.0f);
-        Land.SetPosition(mvp);
+        Land.SetColor(0.3373f, 0.4902f, 0.2745f, 1.0f);
+        //Land.SetColor(m_Color.x, m_Color.y, m_Color.z, m_Color.w);
+        Land.SetPosition(0.0f,0.0f,0.0f, m_Projection, m_View);
+        Land.SetLight(Sun.GetLightColor(), Sun.GetPos(), camPos);
         Land.Paint();
+
+
+
 
 
         // Dynamic Vertex Buffer!!!!
@@ -383,7 +403,7 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         //Object.BindVertexBuffer();
         //GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, Object.GetVerticiesCount() * sizeof(Vertex), Object.GetVerticies().data()));
 
-        Object.BindBufferData(); 
+         
 
        //m_IBO->Bind();
         //Object.BindIndexBuffer();
@@ -413,29 +433,26 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         // Evrything else still needed for a seperate draw call
 
-        modle = glm::translate(glm::mat4(1.0f), glm::vec3(0,2,0));
-        mvp = Projection * View * modle;
+        Object.BindBufferData();
 
-        Object.SetPosition(mvp);
+        Object.SetPosition(0.0f,2.0f,0.0f, m_Projection, m_View);
         Object.SetColor(m_Color.x, m_Color.y, m_Color.z, m_Color.w);
+        Object.SetLight(Sun.GetLightColor(), Sun.GetPos(), camPos);
         Object.Paint();
 
 
-        modle = glm::translate(glm::mat4(1.0f), glm::vec3(2,0,0));
-        mvp = Projection * View * modle;
-
-        Object.SetPosition(mvp);
+        Object.SetPosition(2.0f, 0.0f, 0.0f, m_Projection,m_View);
         Object.SetColor(m_Color2.x, m_Color2.y, m_Color2.z, m_Color2.w);
+        Object.SetLight(Sun.GetLightColor(), Sun.GetPos(), camPos);
         Object.Paint();
 
         //
 
-        modle = glm::translate(glm::mat4(1.0f), glm::vec3(-2,0,0));
-        mvp = Projection * View * modle;
-
-        Object.SetPosition(mvp);
+        Object.SetPosition(-2.0f,0.0f,0.0f, m_Projection, m_View);
         Object.SetColor(m_Color3.x, m_Color3.y, m_Color3.z, m_Color3.w);
+        Object.SetLight(Sun.GetLightColor(), Sun.GetPos(), camPos);
         Object.Paint();
+
 
 
 
@@ -462,9 +479,9 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
             ImGui::Text("This test draws multiple quads in one draw call");
             //ImGui::SliderFloat3("Relative Possiton", &m_pos.x , -600.0f, 600.0f);
             ImGui::DragFloat("FOV", &m_FOV, 1.0f, 10.0f, 150.0f, "%.03f Camera FOV");
-            ImGui::ColorEdit3("Color", (float *)&m_Color);
-            ImGui::ColorEdit3("Color 2", (float *)&m_Color2);
-            ImGui::ColorEdit3("Color 3", (float *)&m_Color3);
+            ImGui::ColorEdit4("Color", (float *)&m_Color);
+            ImGui::ColorEdit4("Color 2", (float *)&m_Color2);
+            ImGui::ColorEdit4("Color 3", (float *)&m_Color3);
             ImGui::Checkbox("Toggle live effect", &m_Effect);
             ImGui::End();
 

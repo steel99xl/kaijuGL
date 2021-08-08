@@ -12,6 +12,8 @@ class TestWorld{
         glm::vec3 m_pos2D;
         float m_FOV;
 
+        glm::mat4 m_Projection, m_View;
+
         ImVec4 m_Color, m_Color2, m_Color3;
 
         //float m_yaw, m_pitch, m_lastX, m_lastY;
@@ -32,6 +34,7 @@ class TestWorld{
 
         SimpleObject Object;
         SimpleObject Land;
+        SimpleObject Sun;
 
         // Literaly just to show that you can set your own size
 

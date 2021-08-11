@@ -12,6 +12,10 @@ class TestWorld{
         glm::vec3 m_pos2D;
         float m_FOV;
 
+        // TODO : implement frame buffer object
+        //Frame Buffer Info
+        unsigned int FrameBufferTexture;
+
         glm::mat4 m_Projection, m_View;
 
         ImVec4 m_Color, m_Color2, m_Color3;
@@ -33,8 +37,11 @@ class TestWorld{
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
 
         SimpleObject Object;
+        SimpleObject Testobject;
         SimpleObject Land;
         SimpleObject Sun;
+
+        SimpleMaterialInfo BasicMetalCube;
 
         // Literaly just to show that you can set your own size
 
@@ -53,10 +60,10 @@ class TestWorld{
 
         void Setup();
 
-        void OnUpdate(float deltaTime);
+        void OnUpdate(float deltaTime, float width, float hight);
         void KeyInput(int key, int scancode, int action, int mods);
         void MouseInput(double xpos, double ypos);
-        void OnRender(int Width, int Height, float ScaleFactor);
+        void OnRender();
         void OnImGui();
 
 

@@ -27,16 +27,39 @@ v_TexIndex = texIndex;
 
 #Shader fragment
 #version 330 core
+struct Light{
+    vec3 position;
+    vec3 lightDir;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
 
-layout(location = 0) out vec4 color;
+    float Asize;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+};
+
+struct Material{
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+}; 
+
+layout(location = 0) out vec4 Finalcolor;
 
 in vec3 v_Normalized;
 in vec3 v_FragPos;
 in vec2 v_TexCord;
 in float v_TexIndex;
 
-uniform vec4 u_Color;
+uniform Material u_Material;
+uniform Light u_Light;
 
+uniform vec4 u_Color;
 uniform vec3 u_lightPos;
 uniform vec3 u_lightColor;
 
@@ -51,29 +74,36 @@ void main(){
     vec4 ObjectColor;
     int index  = int(v_TexIndex);
 
-    float ambientStrength = 0.1;
-    float specularStrength = 0.5;
+    float distance = length(u_Light.position - v_FragPos);
+    float attenuation = 1.0 / (u_Light.constant + u_Light.linear * distance + 
+    		    u_Light.quadratic * (distance * distance));    
 
-    vec3 ambient = ambientStrength * u_lightColor;
 
     vec3 norm = normalize(v_Normalized);
-    vec3 lightDir = normalize(u_lightPos - v_FragPos);
+    vec3 lightPos = normalize(u_Light.position - v_FragPos);
+
+    float theta = dot(lightPos, normalize(-u_Light.lightDir));
+
 
     vec3 viewDir = normalize(u_camPos - v_FragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
+    vec3 reflectDir = reflect(-lightPos, norm);
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    vec3 specular = specularStrength * spec * u_lightColor;
+    vec3 ambient = u_Material.ambient * u_Light.ambient;
+      
+  // do lighting calculations
 
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * u_lightColor;
+    float diff = max(dot(norm, lightPos), 0.0);
+    vec3 diffuse = (diff * u_Material.diffuse) * u_Light.diffuse;
+
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
+    vec3 specular = (u_Material.specular * spec) * u_Light.specular;
 
     if(index == 1){
         texColor = texture(u_Texture0, v_TexCord); 
     } else if(index == 2){
         texColor = texture(u_Texture1, v_TexCord); 
     } else if(index == 3){
-        texColor = texture(u_Texture2, v_TexCord); 
+            texColor = texture(u_Texture2, v_TexCord); 
     } else {
         texColor = u_Color;
     }
@@ -83,6 +113,10 @@ void main(){
         ObjectColor = texColor + u_Color;
     }
 
+    ambient *= attenuation;
+    diffuse *= attenuation;
+    specular *= attenuation;
 
-    color = vec4((ambient+ diffuse+ specular), 1.0) * ObjectColor;
+    Finalcolor = vec4((ambient+ diffuse+ specular), 1.0) * ObjectColor;
+    
 }

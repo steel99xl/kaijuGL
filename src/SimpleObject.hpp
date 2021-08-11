@@ -11,22 +11,43 @@ struct VertexPos{
     float Z;
 };
 
-struct VertexNormalPos{
-    float X;
-    float Y;
-    float Z;
-};
-
 struct VertexTexCord{
     float X;
     float Y;
 };
 
 struct Vertex{
-                VertexPos Pos;
-                VertexNormalPos NormalPos;
-                VertexTexCord TexCord;
-                float TexID;
+    VertexPos Pos;
+    VertexPos NormalPos;
+    VertexTexCord TexCord;
+    float TexID;
+};
+
+struct ColorFloat{
+    float R;
+    float G;
+    float B;
+};
+
+struct SimpleLightInfo{
+    // Note that the Light Struct defined in the BasicShaders set needs position data as well
+    VertexPos lightDir; // might have to be limited to a range of -1 to 1
+    ColorFloat ambient;
+    ColorFloat diffuse;
+    ColorFloat specular;
+
+    float Angle;
+
+    float Const;
+    float Linear;
+    float Quadratic;
+};
+
+struct SimpleMaterialInfo{
+    ColorFloat ambient;
+    ColorFloat diffuse;
+    ColorFloat specular;
+    float shininess;
 };
 
 enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
@@ -35,6 +56,9 @@ enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
 class SimpleObject{
     private:
         int m_MaxQuadCount;
+
+        SimpleMaterialInfo m_Material;
+        SimpleLightInfo m_Light;
 
         // Vectors a used so seach instance of an SimpleObject can have (m_MaxQuads * 4) verticies and (m_MaxQuads * 6) 
         std::vector<Vertex> m_Verticies;
@@ -47,7 +71,10 @@ class SimpleObject{
         int m_MaxQuads, m_UsedQuads;
 
         float m_X, m_Y, m_Z;
+        // Object color
         float m_R, m_G, m_B;
+        // Light color if object is emitting light
+        float m_LR, m_LG, m_LB;
 
         std::unique_ptr<VertexArray> m_VAO;
 
@@ -122,7 +149,12 @@ class SimpleObject{
         inline int GetMaxQuadCound() {return m_MaxQuadCount;}
         inline int GetUsedQuads() {return m_UsedQuads;}
 
-        inline glm::vec3 GetLightColor() { return glm::vec3(m_R, m_G, m_B);}
+        inline SimpleMaterialInfo GetMaterialInfo() {return m_Material;}
+        inline SimpleLightInfo GetLightInfo() {return m_Light;}
+
+        inline void SetLightColor(float R, float G, float B) { m_LR = R; m_LG = G; m_LB = B;}
+
+        inline glm::vec3 GetLightColor() { return glm::vec3(m_LR, m_LG, m_LB);}
         inline glm::vec3 GetPos() {return glm::vec3(m_X, m_Y, m_Z);}
 
         void SetShader(const std::string &filePath);
@@ -131,7 +163,16 @@ class SimpleObject{
 
         void SetColor(float r, float g, float b, float a);
 
-        void SetLight(glm::vec3 lightColor, glm::vec3 lightPos, glm::vec3 camPos);
+        void SetMaterial(SimpleMaterialInfo &Material);
+
+        void MakeMaterial(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float Shininess);
+
+        void MakeLight(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float LightDirX, float LightDirY, float LightDirZ, float AngleSize, float Linear, float Quadratic);
+    
+        void SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos);
+
+        // Sets up the object to act as a source of light;
+        // void SetLightEmission()
 
         void AddTexture(const std::string &filePath, unsigned int slot = 0);
 

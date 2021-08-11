@@ -28,7 +28,7 @@ void SimpleObject::Setup(){
         //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
 
         VertexBufferLayout layout;
-        // This defines the layout 
+        // This defines the layout
         // Position Data;
         layout.Push(3,"float");
         // Normolized Positon Data;
@@ -37,7 +37,7 @@ void SimpleObject::Setup(){
         layout.Push(2,"float");
         //Texture ID
         layout.Push(1,"float");
-        m_VAO->AddBuffer(*m_VertexBuffer,layout); 
+        m_VAO->AddBuffer(*m_VertexBuffer,layout);
 }
 
 
@@ -49,7 +49,7 @@ glm::vec3 SimpleObject::Rotatex(glm::vec3 Start, float Angle){
 
     Buffer.x = (1 * Start.x) + (0 * Start.y) + (0 * Start.z);
     Buffer.y = (0 * Start.x) + (Cosin * Start.y) + (-Sin * Start.z);
-    Buffer.z = (0 * Start.x) + (Sin * Start.y) + (Cosin * Start.z); 
+    Buffer.z = (0 * Start.x) + (Sin * Start.y) + (Cosin * Start.z);
 
     return Buffer;
 }
@@ -62,7 +62,7 @@ glm::vec3 SimpleObject::Rotatey(glm::vec3 Start, float Angle){
 
     Buffer.x = (Cosin * Start.x) + (0 * Start.y) + (Sin * Start.z);
     Buffer.y = (0 * Start.x) + (1 * Start.y) + (0 * Start.z);
-    Buffer.z = (-Sin * Start.x) + (0 * Start.y) + (Cosin * Start.z); 
+    Buffer.z = (-Sin * Start.x) + (0 * Start.y) + (Cosin * Start.z);
 
     return Buffer;
 }
@@ -75,7 +75,7 @@ glm::vec3 SimpleObject::Rotatez(glm::vec3 Start, float Angle){
 
     Buffer.x = (Cosin * Start.x) + (-Sin * Start.y) + (0 * Start.z);
     Buffer.y = (Sin * Start.x) + (Cosin * Start.y) + (0 * Start.z);
-    Buffer.z = (0 * Start.x) + (0 * Start.y) + (1 * Start.z); 
+    Buffer.z = (0 * Start.x) + (0 * Start.y) + (1 * Start.z);
 
     return Buffer;
 }
@@ -119,7 +119,7 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
-        
+
 
         Temp.Pos = {SqrPt2.x + TempPosVec.x, SqrPt2.y + TempPosVec.y, SqrPt2.z + TempPosVec.z};
         Temp.NormalPos = {TempLightPosVec.x, TempLightPosVec.y, TempLightPosVec.z};
@@ -143,18 +143,18 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
 
         m_Verticies.push_back(Temp);
 
-        
+
 
         std::cout << "Texture ID " << TextureID << std::endl;
-        
+
         m_Indices.push_back(0 + m_IndicOffset);
         m_Indices.push_back(1 + m_IndicOffset);
         m_Indices.push_back(2 + m_IndicOffset);
-        
+
 
         //indices[i + 3] =  2 + offset;
         //indices[i + 4] =  3 + offset;
-        //indices[i + 5] =  0 + offset; 
+        //indices[i + 5] =  0 + offset;
 
         m_Indices.push_back(2 + m_IndicOffset);
         m_Indices.push_back(3 + m_IndicOffset);
@@ -175,13 +175,13 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         glm::vec3 CubePt2(0.5*SizeX, -0.5*SizeY, 0.5 * SizeZ);
         glm::vec3 CubePt3(0.5*SizeX, 0.5*SizeY, 0.5 * SizeZ);
         glm::vec3 CubePt4(-0.5*SizeX, 0.5*SizeY, 0.5 * SizeZ);
-        
+
 
         glm::vec3 CubePt5 = Rotatey(CubePt1,180.0f);
-        glm::vec3 CubePt6 = Rotatey(CubePt2,180.0f); 
-        glm::vec3 CubePt7 = Rotatey(CubePt3,180.0f); 
+        glm::vec3 CubePt6 = Rotatey(CubePt2,180.0f);
+        glm::vec3 CubePt7 = Rotatey(CubePt3,180.0f);
         glm::vec3 CubePt8 = Rotatey(CubePt4,180.0f);
-        
+
         Vertex Temp;
 
 
@@ -250,7 +250,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         CubeLightWest = Rotatez(CubeLightWest, AngleZ);
         CubeLightUp = Rotatez(CubeLightUp, AngleZ);
         CubeLightDown = Rotatez(CubeLightDown, AngleZ);
-        
+
 
 
 
@@ -262,7 +262,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
-        
+
 
         Temp.Pos = {CubePt2.x + TempPosVec.x, CubePt2.y + TempPosVec.y, CubePt2.z + TempPosVec.z};
         Temp.NormalPos = {CubeLightNorth.x, CubeLightNorth.y, CubeLightNorth.z};
@@ -305,7 +305,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
-        
+
 
         Temp.Pos = {CubePt6.x + TempPosVec.x, CubePt6.y + TempPosVec.y, CubePt6.z + TempPosVec.z};
         Temp.NormalPos = {CubeLightSouth.x, CubeLightSouth.y, CubeLightSouth.z};
@@ -348,7 +348,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
-        
+
 
         Temp.Pos = {CubePt5.x + TempPosVec.x, CubePt5.y + TempPosVec.y, CubePt5.z + TempPosVec.z};
         Temp.NormalPos = {CubeLightEast.x, CubeLightEast.y, CubeLightEast.z};
@@ -391,7 +391,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
-        
+
 
         Temp.Pos = {CubePt1.x + TempPosVec.x, CubePt1.y + TempPosVec.y, CubePt1.z + TempPosVec.z};
         Temp.NormalPos = {CubeLightWest.x, CubeLightWest.y, CubeLightWest.z};
@@ -434,7 +434,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
-        
+
 
         Temp.Pos = {CubePt3.x + TempPosVec.x, CubePt3.y + TempPosVec.y, CubePt3.z + TempPosVec.z};
         Temp.NormalPos = {CubeLightUp.x, CubeLightUp.y, CubeLightUp.z};
@@ -478,7 +478,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
-        
+
 
         Temp.Pos = {CubePt5.x + TempPosVec.x, CubePt5.y + TempPosVec.y, CubePt5.z + TempPosVec.z};
         Temp.NormalPos = {CubeLightDown.x, CubeLightDown.y, CubeLightDown.z};
@@ -524,7 +524,7 @@ void SimpleObject::Paint(){
 
 void SimpleObject::SetShader(const std::string &filePath){
         m_Shader->SetShader(filePath);
-        
+
         // this is just for testing
         //int samplers[] = {0, 1, 2};
         int samplers[] = {0};
@@ -548,8 +548,8 @@ void SimpleObject::SetPosition(float X, float Y, float Z, glm::mat4 &Projection,
         m_Shader->Bind();
         m_Shader->SetUniformMat4f("Modle", ModlePos);
         m_Shader->SetUniformMat4f("View", View);
-        m_Shader->SetUniformMat4f("Projection", Projection); 
-}        
+        m_Shader->SetUniformMat4f("Projection", Projection);
+}
 
 void SimpleObject::SetColor(float r, float g, float b, float a){
         m_R = r;
@@ -559,12 +559,66 @@ void SimpleObject::SetColor(float r, float g, float b, float a){
         m_Shader->SetUniform4f("u_Color", r, g, b, a);
 }
 
-void SimpleObject::SetLight(glm::vec3 lightColor, glm::vec3 lightPos, glm::vec3 camPos){
+void SimpleObject::SetMaterial(SimpleMaterialInfo &Material){
+    m_Shader->Bind();
+
+    m_Shader->SetUniform3f("u_Material.ambient", Material.ambient.R, Material.ambient.G, Material.ambient.B);
+    m_Shader->SetUniform3f("u_Material.diffuse", Material.diffuse.R, Material.diffuse.G, Material.diffuse.B);
+    m_Shader->SetUniform3f("u_Material.specular", Material.specular.R, Material.specular.G, Material.specular.B);
+    m_Shader->SetUniform1f("u_Material.shininess", Material.shininess);
+}
+
+void SimpleObject::MakeMaterial(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float Shininess){
+        m_Material.ambient.R = AmbientR;
+        m_Material.ambient.G = AmbientG;
+        m_Material.ambient.B = AmbientB;
+
+        m_Material.diffuse.R = DiffuseR;
+        m_Material.diffuse.G = DiffuseG;
+        m_Material.diffuse.B = DiffuseB;
+
+        m_Material.specular.R = SpecularR;
+        m_Material.specular.G = SpecularG;
+        m_Material.specular.B = SpecularB;
+
+        m_Material.shininess = Shininess;
+}
+
+
+void SimpleObject::MakeLight(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float LightDirX, float LightDirY, float LightDirZ, float AngleSize, float Linear, float Quadratic){
+        m_Light.ambient.R = AmbientR;
+        m_Light.ambient.G = AmbientG;
+        m_Light.ambient.B = AmbientB;
+
+        m_Light.diffuse.R = DiffuseR;
+        m_Light.diffuse.G = DiffuseG;
+        m_Light.diffuse.B = DiffuseB;
+
+        m_Light.specular.R = SpecularR;
+        m_Light.specular.G = SpecularG;
+        m_Light.specular.B = SpecularB;
+
+        m_Light.Angle = glm::cos(glm::radians(AngleSize));
+
+        m_Light.Const = 1.0f;
+        m_Light.Linear = Linear;
+        m_Light.Quadratic = Quadratic;
+
+}
+
+void SimpleObject::SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos){
         m_Shader->Bind();
-        m_Shader->SetUniform3f("u_lightColor", lightColor.x, lightColor.y, lightColor.z);
-        m_Shader->SetUniform3f("u_lightPos", lightPos.x, lightPos.y, lightPos.z);
+        m_Shader->SetUniform3f("u_Light.position", lightPos.x, lightPos.y, lightPos.z);
+        m_Shader->SetUniform3f("u_Light.lightDir", lightInfo.lightDir.X, lightInfo.lightDir.Y, lightInfo.lightDir.Z);
+        m_Shader->SetUniform3f("u_Light.ambient", lightInfo.ambient.R, lightInfo.ambient.G, lightInfo.ambient.B);
+        m_Shader->SetUniform3f("u_Light.diffuse", lightInfo.diffuse.R, lightInfo.diffuse.G, lightInfo.diffuse.B);
+        m_Shader->SetUniform3f("u_Light.specular", lightInfo.specular.R, lightInfo.specular.G, lightInfo.specular.B);
+        m_Shader->SetUniform1f("u_Light.Asize", lightInfo.Angle);
+        m_Shader->SetUniform1f("u_Light.constant", lightInfo.Const);
+        m_Shader->SetUniform1f("u_Light.linear", lightInfo.Linear);
+        m_Shader->SetUniform1f("u_Light.quadratic", lightInfo.Quadratic);
         m_Shader->SetUniform3f("u_camPos", camPos.x, camPos.y, camPos.z);
-        
+
 }
 
 
@@ -576,7 +630,7 @@ void SimpleObject::AddTexture(const std::string &filePath, unsigned int slot){
 }
 
 
-void SimpleObject::BindBufferData(){ 
+void SimpleObject::BindBufferData(){
         m_VertexBuffer->Bind();
         glBufferSubData(GL_ARRAY_BUFFER, 0, (m_UsedQuads*4) * sizeof(Vertex), m_Verticies.data());
 

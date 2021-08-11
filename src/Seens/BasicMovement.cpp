@@ -4,12 +4,6 @@
 
 
 
-
-
-   
-
-    
-
 TestWorld::TestWorld() : m_running(false), m_Effect(false), m_Width(800), m_Height(680){
 // This is just to set some basic vars
 
@@ -26,7 +20,9 @@ TestWorld::~TestWorld(){
 
 void TestWorld::Setup(){
 
-    std::cout << "Press the K key to uninvert the camera" << std::endl;
+    std::cout << "Press the K key to uninvert the camera, Press the L key to invert the camera" << std::endl;
+    std::cout << "Press the ESC key to togle cursor lock" << std::endl;
+    std::cout << "W A S D Moves the camera" << std::endl;
 
    
     m_VAO = std::make_unique<VertexArray>();
@@ -36,7 +32,7 @@ void TestWorld::Setup(){
     m_VertexBuffer = std::make_unique<VertexBuffer>();
 
     
-    
+    FrameBufferTexture = m_Texture->MakeTexture("NULL", 800,600);
 
 
     AdvancedCam.SetHorizontalSensitivity(0.1f);
@@ -47,6 +43,23 @@ void TestWorld::Setup(){
     Land.Setup();
     Sun.Setup();
 
+    BasicMetalCube.ambient.R = 0.3;
+    BasicMetalCube.ambient.G = 0.3;
+    BasicMetalCube.ambient.B = 0.3;
+
+    BasicMetalCube.diffuse.R = 0.7f;
+    BasicMetalCube.diffuse.G = 0.7f;
+    BasicMetalCube.diffuse.B = 0.7f;
+
+    BasicMetalCube.specular.R = 0.5f;
+    BasicMetalCube.specular.G = 0.5f;
+    BasicMetalCube.specular.B = 0.5f;
+
+    BasicMetalCube.shininess = 32.0f;
+
+    Sun.MakeLight(1.0f,1.0f,1.0f, 0.5f,0.5f,0.5f, 0.6f,0.6f,0.6f, -3.0f,-5.0f,3.0f, 12.5f, 0.045f, 0.0075f);
+
+
 
 
     // This add 1 quad to the land object
@@ -54,11 +67,11 @@ void TestWorld::Setup(){
    // Land.Create2dQuad(0.0f,0.0f,0.0f, F_NONE, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
     //Land.Create2dQuad(0.0f,10.0f,-10.0f, F_NORTH, 20.0f,20.0f, 0.0f,0.0f, 0.0f, 0.0f, 0.0f);
 
-    Land.Create2dQuad(0.0f,-1.0f,0.0f, -90.0f,45.0f,0.0f, 10.0f,10.0f, 0.0f,0.0f, 1.0f,1.0f, 1.0f);
+    Land.Create2dQuad(0.0f,-1.0f,0.0f, -90.0f,45.0f,0.0f, 100.0f,100.0f, 0.0f,0.0f, 1.0f,1.0f, 1.0f);
 
     Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    Object.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,45.0f, 1.0f,1.0f,1.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    Object.CreateCube(0.0f,0.0f,0.0f, 45.0f,45.0f,45.0f, 1.0f,1.0f,1.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     // Yes the FaceDir matters based on where you want it to be visible
     //Object.Create2dQuad(0.0f,0.0f,0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
@@ -221,7 +234,7 @@ Vertex *TestWorld::CreateQuad(Vertex *target, float X, float Y, float sizeX, flo
     }
 
 
-void TestWorld::OnUpdate(float deltaTime){
+void TestWorld::OnUpdate(float deltaTime, float width, float height){
         glfwPollEvents();
         m_DeltaTime = deltaTime;
         AdvancedCam.Update(m_DeltaTime, (float)m_Width/m_Height, m_FOV);
@@ -368,20 +381,19 @@ void TestWorld::MouseInput(double xpos, double ypos){
 
 
 
-void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
-
-
-        m_Width = Width;
-        m_Height = Height;
+void TestWorld::OnRender(){
 
         glm::vec3 camPos = AdvancedCam.GetCurrentPos();
+
+        //std::cout << AdvancedCam.GetCurrentLook().x << " | " << AdvancedCam.GetCurrentLook().y << " | " << AdvancedCam.GetCurrentLook().z << std::endl;
 
 
 
         Sun.BindBufferData();
         //Sun.SetColor(1.0f,0.9059f,0.0f, 1.0f);
-        Sun.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-        Sun.SetPosition(15.0f,20.0f,-15.0f, m_Projection, m_View);
+        Sun.SetLightColor(1.0f, 1.0f, 1.0f);
+        Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
+        Sun.SetPosition(3.0f,5.0f,-3.0f, m_Projection, m_View);
         //Sun.SetLight(Sun.GetLightColor(), Sun.GetPos());
         Sun.Paint();
 
@@ -389,9 +401,9 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
 
         Land.BindBufferData();
         Land.SetColor(0.3373f, 0.4902f, 0.2745f, 1.0f);
-        //Land.SetColor(m_Color.x, m_Color.y, m_Color.z, m_Color.w);
+        Land.SetMaterial(BasicMetalCube);
         Land.SetPosition(0.0f,0.0f,0.0f, m_Projection, m_View);
-        Land.SetLight(Sun.GetLightColor(), Sun.GetPos(), camPos);
+        Land.SetLight(Sun.GetLightInfo(), Sun.GetPos(), camPos);
         Land.Paint();
 
 
@@ -432,25 +444,28 @@ void TestWorld::OnRender(int Width, int Height, float ScaleFactor){
         //renderer.Draw(*m_VAO, *m_IBO, *m_Shader);
 
         // Evrything else still needed for a seperate draw call
-
+        // This only needs to be calld once if you are drawing the same object multiple times
         Object.BindBufferData();
 
         Object.SetPosition(0.0f,2.0f,0.0f, m_Projection, m_View);
         Object.SetColor(m_Color.x, m_Color.y, m_Color.z, m_Color.w);
-        Object.SetLight(Sun.GetLightColor(), Sun.GetPos(), camPos);
+        Object.SetLight(Sun.GetLightInfo(), Sun.GetPos(), camPos);
+        Object.SetMaterial(BasicMetalCube);
         Object.Paint();
 
 
         Object.SetPosition(2.0f, 0.0f, 0.0f, m_Projection,m_View);
         Object.SetColor(m_Color2.x, m_Color2.y, m_Color2.z, m_Color2.w);
-        Object.SetLight(Sun.GetLightColor(), Sun.GetPos(), camPos);
+        Object.SetLight(Sun.GetLightInfo(), Sun.GetPos(), camPos);
+        Object.SetMaterial(BasicMetalCube);
         Object.Paint();
 
         //
 
         Object.SetPosition(-2.0f,0.0f,0.0f, m_Projection, m_View);
         Object.SetColor(m_Color3.x, m_Color3.y, m_Color3.z, m_Color3.w);
-        Object.SetLight(Sun.GetLightColor(), Sun.GetPos(), camPos);
+        Object.SetLight(Sun.GetLightInfo(), Sun.GetPos(), camPos);
+        Object.SetMaterial(BasicMetalCube);
         Object.Paint();
 
 

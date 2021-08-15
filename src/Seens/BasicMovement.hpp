@@ -14,7 +14,11 @@ class TestWorld{
 
         // TODO : implement frame buffer object
         //Frame Buffer Info
+        unsigned int m_FBO;
         unsigned int FrameBufferTexture;
+        unsigned int TestTexture;
+
+        unsigned int m_RBO;
 
         glm::mat4 m_Projection, m_View;
 
@@ -40,6 +44,8 @@ class TestWorld{
         SimpleObject Testobject;
         SimpleObject Land;
         SimpleObject Sun;
+
+        SimpleObject FBOrec;
 
         SimpleMaterialInfo BasicMetalCube;
 

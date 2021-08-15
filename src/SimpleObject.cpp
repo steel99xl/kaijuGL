@@ -609,11 +609,11 @@ void SimpleObject::MakeLight(float AmbientR, float AmbientG, float AmbientB, flo
 void SimpleObject::SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos){
         m_Shader->Bind();
         m_Shader->SetUniform3f("u_Light.position", lightPos.x, lightPos.y, lightPos.z);
-        m_Shader->SetUniform3f("u_Light.lightDir", lightInfo.lightDir.X, lightInfo.lightDir.Y, lightInfo.lightDir.Z);
+        m_Shader->SetUniform3f("u_Light.lightPoint", lightInfo.lightDir.X, lightInfo.lightDir.Y, lightInfo.lightDir.Z);
         m_Shader->SetUniform3f("u_Light.ambient", lightInfo.ambient.R, lightInfo.ambient.G, lightInfo.ambient.B);
         m_Shader->SetUniform3f("u_Light.diffuse", lightInfo.diffuse.R, lightInfo.diffuse.G, lightInfo.diffuse.B);
         m_Shader->SetUniform3f("u_Light.specular", lightInfo.specular.R, lightInfo.specular.G, lightInfo.specular.B);
-        m_Shader->SetUniform1f("u_Light.Asize", lightInfo.Angle);
+        m_Shader->SetUniform1f("u_Light.Asize", glm::cos(glm::radians(lightInfo.Angle)));
         m_Shader->SetUniform1f("u_Light.constant", lightInfo.Const);
         m_Shader->SetUniform1f("u_Light.linear", lightInfo.Linear);
         m_Shader->SetUniform1f("u_Light.quadratic", lightInfo.Quadratic);
@@ -628,6 +628,19 @@ void SimpleObject::AddTexture(const std::string &filePath, unsigned int slot){
 
         //m_Texture.Bind(slot);
 }
+
+void SimpleObject::SetTexture(unsigned int Texture, const std::string &UniformName){
+        m_Shader->Bind();
+        m_Shader->SetUniform1i(UniformName, Texture);
+}
+
+
+void SimpleObject::SetFloatUniform(const std::string &UniformName, float data){
+        m_Shader->Bind();
+        m_Shader->SetUniform1f(UniformName, data);
+}
+
+
 
 
 void SimpleObject::BindBufferData(){

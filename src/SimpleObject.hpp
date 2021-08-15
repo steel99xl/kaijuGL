@@ -176,6 +176,10 @@ class SimpleObject{
 
         void AddTexture(const std::string &filePath, unsigned int slot = 0);
 
+        void SetTexture(unsigned int Texture, const std::string &UniformName);
+
+        void SetFloatUniform(const std::string &UniformName, float data);
+
         void BindBufferData();
 
         void BindVertexBuffer();

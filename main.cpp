@@ -59,13 +59,15 @@ void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
 int main(void){
     float deltaTime, lastFrame = 0.0f;
 
-    
+    std::string Title = "DUMB OPENGL WINDOW";
     int width = 720;
     int height = 480;
     bool PixelMode = true;
-    float ScalePixle = 1.0f;
+    float ScalePixle = 8.0f;
     float ScaleFactor[2] = {0.0f,0.0f};
     float ScaleBuffer;
+
+    int OSscaler = 2; // This is mainly for mac os
 
     ScaleBuffer = (float)width/(float)height;
 
@@ -121,7 +123,7 @@ int main(void){
 
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(width, height, "DUMB OPENGL WINDOW", NULL, NULL);
+    window = glfwCreateWindow(width, height, Title.c_str(), NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -183,23 +185,93 @@ int main(void){
     
     //Temp Fixes/Places
     glEnable(GL_CULL_FACE);
-    GLCall(glEnable(GL_DEPTH_TEST));
- 
 
+    unsigned int FBO;
+
+    glGenFramebuffers(1, &FBO);
+    GLCall(glBindFramebuffer(GL_FRAMEBUFFER ,FBO));
+
+    unsigned int FrameBuffTexture;
+
+    glGenTextures(1, &FrameBuffTexture);
+    glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0 , GL_RGB, width*OSscaler, height*OSscaler, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST ));
+    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D ,FrameBuffTexture, 0);
+    
+    unsigned int RBO;
+    glGenRenderbuffers(1, &RBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, RBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width*OSscaler, height*OSscaler);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
+
+
+    auto fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if(fboStatus != GL_FRAMEBUFFER_COMPLETE){
+            std::cout << "ERROR FRAMEBUFFER " << fboStatus << std::endl;
+        }
+
+    SimpleObject Frame;
+    Frame.Setup();
+    Frame.SetShader("assets/Shaders/FrameBuffer.shader");
+    Frame.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    Frame.SetTexture(0, "u_Texture");
+    Frame.SetFloatUniform("u_Size.height", height/4);
+    Frame.SetFloatUniform("u_Size.width", width/4);
    
 // Draw LOOP
+    unsigned int FrameTimeCount = 0;
+    float FPS = 0;
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
+    while (!glfwWindowShouldClose(window)){
+        
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;  
+        lastFrame = currentFrame; 
+
+        FPS = 1.0f/deltaTime;
+        std::string NewTile = Title + " " + "( " + std::to_string(FPS) + "FPS)";
+        glfwSetWindowTitle(window, NewTile.c_str());
+
+
+        // Frame Buffer Object Stuff
+
+        glBindFramebuffer(GL_FRAMEBUFFER,  FBO);
+
+        glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0 , GL_RGB, width*OSscaler, height*OSscaler, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST ));
+        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D ,FrameBuffTexture, 0);
+
+
+        glBindRenderbuffer(GL_RENDERBUFFER, RBO);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width*OSscaler, height*OSscaler);
+
+
+
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        GLCall(glEnable(GL_DEPTH_TEST));
+
+       
 
         glfwPollEvents();
         glfwGetWindowSize(window, &width, &height);
+
+        // End of FrameBuffer Stuff for setting it to be writen to
+        // TO draw it you have to go to the bottom of this
     
         // Dont use on mac
-       //glViewport(0,0, width*2, height*2);
+       glViewport(0,0, width*OSscaler, height*OSscaler);
        
         /* Render here */
         renderer.Clear();
@@ -216,24 +288,39 @@ int main(void){
 
         // Simple window to display fps
         {
-            ImGui::Begin("Simple Info Display");
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::Text("Resolution of window | %d width    %d height", width, height);
-            ImGui::End();
+            //ImGui::Begin("Simple Info Display");
+            //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            //ImGui::Text("Resolution of window | %d width    %d height", width, height);
+            //ImGui::End();
         }
 
-
-
-
-
+        // This has to be drawn on the bottom buffer on mac but on linux it has to be the top
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        
+
+
+        // Frame Buffer Object Drawing..
+        // The Frame Buffer Object SHould be provided by the window
+        glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        GLCall(glDisable(GL_DEPTH_TEST)); 
+        Frame.BindBufferData();
+
+        //float Twidth = (float)width;
+        //float Theight = (float)height;
+
+        //Frame.SetFloatUniform("u_Size.height", Twidth);
+        //Frame.SetFloatUniform("u_Size.width", Theight);
+        Frame.Paint();
+
+        
 
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
 
     }
 

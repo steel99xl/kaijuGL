@@ -81,23 +81,21 @@ void main(){
     vec3 norm = normalize(v_Normalized);
     vec3 lightDir = normalize(u_Light.position - v_FragPos);
 
-    //float theta = dot(u_Light.position, normalize(-u_Light.lightDir));
+    float theta = dot(lightDir, normalize(-u_Light.lightPoint));
 
 
     vec3 viewDir = normalize(u_camPos - v_FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
+    vec3 hlafwayDir = normalize(lightDir + viewDir);
 
-    //vec3 hlafwayDir = normalize()
 
     vec3 ambient = u_Material.ambient * u_Light.ambient;
-      
-  // do lighting calculations
 
     float diff = max(dot(norm, u_Light.position), 0.0);
     vec3 diffuse = (diff * u_Material.diffuse) * u_Light.diffuse;
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
-    vec3 specular = (u_Material.specular * spec) * u_Light.specular;
+    float spec = pow(max(dot(norm, hlafwayDir), 0.0), u_Material.shininess);
+    vec3 specular = (spec) * u_Light.specular;
 
     if(index == 1){
         texColor = texture(u_Texture0, v_TexCord); 
@@ -118,6 +116,16 @@ void main(){
     diffuse *= attenuation;
     specular *= attenuation;
 
-    Finalcolor = vec4((ambient+ diffuse+ specular), 1.0) * ObjectColor;
+        
+    //if(theta > u_Light.Asize) {          
+  // do lighting calculations
+   //    Finalcolor = vec4((ambient+ diffuse+ specular), 1.0) * ObjectColor; 
+ //   }else{
+
+//        Finalcolor = vec4(ambient,1.0f) * ObjectColor;
+
+//    }  // else, use ambient light so scene isn't completely
+
+   Finalcolor = vec4((ambient+ diffuse+ specular), 1.0) * ObjectColor; 
     
 }

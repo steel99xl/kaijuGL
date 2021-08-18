@@ -23,7 +23,35 @@ double lastY = 0;
 
 void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mods){
     //std::cout << key << std::endl;
-    World.KeyInput(key, scancode, action, mods);
+    int Keys[100];
+    Keys[0] = glfwGetKey(window, GLFW_KEY_W);
+    Keys[1] = glfwGetKey(window, GLFW_KEY_S);
+    Keys[2] = glfwGetKey(window, GLFW_KEY_A);
+    Keys[3] = glfwGetKey(window, GLFW_KEY_D);
+
+    Keys[4] = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT);
+    Keys[5] = glfwGetKey(window, GLFW_KEY_SPACE);
+    Keys[6] = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL);
+
+    Keys[10] = glfwGetKey(window, GLFW_KEY_W);
+    Keys[11] = glfwGetKey(window, GLFW_KEY_S);
+    Keys[12] = glfwGetKey(window, GLFW_KEY_A);
+    Keys[13] = glfwGetKey(window, GLFW_KEY_D);
+
+    Keys[14] = glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT);
+    Keys[15] = glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
+    Keys[16] = glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL);
+
+    Keys[20] = glfwGetKey(window, GLFW_KEY_L);
+    Keys[21] = glfwGetKey(window, GLFW_KEY_K);
+
+    Keys[22] = glfwGetKey(window, GLFW_KEY_MINUS);
+    Keys[23] = glfwGetKey(window, GLFW_KEY_EQUAL);
+
+
+
+    
+    World.KeyInput(Keys);
 
     // This is only done for an example of out of "world" controls
 
@@ -67,7 +95,7 @@ int main(void){
     float ScaleFactor[2] = {0.0f,0.0f};
     float ScaleBuffer;
 
-    int OSscaler = 2; // This is mainly for mac os
+    int OSscaler = 1; // This is mainly for mac os
 
     ScaleBuffer = (float)width/(float)height;
 
@@ -174,7 +202,7 @@ int main(void){
     ImGui_ImplOpenGL3_Init(glsl_version);
 
 
-    glfwSetInputMode(window, GLFW_STICKY_KEYS,1);
+    glfwSetInputMode(window, GLFW_STICKY_KEYS,GLFW_TRUE);
     //glfwSetKeyCallback(window, KeyCallBack);
 
     World.Setup();

@@ -26,6 +26,10 @@ void SimpleObject::Setup(){
         m_IBO->MakeBuffer(NULL, (m_MaxQuadCount*4)*6 );
         m_VertexBuffer->MakeBuffer(NULL, sizeof(Vertex) * (m_MaxQuadCount*4));
         //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
+        // This is just to set the basic rotation for the object in work space
+        m_rX = 0.0f;
+        m_rY = 1.0f;
+        m_rZ = 0.0f;
 
         VertexBufferLayout layout;
         // This defines the layout
@@ -110,8 +114,6 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
         SqrPt3 = Rotatez(SqrPt3,AngleZ);
         SqrPt4 = Rotatez(SqrPt4,AngleZ);
         TempLightPosVec = Rotatez(TempLightPosVec, AngleZ);
-
-
 
         Temp.Pos = {SqrPt1.x + TempPosVec.x, SqrPt1.y + TempPosVec.y, SqrPt1.z + TempPosVec.z};
         Temp.NormalPos = {TempLightPosVec.x, TempLightPosVec.y, TempLightPosVec.z};

@@ -53,7 +53,7 @@ class TestWorld{
 
         Camera2D SimpleCam = Camera2D(glm::vec3(0.0f,0.0f,0.0f) , 1.0f, 200.0f, 200.0f, 100.0f );
         //SimpleObject Object;// = SimpleObject(1000);
-        Camera3D AdvancedCam = Camera3D(glm::vec3(0.0, 0.0, 3.0f), glm::vec3(0.0, 0.0, -1.0f), glm::vec3(0.0, 1.0, 0.0f), 0.1f, 1.0f, 75.0f, 10000.0f );
+        Camera3D AdvancedCam = Camera3D(glm::vec3(0.0, 0.0, 2.0f), glm::vec3(0.0, 0.0, -1.0f), glm::vec3(0.0, 1.0, 0.0f), 0.1f, 1.0f, 75.0f, 10000.0f );
 
     public:
              
@@ -64,10 +64,13 @@ class TestWorld{
 
         Vertex *CreateQuad(Vertex *target, float X, float Y, float sizeX, float sizeY, float TextureID);
 
+
+        bool SimpleColisionFunction(std::vector<Vertex> ObjectAVerticies, int ObjectAVerticiesCount, glm::vec3 ObjecAPos, std::vector<Vertex> ObjectBVerticies, int ObjectBVerticiesCount, glm::vec3 ObjectBPos);
+
         void Setup();
 
         void OnUpdate(float deltaTime, float width, float hight);
-        void KeyInput(int key, int scancode, int action, int mods);
+        void KeyInput(int Keys[]);
         void MouseInput(double xpos, double ypos);
         void OnRender();
         void OnImGui();

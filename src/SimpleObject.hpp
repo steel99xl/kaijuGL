@@ -71,6 +71,8 @@ class SimpleObject{
         int m_MaxQuads, m_UsedQuads;
 
         float m_X, m_Y, m_Z;
+        // The calculated rotation of point (0.0, 1.0, 0.0) from the origin of the object
+        float m_rX, m_rY, m_rZ;
         // Object color
         float m_R, m_G, m_B;
         // Light color if object is emitting light
@@ -105,7 +107,6 @@ class SimpleObject{
         void Setup();
 
         // This will be used my the shader to place the "object" in the world
-        glm::vec3 m_Pos;
 
 
         // Each object can store a texture, and each object will be able to bind a texture 

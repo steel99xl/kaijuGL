@@ -68,11 +68,15 @@ void TestWorld::Setup(){
    // Land.Create2dQuad(0.0f,0.0f,0.0f, F_NONE, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
     //Land.Create2dQuad(0.0f,10.0f,-10.0f, F_NORTH, 20.0f,20.0f, 0.0f,0.0f, 0.0f, 0.0f, 0.0f);
 
-    Land.Create2dQuad(0.0f,-1.0f,0.0f, -90.0f,45.0f,0.0f, 100.0f,100.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    Land.Create2dQuad(0.0f,-1.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    Land.Create2dQuad(8.0f,1.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+
+    Land.Create2dQuad(0.0f,-1.0f,-6.0f, 0.0f,0.0f,0.0f, 5.0f,5.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+
 
     Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.10f,0.10f,0.10f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    Object.CreateCube(0.0f,0.0f,0.0f, 45.0f,45.0f,45.0f, 1.0f,1.0f,1.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    Object.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     // Yes the FaceDir matters based on where you want it to be visible
     //Object.Create2dQuad(0.0f,0.0f,0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
@@ -274,127 +278,68 @@ void TestWorld::OnUpdate(float deltaTime, float width, float height){
         //);
     }
 
-void TestWorld::KeyInput(int key, int scancode, int action, int mods){
+void TestWorld::KeyInput(int Keys[]){
         float SpeedStep = 4.317f;
+        // Keys[] will be replaced with a vector or array of keyinput structs
+        // Eventualy the movment will be forcebased
 
-        if(mods == 1){
+        if(Keys[6] == GLFW_PRESS){
             //SpeedStep = 12.51f *m_DeltaTime;
             SpeedStep = 5.612;
         }
 
+        if(Keys[0] == GLFW_PRESS){
+           m_pos2D[2] -= 5 + SpeedStep;
+            AdvancedCam.Move(FORWARD, SpeedStep); 
+        }
 
-        if(action == GLFW_PRESS){
-            switch(key){
-                case GLFW_KEY_W:
-                    m_pos2D[2] -= 5 + SpeedStep;
-                    AdvancedCam.Move(FORWARD, SpeedStep);
-                    break;
+        if(Keys[1] == GLFW_PRESS){
+           m_pos2D[2] += 5 + SpeedStep;
+            AdvancedCam.Move(BACK, SpeedStep); 
+        }
 
-                case GLFW_KEY_S:
-                    m_pos2D[2] += 5 + SpeedStep;
-                    AdvancedCam.Move(BACK, SpeedStep);
-                    break;
+        if(Keys[2] == GLFW_PRESS){
+           m_pos2D[0] -= 5 + SpeedStep;
+            AdvancedCam.Move(LEFT, SpeedStep);
+        }
 
-                case GLFW_KEY_SPACE:
-                    m_pos2D[1] += 5 + SpeedStep;
-                    AdvancedCam.Move(UP, SpeedStep);
-                    //_look[1] += 5 + SpeedStep;
-                    break;
+        if(Keys[3] == GLFW_PRESS){
+           m_pos2D[0] += 5 + SpeedStep;
+            AdvancedCam.Move(RIGHT, SpeedStep);
+        }
 
-                
-                case GLFW_KEY_V:
-                    m_pos2D[1] -= 5 + SpeedStep;
-                    AdvancedCam.Move(DOWN, SpeedStep);
-                    //m_look[1] -= 5 + SpeedStep;
-                    break;
+        if(Keys[5] == GLFW_PRESS){
+           m_pos2D[1] += 5 + SpeedStep;
+            AdvancedCam.Move(UP, SpeedStep);
+        }
 
-                case GLFW_KEY_A:
-                    m_pos2D[0] -= 5 + SpeedStep;
-                    AdvancedCam.Move(LEFT, SpeedStep);
-                    //m_look[0] -= 5 + SpeedStep;
-                    break;
+        if(Keys[4] == GLFW_PRESS){
+           m_pos2D[1] -= 5 + SpeedStep;
+            AdvancedCam.Move(DOWN, SpeedStep);
+        }
 
-                case GLFW_KEY_D:
-                    m_pos2D[0] += 5 + SpeedStep;
-                    AdvancedCam.Move(RIGHT, SpeedStep);
-                    //m_look[0] += 5 + SpeedStep;
-                    break;
-
-                case GLFW_KEY_MINUS:
-                    m_FOV -= 1.0f;
+        if(Keys[22] == GLFW_PRESS){
+            m_FOV -= 1.0f;
                     if(m_FOV <= 20.0f){
                         m_FOV = 20.0f;
                     }
-                    break;
+        }
 
-                case GLFW_KEY_EQUAL:
-                    m_FOV += 1.0f;
+        if(Keys[23] == GLFW_PRESS){
+            m_FOV += 1.0f;
                     if(m_FOV >= 120.0f){
                         m_FOV = 120.0f;
                     }
-                    break;
-                
-                case GLFW_KEY_L:
-                    AdvancedCam.InvertVertical();
-                    break;
-                case GLFW_KEY_K:
-                    AdvancedCam.UnInvertVertical();
-                    break;
-            }
         }
 
-         if(action == GLFW_REPEAT){
-            switch(key){
-                case GLFW_KEY_W:
-                    m_pos2D[2] -= 5 + SpeedStep;
-                    AdvancedCam.Move(FORWARD, SpeedStep);
-                    break;
-
-                case GLFW_KEY_S:
-                    m_pos2D[2] += 5 + SpeedStep;
-                    AdvancedCam.Move(BACK, SpeedStep);
-                    break;
-
-                case GLFW_KEY_SPACE:
-                    m_pos2D[1] += 5 + SpeedStep;
-                    AdvancedCam.Move(UP, SpeedStep);
-                    //_look[1] += 5 + SpeedStep;
-                    break;
-
-                
-                case GLFW_KEY_V:
-                    m_pos2D[1] -= 5 + SpeedStep;
-                    AdvancedCam.Move(DOWN, SpeedStep);
-                    //m_look[1] -= 5 + SpeedStep;
-                    break;
-
-                case GLFW_KEY_A:
-                    m_pos2D[0] -= 5 + SpeedStep;
-                    AdvancedCam.Move(LEFT, SpeedStep);
-                    //m_look[0] -= 5 + SpeedStep;
-                    break;
-
-                case GLFW_KEY_D:
-                    m_pos2D[0] += 5 + SpeedStep;
-                    AdvancedCam.Move(RIGHT, SpeedStep);
-                    //m_look[0] += 5 + SpeedStep;
-                    break;
-
-                case GLFW_KEY_MINUS:
-                    m_FOV -= 1.0f;
-                    if(m_FOV <= 20.0f){
-                        m_FOV = 20.0f;
-                    }
-                    break;
-
-                case GLFW_KEY_EQUAL:
-                    m_FOV += 1.0f;
-                    if(m_FOV >= 120.0f){
-                        m_FOV = 120.0f;
-                    }
-                    break;
-            }
+        if(Keys[20] == GLFW_PRESS){
+           AdvancedCam.InvertVertical();
         }
+
+        if(Keys[21] == GLFW_PRESS){
+           AdvancedCam.UnInvertVertical();
+        }
+
 
 }
 
@@ -471,10 +416,28 @@ void TestWorld::OnRender(){
         Object.SetMaterial(BasicMetalCube);
         Object.Paint();
 
-        //
+        //Using this cube as as temp player for colision detection
+        // This is only going to check colision with the single Land Object (IE the ground);
+        // The position is only being set first so i can just call the cube object
+        Object.SetPosition(camPos.x, camPos.y-1.3f, camPos.z, m_Projection, m_View);
 
-        Object.SetPosition(camPos.x, camPos.y-1.5f, camPos.z, m_Projection, m_View);
-        Object.SetColor(m_Color3.x, m_Color3.y, m_Color3.z, m_Color3.w);
+        std::vector<Vertex> CubeVertex = Object.GetVerticies();
+        int CubeVertexCount = Object.GetVerticiesCount();
+         glm::vec3 CubePos = Object.GetPos();
+
+        std::vector<Vertex> LandVertex = Land.GetVerticies();
+        int LandVertexCount =  Land.GetVerticiesCount();
+        glm::vec3 LandPos = Land.GetPos();
+
+        // FragPos will be used for object push back
+        // for now it will be a simple bool
+        bool Test = SimpleColisionFunction(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);
+        
+        if(Test){
+            Object.SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+        } else {
+            Object.SetColor(m_Color3.x, m_Color3.y, m_Color3.z, 1.0f);
+        }
         Object.SetLight(Sun.GetLightInfo(), Sun.GetPos(), camPos);
         Object.SetMaterial(BasicMetalCube);
         Object.Paint();
@@ -486,6 +449,218 @@ void TestWorld::OnRender(){
         
 
     }
+
+bool TestWorld::SimpleColisionFunction(std::vector<Vertex> ObjectAVerticies, int ObjectAVerticiesCount, glm::vec3 ObjectAPos, std::vector<Vertex> ObjectBVerticies, int ObjectBVerticiesCount, glm::vec3 ObjectBPos){
+    bool XColission = false;
+    bool YColission = false;
+    bool ZColission = false;
+
+    std::vector <VertexPos> MinMaxA;
+    int MinMaxACount = 0; // This is just for testing
+    std::vector <VertexPos> MinMaxB;
+    int MinMaxBCount = 0; // This is also just for testing
+
+    VertexPos Max;
+    VertexPos Min;
+
+    float XMin = INFINITY;
+    float YMin = INFINITY;
+    float ZMin = INFINITY;
+
+    float XMax = -INFINITY;
+    float YMax = -INFINITY;
+    float ZMax = -INFINITY;
+
+    int Count = 0; //This is so every min and max is pushed back every quad
+    for(int i = 0; i < ObjectAVerticiesCount; i++){
+        Count++;
+        float X = ObjectAVerticies[i].Pos.X + ObjectAPos[0];
+        float Y = ObjectAVerticies[i].Pos.Y + ObjectAPos[1];
+        float Z = ObjectAVerticies[i].Pos.Z + ObjectAPos[2];
+
+        if(X < XMin){
+            XMin = X;
+        } else if(X > XMax){
+            XMax = X;
+        }
+
+        if(Y < YMin){
+            YMin = Y;
+        } else if(Y > YMax){
+            YMax = Y;
+        }
+
+        if(Z < ZMin){
+            ZMin = Z;
+        } else if(Z > ZMax){
+            ZMax = Z;
+        }
+
+        if(Count == 4){
+            Count = 0;
+
+            Min.X = XMin;
+            Min.Y = YMin;
+            Min.Z = ZMin;
+
+            Max.X = XMax;
+            Max.Y = YMax;
+            Max.Z = ZMax;
+
+            MinMaxA.push_back(Min);
+            MinMaxA.push_back(Max);
+            MinMaxACount += 2;
+
+            XMin = INFINITY;
+            YMin = INFINITY;
+            ZMin = INFINITY;
+
+            XMax = -INFINITY;
+            YMax = -INFINITY;
+            ZMax = -INFINITY;
+
+        }
+    }
+
+    // I should not have to reset the Min and Max but this is just to be save;
+    XMin = INFINITY;
+    YMin = INFINITY;
+    ZMin = INFINITY;
+
+    XMax = -INFINITY;
+    YMax = -INFINITY;
+    ZMax = -INFINITY;
+
+    Count = 0; //This is so every min and max is pushed back every quad
+    for(int i = 0; i < ObjectBVerticiesCount; i++){
+        Count++;
+        float X = ObjectBVerticies[i].Pos.X + ObjectBPos[0];
+        float Y = ObjectBVerticies[i].Pos.Y + ObjectBPos[1];
+        float Z = ObjectBVerticies[i].Pos.Z + ObjectBPos[2];
+
+        if(X < XMin){
+            XMin = X;
+        } else if(X > XMax){
+            XMax = X;
+        }
+
+        if(Y < YMin){
+            YMin = Y;
+        } else if(Y > YMax){
+            YMax = Y;
+        }
+
+        if(Z < ZMin){
+            ZMin = Z;
+        } else if(Z > ZMax){
+            ZMax = Z;
+        }
+
+        if(Count == 4){
+            Count = 0;
+
+            Min.X = XMin;
+            Min.Y = YMin;
+            Min.Z = ZMin;
+
+            Max.X = XMax;
+            Max.Y = YMax;
+            Max.Z = ZMax;
+
+            MinMaxB.push_back(Min);
+            MinMaxB.push_back(Max);
+            MinMaxBCount += 2;
+
+            XMin = INFINITY;
+            YMin = INFINITY;
+            ZMin = INFINITY;
+
+            XMax = -INFINITY;
+            YMax = -INFINITY;
+            ZMax = -INFINITY;
+
+        }
+    }
+
+
+    
+
+    //std::cout << MinMaxA[2].X << " | " << MinMaxA[2].Y << " | " << MinMaxA[2].Z << std::endl;
+    // OK so this looks nearly Vertex Perfext on X and Z 
+    int b,d;
+    for(int a = 0; a < MinMaxACount; a += 2){
+        b = (a + 1) % MinMaxACount;
+        
+        for( int c = 0; c < MinMaxBCount; c += 2){
+            d = (c + 1) % MinMaxBCount;
+
+            /*
+            std::cout << "TITLE BAR FOR EASE OF USE" << std::endl;
+            std::cout << a << " : Curent MinMax pare on object A" << std::endl;
+            std::cout << MinMaxA[a].X << " | " << MinMaxA[a].Y << " | " << MinMaxA[a].Z << std::endl;
+            std::cout << MinMaxA[b].X << " | " << MinMaxA[b].Y << " | " << MinMaxA[b].Z << std::endl;
+            std::cout << "Plane" << std::endl;
+            std::cout << MinMaxB[c].X << " | " << MinMaxB[c].Y << " | " << MinMaxB[c].Z << std::endl;
+            std::cout << MinMaxB[d].X << " | " << MinMaxB[d].Y << " | " << MinMaxB[d].Z << std::endl;
+            */
+            
+            if((MinMaxA[a].X <= MinMaxB[c].X && MinMaxA[b].X >= MinMaxB[d].X) || (MinMaxA[a].X >= MinMaxB[c].X && MinMaxA[b].X <= MinMaxB[d].X)){
+                XColission = true;
+            } else {
+                XColission = false;
+            }
+            if((MinMaxA[a].Y <= MinMaxB[c].Y && MinMaxA[b].Y >= MinMaxB[d].Y) || (MinMaxA[a].Y >= MinMaxB[c].Y && MinMaxA[b].Y <= MinMaxB[d].Y)){
+                YColission = true;
+            } else {
+                YColission = false;
+            }
+            if((MinMaxA[a].Z <= MinMaxB[c].Z && MinMaxA[b].Z >= MinMaxB[d].Z) || (MinMaxA[a].Z >= MinMaxB[c].Z && MinMaxA[b].Z <= MinMaxB[d].Z)){
+                ZColission = true;
+            } else {
+                ZColission = false;
+            }
+
+            if(XColission && ZColission && YColission){
+                return true;
+            }
+
+            /*
+            std::cout << "End of check" << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            */
+        }
+    }
+
+    return false;
+
+    // Super Basic AABB
+    /*
+    for(int a = 1; a < ObjectAVerticiesCount; a += 4){
+        b = a + 2;
+        for( int c = 1; c < ObjectBVerticiesCount; c += 4){
+            d = c + 2;
+            //std::cout << "Current Pos Based on the first Vertex of ObjectA" << std::endl;
+            //std::cout << ObjectAVerticies[0].Pos.X + ObjectAPos[0] << " | " << ObjectBVerticies[c].Pos.X + ObjectBPos[0] << " | " << ObjectBVerticies[d].Pos.X + ObjectBPos[0] << std::endl;
+            if(ObjectAVerticies[a].Pos.X + ObjectAPos[0] <= ObjectBVerticies[c].Pos.X + ObjectBPos[0] && ObjectAVerticies[a].Pos.X + ObjectAPos[0] >= ObjectBVerticies[d].Pos.X + ObjectBPos[0]){
+                XColission = true;
+            }
+            
+            // This cheks opposite compared to the other
+            if(ObjectBVerticies[c].Pos.Y + ObjectBPos[1] >= ObjectAVerticies[a].Pos.Y + ObjectAPos[1] && ObjectBVerticies[c].Pos.Y + ObjectBPos[1] <= ObjectAVerticies[b].Pos.Y + ObjectAPos[1]){
+                YColission = true;
+
+            }
+
+            
+            if(ObjectAVerticies[a].Pos.Z + ObjectAPos[2] <= ObjectBVerticies[c].Pos.Z + ObjectBPos[2] && ObjectAVerticies[a].Pos.Z + ObjectAPos[2] >= ObjectBVerticies[d].Pos.Z + ObjectBPos[2]){
+                ZColission = true;
+            }
+        }
+    }
+    */
+    
+
+}
 
 void TestWorld::OnImGui(){
     {

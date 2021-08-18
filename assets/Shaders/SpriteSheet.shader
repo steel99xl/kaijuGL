@@ -26,10 +26,10 @@ in vec2 v_TexCord;
 in float v_TexIndex;
 
 uniform vec4 u_Color;
+uniform sampler2D u_Texture
 
-//uniform sampler2D u_Texture;
 void main(){
-    //vec4 texColor = texture(u_Texture, v_TexCord); 
-    //color = texColor + u_Color;
-    color = u_Color;
+    int index  = int(v_TexIndex);
+    vec4 texColor = texture(u_Texture, v_TexCord); 
+    color = texColor;
 }

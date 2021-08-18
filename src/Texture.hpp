@@ -19,6 +19,8 @@ class Texture{
 
         void LoadTexture(const std::string &filePath, unsigned int slot = 0);
 
+        unsigned int MakeTexture(const std::string &filePath, int width = 0, int hegith = 0);
+
 
         inline int GetWidth() const {return m_Width;}
 

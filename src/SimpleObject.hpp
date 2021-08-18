@@ -1,6 +1,7 @@
 #pragma once
 //#include "VertexBuffer.hpp"
 //#include "VertexBufferLayout.hpp"
+#include "Texture.hpp"
 #include "Engine.hpp"
 
 
@@ -16,15 +17,48 @@ struct VertexTexCord{
 };
 
 struct Vertex{
-                VertexPos Pos;
-                VertexTexCord TexCord;
-                float TexID;
+    VertexPos Pos;
+    VertexPos NormalPos;
+    VertexTexCord TexCord;
+    float TexID;
 };
+
+struct ColorFloat{
+    float R;
+    float G;
+    float B;
+};
+
+struct SimpleLightInfo{
+    // Note that the Light Struct defined in the BasicShaders set needs position data as well
+    VertexPos lightDir; // might have to be limited to a range of -1 to 1
+    ColorFloat ambient;
+    ColorFloat diffuse;
+    ColorFloat specular;
+
+    float Angle;
+
+    float Const;
+    float Linear;
+    float Quadratic;
+};
+
+struct SimpleMaterialInfo{
+    ColorFloat ambient;
+    ColorFloat diffuse;
+    ColorFloat specular;
+    float shininess;
+};
+
+enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
 
 
 class SimpleObject{
     private:
         int m_MaxQuadCount;
+
+        SimpleMaterialInfo m_Material;
+        SimpleLightInfo m_Light;
 
         // Vectors a used so seach instance of an SimpleObject can have (m_MaxQuads * 4) verticies and (m_MaxQuads * 6) 
         std::vector<Vertex> m_Verticies;
@@ -36,23 +70,30 @@ class SimpleObject{
 
         int m_MaxQuads, m_UsedQuads;
 
-        //VertexBuffer m_VertexBuffer(nullptr, sizeof(Vertex) * 4);
-        //VertexArray m_VAO();
+        float m_X, m_Y, m_Z;
+        // The calculated rotation of point (0.0, 1.0, 0.0) from the origin of the object
+        float m_rX, m_rY, m_rZ;
+        // Object color
+        float m_R, m_G, m_B;
+        // Light color if object is emitting light
+        float m_LR, m_LG, m_LB;
 
-        std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<VertexArray> m_VAO;
-        std::unique_ptr<Shader> m_Shader;
-        std::unique_ptr<IndexBuffer> m_IBO;
-        
+
+        //Astd::unique_ptr<Texture> m_Texture;
         //Texture m_Texture;
 
-        //VertexBuffer *m_VertexBuffer;
-        //VertexArray *m_VAO;
-        //Shader *m_Shader;
-        //IndexBuffer *m_IBO;
+        std::unique_ptr<VertexBuffer> m_VertexBuffer;
+        std::unique_ptr<Shader> m_Shader;
+        std::unique_ptr<IndexBuffer> m_IBO;
+
+
+        glm::vec3 Rotatex(glm::vec3 Start, float Angle);
+        glm::vec3 Rotatey(glm::vec3 Start, float Angle);
+        glm::vec3 Rotatez(glm::vec3 Start, float Angle);
         
-        //std::unique_ptr<Texture> m_Texture;
-        
+
+
 
 
 
@@ -63,17 +104,19 @@ class SimpleObject{
         SimpleObject(int MaxQuads = 10000);
         ~SimpleObject();
 
+        void Setup();
+
         // This will be used my the shader to place the "object" in the world
-        glm::vec3 m_Pos;
 
 
         // Each object can store a texture, and each object will be able to bind a texture 
-        GLuint m_Texture;
         // Depending how a quad is set 1 object can use Textures of other objects
 
         // This function needs to be rewriten to not take "target" from the user
         // Should append to the indexbuffer
-        void Create2dQuad(float X, float Y,float Z, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
+        void Create2dQuad(float X,float Y,float Z, float AngleX, float AngleY, float AngleZ, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
+
+        void CreateCube(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float SizeX, float SizeY, float SizeZ, float tX, float tY, float TX, float TY, float TexuteID);
 
         
 
@@ -106,6 +149,47 @@ class SimpleObject{
         inline int GetIndicCount() {return (m_UsedQuads*4)*6;}; const
         inline int GetMaxQuadCound() {return m_MaxQuadCount;}
         inline int GetUsedQuads() {return m_UsedQuads;}
+
+        inline SimpleMaterialInfo GetMaterialInfo() {return m_Material;}
+        inline SimpleLightInfo GetLightInfo() {return m_Light;}
+
+        inline void SetLightColor(float R, float G, float B) { m_LR = R; m_LG = G; m_LB = B;}
+
+        inline glm::vec3 GetLightColor() { return glm::vec3(m_LR, m_LG, m_LB);}
+        inline glm::vec3 GetPos() {return glm::vec3(m_X, m_Y, m_Z);}
+
+        void SetShader(const std::string &filePath);
+
+        void SetPosition(float X, float Y, float Z, glm::mat4 &Projection, glm::mat4 &View);
+
+        void SetColor(float r, float g, float b, float a);
+
+        void SetMaterial(SimpleMaterialInfo &Material);
+
+        void MakeMaterial(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float Shininess);
+
+        void MakeLight(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float LightDirX, float LightDirY, float LightDirZ, float AngleSize, float Linear, float Quadratic);
+    
+        void SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos);
+
+        // Sets up the object to act as a source of light;
+        // void SetLightEmission()
+
+        void AddTexture(const std::string &filePath, unsigned int slot = 0);
+
+        void SetTexture(unsigned int Texture, const std::string &UniformName);
+
+        void SetFloatUniform(const std::string &UniformName, float data);
+
+        void BindBufferData();
+
+        void BindVertexBuffer();
+        void BindIndexBuffer();
+
+
+        //inline std::unique_ptr<VertexArray> GetVertexArray() {return m_VAO;}
+        //inline std::unique_ptr<IndexBuffer> GetIndexObject() {return m_IBO;}
+        //inline std::unique_ptr<Shader> GetShader() {return m_Shader;}
 
 
 };

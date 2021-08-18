@@ -1,25 +1,6 @@
 #pragma once
 #include "../Engine.hpp"
 
-
-
-struct Vertex2DPos{
-    float X;
-    float Y;
-    float Z;
-};
-
-struct Vertex2DTexCord{
-    float X;
-    float Y;
-};
-
-struct Vertex2D{
-                Vertex2DPos Pos;
-                Vertex2DTexCord TexCord;
-                float TexID;
-             };
-
   
     
 class TestWorld{
@@ -31,30 +12,48 @@ class TestWorld{
         glm::vec3 m_pos2D;
         float m_FOV;
 
+        // TODO : implement frame buffer object
+        //Frame Buffer Info
+        unsigned int m_FBO;
+        unsigned int FrameBufferTexture;
+        unsigned int TestTexture;
+
+        unsigned int m_RBO;
+
+        glm::mat4 m_Projection, m_View;
+
+        ImVec4 m_Color, m_Color2, m_Color3;
+
         //float m_yaw, m_pitch, m_lastX, m_lastY;
 
         int m_Width, m_Height;
 
-        float m_QuadPos2[3] = {200.0f,210.0f,200.0f};
 
+       // VertexArray m_TestVAO;
+        
         std::unique_ptr<VertexArray> m_VAO;
-        //VertexArray *m_VAO;
-        std::unique_ptr<Shader> m_Shader;
-        //Shader *m_Shader;
+        //std::unique_ptr<VertexArray> m_TestVAO;
         std::unique_ptr<IndexBuffer> m_IBO;
-        //IndexBuffer *m_IBO;
+
+    
         std::unique_ptr<Texture> m_Texture;
-        //Texture *m_Texture;
+        std::unique_ptr<Shader> m_Shader;
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
-        //VertexBuffer *m_VertexBuffer;
 
         SimpleObject Object;
+        SimpleObject Testobject;
+        SimpleObject Land;
+        SimpleObject Sun;
+
+        SimpleObject FBOrec;
+
+        SimpleMaterialInfo BasicMetalCube;
 
         // Literaly just to show that you can set your own size
 
         Camera2D SimpleCam = Camera2D(glm::vec3(0.0f,0.0f,0.0f) , 1.0f, 200.0f, 200.0f, 100.0f );
         //SimpleObject Object;// = SimpleObject(1000);
-        Camera3D AdvancedCam = Camera3D(glm::vec3(0.0, 0.0, 3.0f), glm::vec3(0.0, 0.0, -1.0f), glm::vec3(0.0, 1.0, 0.0f), 0.1f, 1.0f, 75.0f, 10000.0f );
+        Camera3D AdvancedCam = Camera3D(glm::vec3(0.0, 0.0, 2.0f), glm::vec3(0.0, 0.0, -1.0f), glm::vec3(0.0, 1.0, 0.0f), 0.1f, 1.0f, 75.0f, 10000.0f );
 
     public:
              
@@ -65,12 +64,15 @@ class TestWorld{
 
         Vertex *CreateQuad(Vertex *target, float X, float Y, float sizeX, float sizeY, float TextureID);
 
+
+        bool SimpleColisionFunction(std::vector<Vertex> ObjectAVerticies, int ObjectAVerticiesCount, glm::vec3 ObjecAPos, std::vector<Vertex> ObjectBVerticies, int ObjectBVerticiesCount, glm::vec3 ObjectBPos);
+
         void Setup();
 
-        void OnUpdate(float deltaTime);
-        void KeyInput(int key, int scancode, int action, int mods);
+        void OnUpdate(float deltaTime, float width, float hight);
+        void KeyInput(int Keys[]);
         void MouseInput(double xpos, double ypos);
-        void OnRender(int Width, int Height, float ScaleFactor);
+        void OnRender();
         void OnImGui();
 
 

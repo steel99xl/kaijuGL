@@ -90,13 +90,15 @@ void Camera3D::Move(Direction direction, float Speed){
 
     Speed = Speed * m_DeltaTime;
 
+     float Buff = m_pos[1];
+
     switch(direction){
         case UP:
-            m_pos[1] += 5 + Speed;
+            m_pos[1] += Speed;
             break;
 
         case DOWN:
-            m_pos[1] -= 5 + Speed;
+            m_pos[1] -= Speed;
             break;
 
         case LEFT:
@@ -108,11 +110,15 @@ void Camera3D::Move(Direction direction, float Speed){
             break;
 
         case FORWARD:
-            m_pos += (float)(Speed) * m_look;
+            m_pos[0] += (float)(Speed) * m_WalkingDir[0];
+            m_pos[2] += (float)(Speed) * m_WalkingDir[1]; 
+            m_pos[1] = Buff;
             break;
 
         case BACK:
-            m_pos -= (float)(Speed) * m_look;
+            m_pos[0] -= (float)(Speed) * m_WalkingDir[0];
+            m_pos[2] -= (float)(Speed) * m_WalkingDir[1];
+            m_pos[1] = Buff;
             break;
 
     }
@@ -143,5 +149,8 @@ void Camera3D::LookRelative(double xpos, double ypos){
     direction.y = sin(glm::radians(m_Lpitch));
     direction.z = sin(glm::radians(m_Lyaw)) * cos(glm::radians(m_Lpitch));
     m_look = glm::normalize(direction);
+    m_WalkingDir.x = direction.x;
+    m_WalkingDir.y = direction.z; 
+    m_WalkingDir = glm::normalize(m_WalkingDir);
 
 }

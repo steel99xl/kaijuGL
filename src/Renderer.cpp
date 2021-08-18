@@ -17,7 +17,7 @@ void Renderer::Clear() const {
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 }
 
-void Renderer::Draw(const class VertexArray &va, const class IndexBuffer &ib, const class Shader &shader) {
+void Renderer::Draw(class VertexArray &va, class IndexBuffer &ib, class Shader &shader) {
     va.Bind();
     ib.Bind();
     shader.Bind();

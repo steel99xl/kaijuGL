@@ -47,6 +47,7 @@ class Camera3D{
     //Camera  Position, Faceing, Rotation
     glm::vec3  m_pos, m_look, m_rotation;
     glm::mat4 m_Proj, m_View; // This MVP stuff has the same naems
+    glm::vec2 m_WalkingDir; // same as look but just for the X and Z cordinates
 
     // Used where the camera is looking
     float m_Lyaw, m_Lpitch, m_LlastinputX, m_LlastinputY;

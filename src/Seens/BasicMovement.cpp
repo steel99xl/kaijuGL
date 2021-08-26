@@ -12,7 +12,7 @@ TestWorld::TestWorld() : m_running(false), m_Effect(false), m_Width(800), m_Heig
 
 TestWorld::~TestWorld(){
 
-    
+
     //m_TestVAO = std::make_unique<VertexArray>();
 
 }
@@ -24,14 +24,14 @@ void TestWorld::Setup(){
     std::cout << "Press the ESC key to togle cursor lock" << std::endl;
     std::cout << "W A S D Moves the camera" << std::endl;
 
-   
+
     m_VAO = std::make_unique<VertexArray>();
     m_Shader = std::make_unique<Shader>();
     m_IBO = std::make_unique<IndexBuffer>();
     m_Texture = std::make_unique<Texture>();
     m_VertexBuffer = std::make_unique<VertexBuffer>();
 
-    
+
     //FrameBufferTexture = m_Texture->MakeTexture("NULL", 800,600);
     TestTexture = m_Texture->MakeTexture("assets/Textures/OtherBox.png");
 
@@ -68,15 +68,21 @@ void TestWorld::Setup(){
    // Land.Create2dQuad(0.0f,0.0f,0.0f, F_NONE, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
     //Land.Create2dQuad(0.0f,10.0f,-10.0f, F_NORTH, 20.0f,20.0f, 0.0f,0.0f, 0.0f, 0.0f, 0.0f);
 
-    Land.Create2dQuad(0.0f,-1.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-    Land.Create2dQuad(8.0f,1.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    Land.Create2dQuad(0.0f,-1.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    Land.Create2dQuad(8.0f,1.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    Land.Create2dQuad(0.0f,4.0f,0.0f, 90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f,0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    Land.Create2dQuad(0.0f,-1.0f,-6.0f, 0.0f,0.0f,0.0f, 5.0f,5.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    Land.Create2dQuad(0.0f,-1.0f,-2.5f, 0.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    Land.Create2dQuad(0.0f,-1.0f,2.5f, 0.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+
+    Land.Create2dQuad(-2.5f,-1.0f,0.0f, 0.0f,-90.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
 
-    Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.10f,0.10f,0.10f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    Object.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+
+    Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.10f,0.10f,0.10f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+
+    Object.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     // Yes the FaceDir matters based on where you want it to be visible
     //Object.Create2dQuad(0.0f,0.0f,0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
@@ -109,14 +115,14 @@ void TestWorld::Setup(){
 
     //m_IBO->MakeBuffer(Object.GetIndices().data(), Object.GetIndicCount() );
     //m_IBO->MakeBuffer(NULL, (Object.GetMaxQuadCound() * 4) * 6);
-   // std::cout << "Index information " << std::endl; 
+   // std::cout << "Index information " << std::endl;
     //m_IBO->Bind();
     //std::cout << "set index buffer" << std::endl;
-    //FBOrec.SetShader("assets/Shaders/FrameBuffer.shader"); 
+    //FBOrec.SetShader("assets/Shaders/FrameBuffer.shader");
     Land.SetShader("assets/Shaders/BlinnPhong.shader");
-    Object.SetShader("assets/Shaders/BlinnPhong.shader"); 
+    Object.SetShader("assets/Shaders/BlinnPhong.shader");
     //TestObject.SetShader("assets/Shaders/MultiImg.shader");
-    
+
     Sun.SetShader("assets/Shaders/BasicLight.shader");
 
     //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
@@ -130,7 +136,7 @@ void TestWorld::Setup(){
         //GLCall(glUniform1iv(loc, size, samplers));
     ///m_Shader->SetUniform1iv("u_Textures", 3, samplers);
     //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
-    
+
     //m_Texture = std::make_unique<Texture>("assets/Textures/Box.png");
 
 
@@ -158,11 +164,10 @@ void TestWorld::Setup(){
 
     //
 
-    
-    
 
-    
-    FBOrec.Create2dQuad(1.0f,1.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f,1.0f, 1.0f);
+
+
+
 
     //m_Texture->LoadTexture("assets/Textures/OtherBox.png");
     //m_Texture->LoadTexture("assets/Textures/Logo.jpeg",1);
@@ -184,7 +189,7 @@ void TestWorld::Setup(){
     //GLCall(glActiveTexture(GL_TEXTURE0 + 2));
     //GLCall(glBindTexture(GL_TEXTURE_2D, Tex3));
 
-    
+
     // This sets the max amout of things in the vertex buffer
     //m_VertexBuffer = std::make_unique<VertexBuffer>(nullptr, sizeof(Vertex) * 100);
 
@@ -195,12 +200,12 @@ void TestWorld::Setup(){
         //std::cout << m_IBO->Unquie() << std::endl;
 
     //VertexBufferLayout layout;
-        // This defines the layout 
+        // This defines the layout
     //layout.Push(3,"float");
     //layout.Push(2,"float");
     //layout.Push(1,"float");
     //layout.Push(1,"float");
-    //m_VAO->AddBuffer(*m_VertexBuffer,layout);    
+    //m_VAO->AddBuffer(*m_VertexBuffer,layout);
 
         //std::cout << "Seting shader program" << std::endl;
 
@@ -208,7 +213,7 @@ void TestWorld::Setup(){
         //GLCall(glUseProgram(m_Shader->GetRenderID()));
 
     //m_Shader->Bind();
- 
+
 
         //Shader shader("assets/Shaders/ImgLoad.shader");
         //m_Shader->Bind();
@@ -219,9 +224,9 @@ void TestWorld::Setup(){
     m_FOV = 75.0f;
 
 
-   
 
-    
+
+
 
     //std::cout << "Total Verticies Sent = " << Object.GetVerticiesCount() << std::endl;
   //  std::cout << "Total Squares = " << Object.GetVerticiesCount()/4 << std::endl;
@@ -230,38 +235,71 @@ void TestWorld::Setup(){
 
 }
 
+void TestWorld::StaticUpdate(int MaxUpdateSpeed){
 
-Vertex *TestWorld::CreateQuad(Vertex *target, float X, float Y, float sizeX, float sizeY, float TextureID){
+        std::vector<Vertex> CubeVertex = Object.GetVerticies();
+        int CubeVertexCount = Object.GetVerticiesCount();
+        glm::vec3 CubePos = Object.GetPos();
 
-        target->Pos = {X, Y, 0.0f};
-        target->TexCord = {0.0f, 0.0f};
-        target->TexID = TextureID;
+        std::vector<Vertex> LandVertex = Land.GetVerticies();
+        int LandVertexCount =  Land.GetVerticiesCount();
+        glm::vec3 LandPos = Land.GetPos();
 
-        target++;
+        //bool Test = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);
 
-        target->Pos = {X+sizeX, Y, 0.0f};
-        target->TexCord = {1.0f, 0.0f};
-        target->TexID = TextureID;
+        // This is just to seperate the old colision system from the new one
+        ColisionInfo SimpleColision;
+        std::vector<QuadPhysicsBody> PhysBodyA, PhysBodyB;
+        std::vector<float> ObjectAX, ObjectAY, ObjectAZ;
+        std::vector<float> ObjectANormX, ObjectANormY, ObjectANormZ;
+        std::vector<float> ObjectBX, ObjectBY, ObjectBZ;
+        std::vector<float> ObjectBNormX, ObjectBNormY, ObjectBNormZ;
+        std::vector<float> ObjectAWeights, ObjectBWeights;
 
-        target++;
+        ForceDirection ObjectAPos, ObjectBPos;
+        ObjectAPos.X = CubePos[0];
+        ObjectAPos.Y = CubePos[1];
+        ObjectAPos.Z = CubePos[2];
 
-        target->Pos = {X+sizeX, Y+sizeY, 0.0f};
-        target->TexCord = {1.0f, 1.0f};
-        target->TexID = TextureID;
-
-        target++;
-
-        target->Pos = {X, Y+sizeY, 0.0f};
-        target->TexCord = {0.0f, 1.0f};
-        target->TexID = TextureID;
-
-        target++;
+        ObjectBPos.X = LandPos[0];
+        ObjectBPos.Y = LandPos[1];
+        ObjectBPos.Z = LandPos[2];
 
 
-        return target;
+        ObjectAWeights = Object.GetWeights();
+        ObjectBWeights = Land.GetWeights();
 
-    }
+        // Ya baybe 2 for loops
+        for(int i = 0; i < CubeVertex.size(); i++){
+            ObjectAX.push_back(CubeVertex[i].Pos.X);
+            ObjectAY.push_back(CubeVertex[i].Pos.Y);
+            ObjectAZ.push_back(CubeVertex[i].Pos.Z);
 
+            ObjectANormX.push_back(CubeVertex[i].NormalPos.X);
+            ObjectANormY.push_back(CubeVertex[i].NormalPos.Y);
+            ObjectANormZ.push_back(CubeVertex[i].NormalPos.Z);
+        }
+
+        for(int i = 0; i < LandVertex.size(); i++){
+            ObjectBX.push_back(LandVertex[i].Pos.X);
+            ObjectBY.push_back(LandVertex[i].Pos.Y);
+            ObjectBZ.push_back(LandVertex[i].Pos.Z);
+
+            ObjectBNormX.push_back(LandVertex[i].NormalPos.X);
+            ObjectBNormY.push_back(LandVertex[i].NormalPos.Y);
+            ObjectBNormZ.push_back(LandVertex[i].NormalPos.Z);
+        }
+
+        PhysBodyA = BasicPhysics.MakePhysicsBods(ObjectAX,ObjectAY,ObjectAZ, ObjectANormX,ObjectANormY,ObjectANormZ, ObjectAWeights);
+        PhysBodyB = BasicPhysics.MakePhysicsBods(ObjectBX,ObjectBY,ObjectBZ, ObjectBNormX,ObjectBNormY,ObjectBNormZ, ObjectBWeights);
+
+        SimpleColision = BasicPhysics.AABBColision(PhysBodyA, ObjectAPos, PhysBodyB, ObjectBPos);
+
+        //bool SunTest = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, SunVertex, SunVertexCount,SunPos);
+
+        Object.SetColision(SimpleColision.IsColision);
+
+}
 
 void TestWorld::OnUpdate(float deltaTime, float width, float height){
         glfwPollEvents();
@@ -290,12 +328,12 @@ void TestWorld::KeyInput(int Keys[]){
 
         if(Keys[0] == GLFW_PRESS){
            m_pos2D[2] -= 5 + SpeedStep;
-            AdvancedCam.Move(FORWARD, SpeedStep); 
+            AdvancedCam.Move(FORWARD, SpeedStep);
         }
 
         if(Keys[1] == GLFW_PRESS){
            m_pos2D[2] += 5 + SpeedStep;
-            AdvancedCam.Move(BACK, SpeedStep); 
+            AdvancedCam.Move(BACK, SpeedStep);
         }
 
         if(Keys[2] == GLFW_PRESS){
@@ -345,10 +383,9 @@ void TestWorld::KeyInput(int Keys[]){
 
 void TestWorld::MouseInput(double xpos, double ypos){
 
-    AdvancedCam.LookRelative(xpos,ypos);    
+    AdvancedCam.LookRelative(xpos,ypos);
 
 }
-
 
 
 void TestWorld::OnRender(){
@@ -369,7 +406,7 @@ void TestWorld::OnRender(){
         //Sun.SetColor(1.0f,0.9059f,0.0f, 1.0f);
         Sun.SetLightColor(1.0f, 1.0f, 1.0f);
         Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
-        Sun.SetPosition(0.0f,4.0f,0.0f, m_Projection, m_View);
+        Sun.SetPosition(0.0f,3.0f,0.0f, m_Projection, m_View);
         //Sun.SetLight(Sun.GetLightColor(), Sun.GetPos());
         Sun.Paint();
 
@@ -383,61 +420,23 @@ void TestWorld::OnRender(){
         Land.Paint();
 
 
-
-
-
-        // Dynamic Vertex Buffer!!!!
-
-
-         
-
-       //m_IBO->Bind();
-        //Object.BindIndexBuffer();
-        //GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, Object.GetIndicCount(), Object.GetIndices().data()));
-        
-        // if the offset is not correct it wont draw, will messup a draw
-        
-        // You have to have a second vertex buffer object set up on the same Vertex array object
-
-        // Evrything else still needed for a seperate draw call
-        // This only needs to be calld once if you are drawing the same object multiple times
         Object.BindBufferData();
-
-        Object.SetPosition(0.0f,2.0f,0.0f, m_Projection, m_View);
-        Object.SetColor(m_Color.x, m_Color.y, m_Color.z, m_Color.w);
-        Object.SetLight(Sun.GetLightInfo(), Sun.GetPos(), camPos);
-        Object.SetMaterial(BasicMetalCube);
-        Object.Paint();
-
-
-        Object.SetPosition(2.0f, 0.0f, 0.0f, m_Projection,m_View);
-        Object.SetColor(m_Color2.x, m_Color2.y, m_Color2.z, m_Color2.w);
-        Object.SetLight(Sun.GetLightInfo(), Sun.GetPos(), camPos);
-        Object.SetMaterial(BasicMetalCube);
-        Object.Paint();
 
         //Using this cube as as temp player for colision detection
         // This is only going to check colision with the single Land Object (IE the ground);
         // The position is only being set first so i can just call the cube object
         Object.SetPosition(camPos.x, camPos.y-1.3f, camPos.z, m_Projection, m_View);
+        if(Object.GetColision()){
+            Object.SetColor(1.0f,0.0f,0.0f, 1.0f);
+        } else {
+            Object.SetColor(m_Color.x, m_Color.y, m_Color.z, m_Color.w);
+        }
 
-        std::vector<Vertex> CubeVertex = Object.GetVerticies();
-        int CubeVertexCount = Object.GetVerticiesCount();
-         glm::vec3 CubePos = Object.GetPos();
-
-        std::vector<Vertex> LandVertex = Land.GetVerticies();
-        int LandVertexCount =  Land.GetVerticiesCount();
-        glm::vec3 LandPos = Land.GetPos();
 
         // FragPos will be used for object push back
         // for now it will be a simple bool
-        bool Test = SimpleColisionFunction(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);
-        
-        if(Test){
-            Object.SetColor(1.0f, 0.0f, 0.0f, 1.0f);
-        } else {
-            Object.SetColor(m_Color3.x, m_Color3.y, m_Color3.z, 1.0f);
-        }
+
+
         Object.SetLight(Sun.GetLightInfo(), Sun.GetPos(), camPos);
         Object.SetMaterial(BasicMetalCube);
         Object.Paint();
@@ -446,221 +445,10 @@ void TestWorld::OnRender(){
             // Post Draw Stuff if needed
 
         }
-        
 
-    }
-
-bool TestWorld::SimpleColisionFunction(std::vector<Vertex> ObjectAVerticies, int ObjectAVerticiesCount, glm::vec3 ObjectAPos, std::vector<Vertex> ObjectBVerticies, int ObjectBVerticiesCount, glm::vec3 ObjectBPos){
-    bool XColission = false;
-    bool YColission = false;
-    bool ZColission = false;
-
-    std::vector <VertexPos> MinMaxA;
-    int MinMaxACount = 0; // This is just for testing
-    std::vector <VertexPos> MinMaxB;
-    int MinMaxBCount = 0; // This is also just for testing
-
-    VertexPos Max;
-    VertexPos Min;
-
-    float XMin = INFINITY;
-    float YMin = INFINITY;
-    float ZMin = INFINITY;
-
-    float XMax = -INFINITY;
-    float YMax = -INFINITY;
-    float ZMax = -INFINITY;
-
-    int Count = 0; //This is so every min and max is pushed back every quad
-    for(int i = 0; i < ObjectAVerticiesCount; i++){
-        Count++;
-        float X = ObjectAVerticies[i].Pos.X + ObjectAPos[0];
-        float Y = ObjectAVerticies[i].Pos.Y + ObjectAPos[1];
-        float Z = ObjectAVerticies[i].Pos.Z + ObjectAPos[2];
-
-        if(X < XMin){
-            XMin = X;
-        } else if(X > XMax){
-            XMax = X;
-        }
-
-        if(Y < YMin){
-            YMin = Y;
-        } else if(Y > YMax){
-            YMax = Y;
-        }
-
-        if(Z < ZMin){
-            ZMin = Z;
-        } else if(Z > ZMax){
-            ZMax = Z;
-        }
-
-        if(Count == 4){
-            Count = 0;
-
-            Min.X = XMin;
-            Min.Y = YMin;
-            Min.Z = ZMin;
-
-            Max.X = XMax;
-            Max.Y = YMax;
-            Max.Z = ZMax;
-
-            MinMaxA.push_back(Min);
-            MinMaxA.push_back(Max);
-            MinMaxACount += 2;
-
-            XMin = INFINITY;
-            YMin = INFINITY;
-            ZMin = INFINITY;
-
-            XMax = -INFINITY;
-            YMax = -INFINITY;
-            ZMax = -INFINITY;
-
-        }
-    }
-
-    // I should not have to reset the Min and Max but this is just to be save;
-    XMin = INFINITY;
-    YMin = INFINITY;
-    ZMin = INFINITY;
-
-    XMax = -INFINITY;
-    YMax = -INFINITY;
-    ZMax = -INFINITY;
-
-    Count = 0; //This is so every min and max is pushed back every quad
-    for(int i = 0; i < ObjectBVerticiesCount; i++){
-        Count++;
-        float X = ObjectBVerticies[i].Pos.X + ObjectBPos[0];
-        float Y = ObjectBVerticies[i].Pos.Y + ObjectBPos[1];
-        float Z = ObjectBVerticies[i].Pos.Z + ObjectBPos[2];
-
-        if(X < XMin){
-            XMin = X;
-        } else if(X > XMax){
-            XMax = X;
-        }
-
-        if(Y < YMin){
-            YMin = Y;
-        } else if(Y > YMax){
-            YMax = Y;
-        }
-
-        if(Z < ZMin){
-            ZMin = Z;
-        } else if(Z > ZMax){
-            ZMax = Z;
-        }
-
-        if(Count == 4){
-            Count = 0;
-
-            Min.X = XMin;
-            Min.Y = YMin;
-            Min.Z = ZMin;
-
-            Max.X = XMax;
-            Max.Y = YMax;
-            Max.Z = ZMax;
-
-            MinMaxB.push_back(Min);
-            MinMaxB.push_back(Max);
-            MinMaxBCount += 2;
-
-            XMin = INFINITY;
-            YMin = INFINITY;
-            ZMin = INFINITY;
-
-            XMax = -INFINITY;
-            YMax = -INFINITY;
-            ZMax = -INFINITY;
-
-        }
-    }
-
-
-    
-
-    //std::cout << MinMaxA[2].X << " | " << MinMaxA[2].Y << " | " << MinMaxA[2].Z << std::endl;
-    // OK so this looks nearly Vertex Perfext on X and Z 
-    int b,d;
-    for(int a = 0; a < MinMaxACount; a += 2){
-        b = (a + 1) % MinMaxACount;
-        
-        for( int c = 0; c < MinMaxBCount; c += 2){
-            d = (c + 1) % MinMaxBCount;
-
-            /*
-            std::cout << "TITLE BAR FOR EASE OF USE" << std::endl;
-            std::cout << a << " : Curent MinMax pare on object A" << std::endl;
-            std::cout << MinMaxA[a].X << " | " << MinMaxA[a].Y << " | " << MinMaxA[a].Z << std::endl;
-            std::cout << MinMaxA[b].X << " | " << MinMaxA[b].Y << " | " << MinMaxA[b].Z << std::endl;
-            std::cout << "Plane" << std::endl;
-            std::cout << MinMaxB[c].X << " | " << MinMaxB[c].Y << " | " << MinMaxB[c].Z << std::endl;
-            std::cout << MinMaxB[d].X << " | " << MinMaxB[d].Y << " | " << MinMaxB[d].Z << std::endl;
-            */
-            
-            if((MinMaxA[a].X <= MinMaxB[c].X && MinMaxA[b].X >= MinMaxB[d].X) || (MinMaxA[a].X >= MinMaxB[c].X && MinMaxA[b].X <= MinMaxB[d].X)){
-                XColission = true;
-            } else {
-                XColission = false;
-            }
-            if((MinMaxA[a].Y <= MinMaxB[c].Y && MinMaxA[b].Y >= MinMaxB[d].Y) || (MinMaxA[a].Y >= MinMaxB[c].Y && MinMaxA[b].Y <= MinMaxB[d].Y)){
-                YColission = true;
-            } else {
-                YColission = false;
-            }
-            if((MinMaxA[a].Z <= MinMaxB[c].Z && MinMaxA[b].Z >= MinMaxB[d].Z) || (MinMaxA[a].Z >= MinMaxB[c].Z && MinMaxA[b].Z <= MinMaxB[d].Z)){
-                ZColission = true;
-            } else {
-                ZColission = false;
-            }
-
-            if(XColission && ZColission && YColission){
-                return true;
-            }
-
-            /*
-            std::cout << "End of check" << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            */
-        }
-    }
-
-    return false;
-
-    // Super Basic AABB
-    /*
-    for(int a = 1; a < ObjectAVerticiesCount; a += 4){
-        b = a + 2;
-        for( int c = 1; c < ObjectBVerticiesCount; c += 4){
-            d = c + 2;
-            //std::cout << "Current Pos Based on the first Vertex of ObjectA" << std::endl;
-            //std::cout << ObjectAVerticies[0].Pos.X + ObjectAPos[0] << " | " << ObjectBVerticies[c].Pos.X + ObjectBPos[0] << " | " << ObjectBVerticies[d].Pos.X + ObjectBPos[0] << std::endl;
-            if(ObjectAVerticies[a].Pos.X + ObjectAPos[0] <= ObjectBVerticies[c].Pos.X + ObjectBPos[0] && ObjectAVerticies[a].Pos.X + ObjectAPos[0] >= ObjectBVerticies[d].Pos.X + ObjectBPos[0]){
-                XColission = true;
-            }
-            
-            // This cheks opposite compared to the other
-            if(ObjectBVerticies[c].Pos.Y + ObjectBPos[1] >= ObjectAVerticies[a].Pos.Y + ObjectAPos[1] && ObjectBVerticies[c].Pos.Y + ObjectBPos[1] <= ObjectAVerticies[b].Pos.Y + ObjectAPos[1]){
-                YColission = true;
-
-            }
-
-            
-            if(ObjectAVerticies[a].Pos.Z + ObjectAPos[2] <= ObjectBVerticies[c].Pos.Z + ObjectBPos[2] && ObjectAVerticies[a].Pos.Z + ObjectAPos[2] >= ObjectBVerticies[d].Pos.Z + ObjectBPos[2]){
-                ZColission = true;
-            }
-        }
-    }
-    */
-    
 
 }
+
 
 void TestWorld::OnImGui(){
     {

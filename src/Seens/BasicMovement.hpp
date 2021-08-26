@@ -49,6 +49,8 @@ class TestWorld{
 
         SimpleMaterialInfo BasicMetalCube;
 
+        SimplePhysics BasicPhysics = SimplePhysics(-10.0f ,15.0f,20.0f,10.0f);
+
         // Literaly just to show that you can set your own size
 
         Camera2D SimpleCam = Camera2D(glm::vec3(0.0f,0.0f,0.0f) , 1.0f, 200.0f, 200.0f, 100.0f );
@@ -65,9 +67,9 @@ class TestWorld{
         Vertex *CreateQuad(Vertex *target, float X, float Y, float sizeX, float sizeY, float TextureID);
 
 
-        bool SimpleColisionFunction(std::vector<Vertex> ObjectAVerticies, int ObjectAVerticiesCount, glm::vec3 ObjecAPos, std::vector<Vertex> ObjectBVerticies, int ObjectBVerticiesCount, glm::vec3 ObjectBPos);
-
         void Setup();
+
+        void StaticUpdate(int MaxUpdateSpeed);
 
         void OnUpdate(float deltaTime, float width, float hight);
         void KeyInput(int Keys[]);

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 #include <fstream>
 #include <cstring>
 #include <sstream>
@@ -82,7 +83,24 @@ void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
 
 }
 
+void SecondThread(int UpdateSpeed){
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    auto WaitTime = std::chrono::milliseconds(UpdateSpeed);
+    while(true){
+        auto StartTime = std::chrono::steady_clock::now();
+        World.StaticUpdate(UpdateSpeed);
+        auto EndTime = std::chrono::steady_clock::now();
 
+        auto ElapsedTime = EndTime - StartTime;
+
+        auto FinalTime = WaitTime - ElapsedTime;
+        if(FinalTime > std::chrono::milliseconds::zero()){
+            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(FinalTime);
+        }
+    }
+    
+}
 
 int main(void){
     float deltaTime, lastFrame = 0.0f;
@@ -95,7 +113,7 @@ int main(void){
     float ScaleFactor[2] = {0.0f,0.0f};
     float ScaleBuffer;
 
-    int OSscaler = 1; // This is mainly for mac os
+    int OSscaler = 2; // This is mainly for mac os
 
     ScaleBuffer = (float)width/(float)height;
 
@@ -206,6 +224,9 @@ int main(void){
     //glfwSetKeyCallback(window, KeyCallBack);
 
     World.Setup();
+    std::thread PhysicsThread(SecondThread,15);
+    PhysicsThread.detach();
+
 
     glfwSetKeyCallback(window, KeyCallBack);
     glfwSetCursorPosCallback(window, MousePosCallBack);
@@ -248,10 +269,11 @@ int main(void){
     SimpleObject Frame;
     Frame.Setup();
     Frame.SetShader("assets/Shaders/FrameBuffer.shader");
-    Frame.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    Frame.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f, 1.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
     Frame.SetTexture(0, "u_Texture");
     Frame.SetFloatUniform("u_Size.height", height/4);
     Frame.SetFloatUniform("u_Size.width", width/4);
+
    
 // Draw LOOP
     unsigned int FrameTimeCount = 0;

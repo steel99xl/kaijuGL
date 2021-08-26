@@ -1,0 +1,81 @@
+#pragma once
+#include <cmath>
+#include <vector>
+
+// THis is just for debuging
+#include <iostream>
+// This file should not really care about anything else in the engine, outside the data directly sent to it
+
+
+struct ForceDirection{
+    float X;
+    float Y;
+    float Z;
+};
+
+struct Force{
+    float Power;
+    ForceDirection Direction;
+};
+
+struct PhysicsPoint{
+    float X;
+    float Y;
+    float Z;
+    float Weight;
+    Force Energy;
+};
+
+
+struct QuadPhysicsBody{
+    PhysicsPoint PosA;
+    PhysicsPoint PosB;
+    PhysicsPoint PosC;
+    PhysicsPoint PosD;
+    ForceDirection PlaneNorm;
+
+};
+
+struct TriPhysicsBody{
+    PhysicsPoint PosA;
+    PhysicsPoint PosB;
+    PhysicsPoint PosC;
+    ForceDirection PlaneNorm;
+
+};
+
+
+struct PlaneMinMax{
+    ForceDirection Min;
+    ForceDirection Max;
+};
+
+
+
+struct ColisionInfo{
+    bool IsColision; // Simple "yes" "no" colision
+    ForceDirection MovmentDirectionA; //This can be calculated by comparing the dirs of the 2 coliding object
+    ForceDirection MovmentDirectionB;
+    float Force; // the Force that should applied to the colistion objectA
+};
+
+
+class SimplePhysics{
+    private:
+
+        Force m_Gravity;
+
+
+    public:
+        inline Force GetGravity(){return m_Gravity;}
+
+        ColisionInfo AABBColision(std::vector<QuadPhysicsBody> ObjectA, ForceDirection ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, ForceDirection ObjectBPos);
+
+        std::vector<QuadPhysicsBody> MakePhysicsBods(std::vector<float> X, std::vector<float> Y, std::vector<float> Z, std::vector<float>NormX, std::vector<float>NormY, std::vector<float>NormZ, std::vector<float> Weights);
+
+
+        SimplePhysics(float GravityForce, float GravityX, float GravityY, float GravityZ);
+        ~SimplePhysics();
+    
+
+};

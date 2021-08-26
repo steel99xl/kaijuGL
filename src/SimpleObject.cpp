@@ -21,6 +21,8 @@ void SimpleObject::Setup(){
         m_IBO = std::make_unique<IndexBuffer>();
         //m_Texture = std::make_unique<Texture>();
 
+        SimpleColision = false;
+
         std::cout << m_MaxQuadCount << std::endl;
 
         m_IBO->MakeBuffer(NULL, (m_MaxQuadCount*4)*6 );
@@ -84,70 +86,76 @@ glm::vec3 SimpleObject::Rotatez(glm::vec3 Start, float Angle){
     return Buffer;
 }
 
-void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID){
+void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float sizeX, float sizeY, float Weight, float tX, float tY, float TX, float TY, float TextureID){
 
         Vertex Temp;
 
+
+
+
         glm::vec3 TempPosVec(X,Y,Z);
-        glm::vec3 SqrPt1(-0.5*sizeX, -0.5*sizeY, 0.0);
-        glm::vec3 SqrPt2(0.5*sizeX, -0.5*sizeY, 0.0);
-        glm::vec3 SqrPt3(0.5*sizeX, 0.5*sizeY, 0.0);
-        glm::vec3 SqrPt4(-0.5*sizeX, 0.5*sizeY, 0.0);
+        std::vector<glm::vec3> SqrPt;
+        SqrPt.push_back(glm::vec3 (-0.5*sizeX, -0.5*sizeY, 0.0));
+        SqrPt.push_back(glm::vec3 (0.5*sizeX, -0.5*sizeY, 0.0));
+        SqrPt.push_back(glm::vec3 (0.5*sizeX, 0.5*sizeY, 0.0));
+        SqrPt.push_back(glm::vec3 (-0.5*sizeX, 0.5*sizeY, 0.0));
 
         glm::vec3 TempLightPosVec(0.0f,0.0f,1.0f);
 
 
-        SqrPt1 = Rotatex(SqrPt1,AngleX);
-        SqrPt2 = Rotatex(SqrPt2,AngleX);
-        SqrPt3 = Rotatex(SqrPt3,AngleX);
-        SqrPt4 = Rotatex(SqrPt4,AngleX);
+        SqrPt[0] = Rotatex(SqrPt[0],AngleX);
+        SqrPt[1] = Rotatex(SqrPt[1],AngleX);
+        SqrPt[2] = Rotatex(SqrPt[2],AngleX);
+        SqrPt[3] = Rotatex(SqrPt[3],AngleX);
         TempLightPosVec = Rotatex(TempLightPosVec, AngleX);
 
-        SqrPt1 = Rotatey(SqrPt1,AngleY);
-        SqrPt2 = Rotatey(SqrPt2,AngleY);
-        SqrPt3 = Rotatey(SqrPt3,AngleY);
-        SqrPt4 = Rotatey(SqrPt4,AngleY);
+        SqrPt[0] = Rotatey(SqrPt[0],AngleY);
+        SqrPt[1] = Rotatey(SqrPt[1],AngleY);
+        SqrPt[2] = Rotatey(SqrPt[2],AngleY);
+        SqrPt[3] = Rotatey(SqrPt[3],AngleY);
         TempLightPosVec = Rotatey(TempLightPosVec, AngleY);
 
-        SqrPt1 = Rotatez(SqrPt1,AngleZ);
-        SqrPt2 = Rotatez(SqrPt2,AngleZ);
-        SqrPt3 = Rotatez(SqrPt3,AngleZ);
-        SqrPt4 = Rotatez(SqrPt4,AngleZ);
+        SqrPt[0] = Rotatez(SqrPt[0],AngleZ);
+        SqrPt[1] = Rotatez(SqrPt[1],AngleZ);
+        SqrPt[2] = Rotatez(SqrPt[2],AngleZ);
+        SqrPt[3] = Rotatez(SqrPt[3],AngleZ);
         TempLightPosVec = Rotatez(TempLightPosVec, AngleZ);
 
-        Temp.Pos = {SqrPt1.x + TempPosVec.x, SqrPt1.y + TempPosVec.y, SqrPt1.z + TempPosVec.z};
-        Temp.NormalPos = {TempLightPosVec.x, TempLightPosVec.y, TempLightPosVec.z};
-        Temp.TexCord = {tX, tY};
-        Temp.TexID = TextureID;
+        for(int i = 0; i < 4; i++){
+                std::cout << i << std::endl;
+                Temp.Pos = {SqrPt[i].x + TempPosVec.x, SqrPt[i].y + TempPosVec.y, SqrPt[i].z + TempPosVec.z};
+                Temp.NormalPos = {TempLightPosVec.x, TempLightPosVec.y, TempLightPosVec.z};
+                switch(i){
+                        case 0:
+                                Temp.TexCord = {tX, tY};
+                                break;
+                        case 1:
+                                Temp.TexCord = {TX, tY};
+                                break;
+                        case 2:
+                                Temp.TexCord = {TX, TY};
+                                break;
+                        case 3:
+                                Temp.TexCord = {tX, TY};
+                                break;
+                }
+        //        Temp.TexCord = {tX, tY};
+                Temp.TexID = TextureID;
 
-        m_Verticies.push_back(Temp);
+                m_Verticies.push_back(Temp);
 
+                if(Weight == 0){
+                        m_Weights.push_back(0);
+                } else {
+                        m_Weights.push_back(Weight/4);
+                }
+                
+        }
 
-        Temp.Pos = {SqrPt2.x + TempPosVec.x, SqrPt2.y + TempPosVec.y, SqrPt2.z + TempPosVec.z};
-        Temp.NormalPos = {TempLightPosVec.x, TempLightPosVec.y, TempLightPosVec.z};
-        Temp.TexCord = {TX, tY};
-        Temp.TexID = TextureID;
-
-        m_Verticies.push_back(Temp);
-
-        Temp.Pos = {SqrPt3.x + TempPosVec.x, SqrPt3.y + TempPosVec.y, SqrPt3.z + TempPosVec.z};
-        Temp.NormalPos = {TempLightPosVec.x, TempLightPosVec.y, TempLightPosVec.z};
-        Temp.TexCord = {TX, TY};
-        Temp.TexID = TextureID;
-
-        m_Verticies.push_back(Temp);
-
-
-        Temp.Pos = {SqrPt4.x + TempPosVec.x, SqrPt4.y + TempPosVec.y, SqrPt4.z + TempPosVec.z};
-        Temp.NormalPos = {TempLightPosVec.x, TempLightPosVec.y, TempLightPosVec.z};
-        Temp.TexCord = {tX, TY};
-        Temp.TexID = TextureID;
-
-        m_Verticies.push_back(Temp);
+        //std::cout << TempLightPosVec[0] << " | " << TempLightPosVec[1] << " | " << TempLightPosVec[2] << std::endl;
 
 
 
-        std::cout << "Texture ID " << TextureID << std::endl;
 
         m_Indices.push_back(0 + m_IndicOffset);
         m_Indices.push_back(1 + m_IndicOffset);
@@ -170,19 +178,24 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
 
 }
 
-void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float SizeX, float SizeY, float SizeZ, float tX, float tY, float TX, float TY, float TextureID){
+void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float SizeX, float SizeY, float SizeZ, float Weight, float tX, float tY, float TX, float TY, float TextureID){
+        // This hole function needs to be re-writen but for now im just adding this
+        for(int i = 0; i < 24; i++){
+                m_Weights.push_back(Weight/24);
+        }
 
         glm::vec3 TempPosVec(X,Y,Z);
-        glm::vec3 CubePt1(-0.5*SizeX, -0.5*SizeY, 0.5* SizeZ);
-        glm::vec3 CubePt2(0.5*SizeX, -0.5*SizeY, 0.5 * SizeZ);
-        glm::vec3 CubePt3(0.5*SizeX, 0.5*SizeY, 0.5 * SizeZ);
-        glm::vec3 CubePt4(-0.5*SizeX, 0.5*SizeY, 0.5 * SizeZ);
+        std::vector<glm::vec3> CubePt;
+        CubePt.push_back(glm::vec3 (-0.5*SizeX, -0.5*SizeY, 0.5* SizeZ));
+        CubePt.push_back(glm::vec3 (0.5*SizeX, -0.5*SizeY, 0.5 * SizeZ));
+        CubePt.push_back(glm::vec3 (0.5*SizeX, 0.5*SizeY, 0.5 * SizeZ));
+        CubePt.push_back(glm::vec3 (-0.5*SizeX, 0.5*SizeY, 0.5 * SizeZ));
 
 
-        glm::vec3 CubePt5 = Rotatey(CubePt1,180.0f);
-        glm::vec3 CubePt6 = Rotatey(CubePt2,180.0f);
-        glm::vec3 CubePt7 = Rotatey(CubePt3,180.0f);
-        glm::vec3 CubePt8 = Rotatey(CubePt4,180.0f);
+        CubePt.push_back(Rotatey(CubePt[0],180.0f));
+        CubePt.push_back(Rotatey(CubePt[1],180.0f));
+        CubePt.push_back(Rotatey(CubePt[2],180.0f));
+        CubePt.push_back(Rotatey(CubePt[3],180.0f));
 
         Vertex Temp;
 
@@ -200,34 +213,34 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         //TempPosVec = Rotatex(TempPosVec, 45.0f);
         //TempPosVec = Rotatey(TempPosVec, 45.0f);
 
-        CubePt1 = Rotatex(CubePt1, AngleX);
-        CubePt2 = Rotatex(CubePt2, AngleX);
-        CubePt3 = Rotatex(CubePt3, AngleX);
-        CubePt4 = Rotatex(CubePt4, AngleX);
-        CubePt5 = Rotatex(CubePt5, AngleX);
-        CubePt6 = Rotatex(CubePt6, AngleX);
-        CubePt7 = Rotatex(CubePt7, AngleX);
-        CubePt8 = Rotatex(CubePt8, AngleX);
+        CubePt[0] = Rotatex(CubePt[0], AngleX);
+        CubePt[1] = Rotatex(CubePt[1], AngleX);
+        CubePt[2] = Rotatex(CubePt[2], AngleX);
+        CubePt[3] = Rotatex(CubePt[3], AngleX);
+        CubePt[4] = Rotatex(CubePt[4], AngleX);
+        CubePt[5] = Rotatex(CubePt[5], AngleX);
+        CubePt[6] = Rotatex(CubePt[6], AngleX);
+        CubePt[7] = Rotatex(CubePt[7], AngleX);
 
 
-        CubePt1 = Rotatey(CubePt1, AngleY);
-        CubePt2 = Rotatey(CubePt2, AngleY);
-        CubePt3 = Rotatey(CubePt3, AngleY);
-        CubePt4 = Rotatey(CubePt4, AngleY);
-        CubePt5 = Rotatey(CubePt5, AngleY);
-        CubePt6 = Rotatey(CubePt6, AngleY);
-        CubePt7 = Rotatey(CubePt7, AngleY);
-        CubePt8 = Rotatey(CubePt8, AngleY);
+        CubePt[0] = Rotatey(CubePt[0], AngleY);
+        CubePt[1] = Rotatey(CubePt[1], AngleY);
+        CubePt[2] = Rotatey(CubePt[2], AngleY);
+        CubePt[3] = Rotatey(CubePt[3], AngleY);
+        CubePt[4] = Rotatey(CubePt[4], AngleY);
+        CubePt[5] = Rotatey(CubePt[5], AngleY);
+        CubePt[6] = Rotatey(CubePt[6], AngleY);
+        CubePt[7] = Rotatey(CubePt[7], AngleY);
 
 
-        CubePt1 = Rotatez(CubePt1, AngleZ);
-        CubePt2 = Rotatez(CubePt2, AngleZ);
-        CubePt3 = Rotatez(CubePt3, AngleZ);
-        CubePt4 = Rotatez(CubePt4, AngleZ);
-        CubePt5 = Rotatez(CubePt5, AngleZ);
-        CubePt6 = Rotatez(CubePt6, AngleZ);
-        CubePt7 = Rotatez(CubePt7, AngleZ);
-        CubePt8 = Rotatez(CubePt8, AngleZ);
+        CubePt[0] = Rotatez(CubePt[0], AngleZ);
+        CubePt[1] = Rotatez(CubePt[1], AngleZ);
+        CubePt[2] = Rotatez(CubePt[2], AngleZ);
+        CubePt[3] = Rotatez(CubePt[3], AngleZ);
+        CubePt[4] = Rotatez(CubePt[4], AngleZ);
+        CubePt[5] = Rotatez(CubePt[5], AngleZ);
+        CubePt[6] = Rotatez(CubePt[6], AngleZ);
+        CubePt[7] = Rotatez(CubePt[7], AngleZ);
 
 
         CubeLightNorth = Rotatex(CubeLightNorth, AngleX);
@@ -258,7 +271,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
 
 
         // North quad
-        Temp.Pos = {CubePt1.x + TempPosVec.x, CubePt1.y + TempPosVec.y, CubePt1.z + TempPosVec.z};
+        Temp.Pos = {CubePt[0].x + TempPosVec.x, CubePt[0].y + TempPosVec.y, CubePt[0].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightNorth.x, CubeLightNorth.y, CubeLightNorth.z};
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
@@ -266,14 +279,14 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt2.x + TempPosVec.x, CubePt2.y + TempPosVec.y, CubePt2.z + TempPosVec.z};
+        Temp.Pos = {CubePt[1].x + TempPosVec.x, CubePt[1].y + TempPosVec.y, CubePt[1].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightNorth.x, CubeLightNorth.y, CubeLightNorth.z};
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
 
-        Temp.Pos = {CubePt3.x + TempPosVec.x, CubePt3.y + TempPosVec.y, CubePt3.z + TempPosVec.z};
+        Temp.Pos = {CubePt[2].x + TempPosVec.x, CubePt[2].y + TempPosVec.y, CubePt[2].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightNorth.x, CubeLightNorth.y, CubeLightNorth.z};
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
@@ -281,7 +294,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt4.x + TempPosVec.x, CubePt4.y + TempPosVec.y, CubePt4.z + TempPosVec.z};
+        Temp.Pos = {CubePt[3].x + TempPosVec.x, CubePt[3].y + TempPosVec.y, CubePt[3].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightNorth.x, CubeLightNorth.y, CubeLightNorth.z};
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
@@ -301,7 +314,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_UsedQuads += 1;
 
         // South Quad
-        Temp.Pos = {CubePt5.x + TempPosVec.x, CubePt5.y + TempPosVec.y, CubePt5.z + TempPosVec.z};
+        Temp.Pos = {CubePt[4].x + TempPosVec.x, CubePt[4].y + TempPosVec.y, CubePt[4].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightSouth.x, CubeLightSouth.y, CubeLightSouth.z};
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
@@ -309,14 +322,14 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt6.x + TempPosVec.x, CubePt6.y + TempPosVec.y, CubePt6.z + TempPosVec.z};
+        Temp.Pos = {CubePt[5].x + TempPosVec.x, CubePt[5].y + TempPosVec.y, CubePt[5].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightSouth.x, CubeLightSouth.y, CubeLightSouth.z};
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
 
-        Temp.Pos = {CubePt7.x + TempPosVec.x, CubePt7.y + TempPosVec.y, CubePt7.z + TempPosVec.z};
+        Temp.Pos = {CubePt[6].x + TempPosVec.x, CubePt[6].y + TempPosVec.y, CubePt[6].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightSouth.x, CubeLightSouth.y, CubeLightSouth.z};
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
@@ -324,7 +337,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt8.x + TempPosVec.x, CubePt8.y + TempPosVec.y, CubePt8.z + TempPosVec.z};
+        Temp.Pos = {CubePt[7].x + TempPosVec.x, CubePt[7].y + TempPosVec.y, CubePt[7].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightSouth.x, CubeLightSouth.y, CubeLightSouth.z};
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
@@ -344,7 +357,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_UsedQuads += 1;
 
         // East Quad
-        Temp.Pos = {CubePt2.x + TempPosVec.x, CubePt2.y + TempPosVec.y, CubePt2.z + TempPosVec.z};
+        Temp.Pos = {CubePt[1].x + TempPosVec.x, CubePt[1].y + TempPosVec.y, CubePt[1].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightEast.x, CubeLightEast.y, CubeLightEast.z};
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
@@ -352,14 +365,14 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt5.x + TempPosVec.x, CubePt5.y + TempPosVec.y, CubePt5.z + TempPosVec.z};
+        Temp.Pos = {CubePt[4].x + TempPosVec.x, CubePt[4].y + TempPosVec.y, CubePt[4].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightEast.x, CubeLightEast.y, CubeLightEast.z};
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
 
-        Temp.Pos = {CubePt8.x + TempPosVec.x, CubePt8.y + TempPosVec.y, CubePt8.z + TempPosVec.z};
+        Temp.Pos = {CubePt[7].x + TempPosVec.x, CubePt[7].y + TempPosVec.y, CubePt[7].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightEast.x, CubeLightEast.y, CubeLightEast.z};
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
@@ -367,7 +380,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt3.x + TempPosVec.x, CubePt3.y + TempPosVec.y, CubePt3.z + TempPosVec.z};
+        Temp.Pos = {CubePt[2].x + TempPosVec.x, CubePt[2].y + TempPosVec.y, CubePt[2].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightEast.x, CubeLightEast.y, CubeLightEast.z};
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
@@ -387,7 +400,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_UsedQuads += 1;
 
         // West Quad
-        Temp.Pos = {CubePt6.x + TempPosVec.x, CubePt6.y + TempPosVec.y, CubePt6.z + TempPosVec.z};
+        Temp.Pos = {CubePt[5].x + TempPosVec.x, CubePt[5].y + TempPosVec.y, CubePt[5].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightWest.x, CubeLightWest.y, CubeLightWest.z};
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
@@ -395,14 +408,14 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt1.x + TempPosVec.x, CubePt1.y + TempPosVec.y, CubePt1.z + TempPosVec.z};
+        Temp.Pos = {CubePt[0].x + TempPosVec.x, CubePt[0].y + TempPosVec.y, CubePt[0].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightWest.x, CubeLightWest.y, CubeLightWest.z};
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
 
-        Temp.Pos = {CubePt4.x + TempPosVec.x, CubePt4.y + TempPosVec.y, CubePt4.z + TempPosVec.z};
+        Temp.Pos = {CubePt[3].x + TempPosVec.x, CubePt[3].y + TempPosVec.y, CubePt[3].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightWest.x, CubeLightWest.y, CubeLightWest.z};
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
@@ -410,7 +423,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt7.x + TempPosVec.x, CubePt7.y + TempPosVec.y, CubePt7.z + TempPosVec.z};
+        Temp.Pos = {CubePt[6].x + TempPosVec.x, CubePt[6].y + TempPosVec.y, CubePt[6].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightWest.x, CubeLightWest.y, CubeLightWest.z};
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
@@ -430,7 +443,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_UsedQuads += 1;
 
         // "UP" Quad
-        Temp.Pos = {CubePt4.x + TempPosVec.x, CubePt4.y + TempPosVec.y, CubePt4.z + TempPosVec.z};
+        Temp.Pos = {CubePt[3].x + TempPosVec.x, CubePt[3].y + TempPosVec.y, CubePt[3].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightUp.x, CubeLightUp.y, CubeLightUp.z};
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
@@ -438,14 +451,14 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt3.x + TempPosVec.x, CubePt3.y + TempPosVec.y, CubePt3.z + TempPosVec.z};
+        Temp.Pos = {CubePt[2].x + TempPosVec.x, CubePt[2].y + TempPosVec.y, CubePt[2].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightUp.x, CubeLightUp.y, CubeLightUp.z};
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
 
-        Temp.Pos = {CubePt8.x + TempPosVec.x, CubePt8.y + TempPosVec.y, CubePt8.z + TempPosVec.z};
+        Temp.Pos = {CubePt[7].x + TempPosVec.x, CubePt[7].y + TempPosVec.y, CubePt[7].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightUp.x, CubeLightUp.y, CubeLightUp.z};
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
@@ -453,7 +466,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt7.x + TempPosVec.x, CubePt7.y + TempPosVec.y, CubePt7.z + TempPosVec.z};
+        Temp.Pos = {CubePt[6].x + TempPosVec.x, CubePt[6].y + TempPosVec.y, CubePt[6].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightUp.x, CubeLightUp.y, CubeLightUp.z};
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
@@ -474,7 +487,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
 
 
         // "Down Quad"
-        Temp.Pos = {CubePt6.x + TempPosVec.x, CubePt6.y + TempPosVec.y, CubePt6.z + TempPosVec.z};
+        Temp.Pos = {CubePt[5].x + TempPosVec.x, CubePt[5].y + TempPosVec.y, CubePt[5].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightDown.x, CubeLightDown.y, CubeLightDown.z};
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
@@ -482,14 +495,14 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt5.x + TempPosVec.x, CubePt5.y + TempPosVec.y, CubePt5.z + TempPosVec.z};
+        Temp.Pos = {CubePt[4].x + TempPosVec.x, CubePt[4].y + TempPosVec.y, CubePt[4].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightDown.x, CubeLightDown.y, CubeLightDown.z};
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
         m_Verticies.push_back(Temp);
 
-        Temp.Pos = {CubePt2.x + TempPosVec.x, CubePt2.y + TempPosVec.y, CubePt2.z + TempPosVec.z};
+        Temp.Pos = {CubePt[1].x + TempPosVec.x, CubePt[1].y + TempPosVec.y, CubePt[1].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightDown.x, CubeLightDown.y, CubeLightDown.z};
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
@@ -497,7 +510,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         m_Verticies.push_back(Temp);
 
 
-        Temp.Pos = {CubePt1.x + TempPosVec.x, CubePt1.y + TempPosVec.y, CubePt1.z + TempPosVec.z};
+        Temp.Pos = {CubePt[0].x + TempPosVec.x, CubePt[0].y + TempPosVec.y, CubePt[0].z + TempPosVec.z};
         Temp.NormalPos = {CubeLightDown.x, CubeLightDown.y, CubeLightDown.z};
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
@@ -586,7 +599,6 @@ void SimpleObject::MakeMaterial(float AmbientR, float AmbientG, float AmbientB, 
         m_Material.shininess = Shininess;
 }
 
-
 void SimpleObject::MakeLight(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float LightDirX, float LightDirY, float LightDirZ, float AngleSize, float Linear, float Quadratic){
         m_Light.ambient.R = AmbientR;
         m_Light.ambient.G = AmbientG;
@@ -623,7 +635,171 @@ void SimpleObject::SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::
 
 }
 
+bool SimpleObject::AABBColision(std::vector<Vertex> ObjectAVerticies, int ObjectAVerticiesCount, glm::vec3 ObjectAPos, std::vector<Vertex> ObjectBVerticies, int ObjectBVerticiesCount, glm::vec3 ObjectBPos){
+    bool XColission = false;
+    bool YColission = false;
+    bool ZColission = false;
 
+    std::vector <VertexPos> MinMaxA;
+    int MinMaxACount = 0; // This is just for testing
+    std::vector <VertexPos> MinMaxB;
+    int MinMaxBCount = 0; // This is also just for testing
+
+    VertexPos Max;
+    VertexPos Min;
+
+    float XMin = INFINITY;
+    float YMin = INFINITY;
+    float ZMin = INFINITY;
+
+    float XMax = -INFINITY;
+    float YMax = -INFINITY;
+    float ZMax = -INFINITY;
+
+    int Count = 0; //This is so every min and max is pushed back every quad
+    for(int i = 0; i < ObjectAVerticiesCount; i++){
+        Count++;
+        float X = ObjectAVerticies[i].Pos.X + ObjectAPos[0];
+        float Y = ObjectAVerticies[i].Pos.Y + ObjectAPos[1];
+        float Z = ObjectAVerticies[i].Pos.Z + ObjectAPos[2];
+
+        if(X < XMin){
+            XMin = X;
+        } else if(X > XMax){
+            XMax = X;
+        }
+
+        if(Y < YMin){
+            YMin = Y;
+        } else if(Y > YMax){
+            YMax = Y;
+        }
+
+        if(Z < ZMin){
+            ZMin = Z;
+        } else if(Z > ZMax){
+            ZMax = Z;
+        }
+
+        if(Count == 4){
+            Count = 0;
+
+            Min.X = XMin;
+            Min.Y = YMin;
+            Min.Z = ZMin;
+
+            Max.X = XMax;
+            Max.Y = YMax;
+            Max.Z = ZMax;
+
+            MinMaxA.push_back(Min);
+            MinMaxA.push_back(Max);
+            MinMaxACount += 2;
+
+            XMin = INFINITY;
+            YMin = INFINITY;
+            ZMin = INFINITY;
+
+            XMax = -INFINITY;
+            YMax = -INFINITY;
+            ZMax = -INFINITY;
+
+        }
+    }
+
+    // I should not have to reset the Min and Max but this is just to be save;
+    XMin = INFINITY;
+    YMin = INFINITY;
+    ZMin = INFINITY;
+
+    XMax = -INFINITY;
+    YMax = -INFINITY;
+    ZMax = -INFINITY;
+
+    Count = 0; //This is so every min and max is pushed back every quad
+    for(int i = 0; i < ObjectBVerticiesCount; i++){
+        Count++;
+        float X = ObjectBVerticies[i].Pos.X + ObjectBPos[0];
+        float Y = ObjectBVerticies[i].Pos.Y + ObjectBPos[1];
+        float Z = ObjectBVerticies[i].Pos.Z + ObjectBPos[2];
+
+        if(X < XMin){
+            XMin = X;
+        } else if(X > XMax){
+            XMax = X;
+        }
+
+        if(Y < YMin){
+            YMin = Y;
+        } else if(Y > YMax){
+            YMax = Y;
+        }
+
+        if(Z < ZMin){
+            ZMin = Z;
+        } else if(Z > ZMax){
+            ZMax = Z;
+        }
+
+        if(Count == 4){
+            Count = 0;
+
+            Min.X = XMin;
+            Min.Y = YMin;
+            Min.Z = ZMin;
+
+            Max.X = XMax;
+            Max.Y = YMax;
+            Max.Z = ZMax;
+
+            MinMaxB.push_back(Min);
+            MinMaxB.push_back(Max);
+            MinMaxBCount += 2;
+
+            XMin = INFINITY;
+            YMin = INFINITY;
+            ZMin = INFINITY;
+
+            XMax = -INFINITY;
+            YMax = -INFINITY;
+            ZMax = -INFINITY;
+
+        }
+    }
+
+    int b,d;
+    for(int a = 0; a < MinMaxACount; a += 2){
+        b = (a + 1) % MinMaxACount;
+        
+        for( int c = 0; c < MinMaxBCount; c += 2){
+            d = (c + 1) % MinMaxBCount;
+            
+            if((MinMaxA[a].X <= MinMaxB[c].X && MinMaxA[b].X >= MinMaxB[d].X) || (MinMaxA[a].X >= MinMaxB[c].X && MinMaxA[b].X <= MinMaxB[d].X)){
+                XColission = true;
+            } else {
+                XColission = false;
+            }
+            if((MinMaxA[a].Y <= MinMaxB[c].Y && MinMaxA[b].Y >= MinMaxB[d].Y) || (MinMaxA[a].Y >= MinMaxB[c].Y && MinMaxA[b].Y <= MinMaxB[d].Y)){
+                YColission = true;
+            } else {
+                YColission = false;
+            }
+            if((MinMaxA[a].Z <= MinMaxB[c].Z && MinMaxA[b].Z >= MinMaxB[d].Z) || (MinMaxA[a].Z >= MinMaxB[c].Z && MinMaxA[b].Z <= MinMaxB[d].Z)){
+                ZColission = true;
+            } else {
+                ZColission = false;
+            }
+
+            if(XColission && ZColission && YColission){
+                return true;
+            }
+        }
+    }
+
+
+    return false;
+
+}
 
 void SimpleObject::AddTexture(const std::string &filePath, unsigned int slot){
         //m_Texture.LoadTexture(filePath, slot);
@@ -636,14 +812,10 @@ void SimpleObject::SetTexture(unsigned int Texture, const std::string &UniformNa
         m_Shader->SetUniform1i(UniformName, Texture);
 }
 
-
 void SimpleObject::SetFloatUniform(const std::string &UniformName, float data){
         m_Shader->Bind();
         m_Shader->SetUniform1f(UniformName, data);
 }
-
-
-
 
 void SimpleObject::BindBufferData(){
         m_VertexBuffer->Bind();

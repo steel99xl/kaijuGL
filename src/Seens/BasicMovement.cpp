@@ -42,7 +42,7 @@ void TestWorld::Setup(){
     Object.Setup();
     Land.Setup();
     Sun.Setup();
-    FBOrec.Setup();
+    SlowMovingBlock.Setup();
 
     BasicMetalCube.ambient.R = 0.3;
     BasicMetalCube.ambient.G = 0.3;
@@ -82,7 +82,10 @@ void TestWorld::Setup(){
 
     Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.10f,0.10f,0.10f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    Object.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    Object.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,2.0f,1.0f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+
+    SlowMovingBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+
 
     // Yes the FaceDir matters based on where you want it to be visible
     //Object.Create2dQuad(0.0f,0.0f,0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
@@ -121,6 +124,7 @@ void TestWorld::Setup(){
     //FBOrec.SetShader("assets/Shaders/FrameBuffer.shader");
     Land.SetShader("assets/Shaders/BlinnPhong.shader");
     Object.SetShader("assets/Shaders/BlinnPhong.shader");
+    SlowMovingBlock.SetShader("assets/Shaders/BlinnPhong.shader");
     //TestObject.SetShader("assets/Shaders/MultiImg.shader");
 
     Sun.SetShader("assets/Shaders/BasicLight.shader");
@@ -130,105 +134,10 @@ void TestWorld::Setup(){
 
     std::cout << "Shader set" << std::endl;
 
-        //auto loc = m_Shader->GetUniformLocation("u_Textures");
     //int samplers[3] = {0 ,1,2};
-        //GLsizei size = 2;
-        //GLCall(glUniform1iv(loc, size, samplers));
-    ///m_Shader->SetUniform1iv("u_Textures", 3, samplers);
-    //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
-
-    //m_Texture = std::make_unique<Texture>("assets/Textures/Box.png");
-
-
-    //Tex1 = m_Texture->LoadTexture("assets/Textures/Box.png");
-    //Tex2 = m_Texture->LoadTexture("assets/Textures/Logo.jpeg");
-    //Tex3 = m_Texture->LoadTexture("assets/Textures/OtherBox.png");
-
-    //Object.AddTexture("assets/Textures/Box.png");
-    //Object.AddTexture("assets/Textures/Logo.jpeg",1);
-    //Object.AddTexture("assets/Textures/OtherBox.png",2);
-
-
-    // All The funcinality that has to be in the setup of the FrameBuffer Object
-    //GLCall(glGenFramebuffers(1, &m_FBO));
-    //GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
-
-
-    //FrameBufferTexture = m_Texture->MakeTexture("NULL", 720, 480);
-
-    //
-
-    //GLCall(glGenRenderbuffers(1, &m_RBO));
-    //GLCall(glBindRenderbuffer(GL_RENDERBUFFER, m_RBO));
-    //
-
-    //
-
-
-
-
-
-
-    //m_Texture->LoadTexture("assets/Textures/OtherBox.png");
-    //m_Texture->LoadTexture("assets/Textures/Logo.jpeg",1);
-    //m_Texture->LoadTexture("assets/Textures/OtherBox.png",2);
-
-    //m_Texture->Bind(0);
-    //m_Texture->Bind(1);
-    //m_Texture->Bind(2);
-
-
-        //std::cout << "bound texture 1" << std::endl;
-    //GLCall(glActiveTexture(GL_TEXTURE0 + 0));
-    //GLCall(glBindTexture(GL_TEXTURE_2D, Tex1));
-
-        //std::cout << "bound texture 2 " << std::endl;
-    //GLCall(glActiveTexture(GL_TEXTURE0 + 1));
-    //GLCall(glBindTexture(GL_TEXTURE_2D, Tex2));
-
-    //GLCall(glActiveTexture(GL_TEXTURE0 + 2));
-    //GLCall(glBindTexture(GL_TEXTURE_2D, Tex3));
-
-
-    // This sets the max amout of things in the vertex buffer
-    //m_VertexBuffer = std::make_unique<VertexBuffer>(nullptr, sizeof(Vertex) * 100);
-
-   //m_VertexBuffer->MakeBuffer(NULL, sizeof(Vertex) * (Object.GetMaxQuadCound() * 4 ));
-
-
-
-        //std::cout << m_IBO->Unquie() << std::endl;
-
-    //VertexBufferLayout layout;
-        // This defines the layout
-    //layout.Push(3,"float");
-    //layout.Push(2,"float");
-    //layout.Push(1,"float");
-    //layout.Push(1,"float");
-    //m_VAO->AddBuffer(*m_VertexBuffer,layout);
-
-        //std::cout << "Seting shader program" << std::endl;
-
-        //IndexBuffer ibo(SqIndex,6);
-        //GLCall(glUseProgram(m_Shader->GetRenderID()));
-
-    //m_Shader->Bind();
-
-
-        //Shader shader("assets/Shaders/ImgLoad.shader");
-        //m_Shader->Bind();
-
-     // This has to match the bound texture buffer
-
-        //m_Shader->SetUniform1i("u_Texture", 0);
+   
     m_FOV = 75.0f;
 
-
-
-
-
-
-    //std::cout << "Total Verticies Sent = " << Object.GetVerticiesCount() << std::endl;
   //  std::cout << "Total Squares = " << Object.GetVerticiesCount()/4 << std::endl;
    // std::cout << "Total Verticies Drawn = " << (Object.GetVerticiesCount()/4)*6 << std::endl;
 
@@ -236,27 +145,26 @@ void TestWorld::Setup(){
 }
 
 void TestWorld::StaticUpdate(int MaxUpdateSpeed){
+        // camera stuff 
+        AdvancedCam.Update(((float)MaxUpdateSpeed)/1000.0f, (float)m_Width/m_Height, m_FOV);
+        m_Projection = AdvancedCam.GetProj();
+        m_View = AdvancedCam.GetView();
+        m_3dCamPos = AdvancedCam.GetCurrentPos();
 
-        std::vector<Vertex> CubeVertex = Object.GetVerticies();
-        int CubeVertexCount = Object.GetVerticiesCount();
+
+
+        Land.SetPosition(0.0f,0.0f,-6.0f);
+        SlowMovingBlock.SetPosition(0.0f,0.0f,-3.0f);
+
         glm::vec3 CubePos = Object.GetPos();
-
-        std::vector<Vertex> LandVertex = Land.GetVerticies();
-        int LandVertexCount =  Land.GetVerticiesCount();
         glm::vec3 LandPos = Land.GetPos();
-
         //bool Test = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);
-
         // This is just to seperate the old colision system from the new one
         ColisionInfo SimpleColision;
         std::vector<QuadPhysicsBody> PhysBodyA, PhysBodyB;
-        std::vector<float> ObjectAX, ObjectAY, ObjectAZ;
-        std::vector<float> ObjectANormX, ObjectANormY, ObjectANormZ;
-        std::vector<float> ObjectBX, ObjectBY, ObjectBZ;
-        std::vector<float> ObjectBNormX, ObjectBNormY, ObjectBNormZ;
         std::vector<float> ObjectAWeights, ObjectBWeights;
-
         ForceDirection ObjectAPos, ObjectBPos;
+
         ObjectAPos.X = CubePos[0];
         ObjectAPos.Y = CubePos[1];
         ObjectAPos.Z = CubePos[2];
@@ -269,44 +177,33 @@ void TestWorld::StaticUpdate(int MaxUpdateSpeed){
         ObjectAWeights = Object.GetWeights();
         ObjectBWeights = Land.GetWeights();
 
-        // Ya baybe 2 for loops
-        for(int i = 0; i < CubeVertex.size(); i++){
-            ObjectAX.push_back(CubeVertex[i].Pos.X);
-            ObjectAY.push_back(CubeVertex[i].Pos.Y);
-            ObjectAZ.push_back(CubeVertex[i].Pos.Z);
 
-            ObjectANormX.push_back(CubeVertex[i].NormalPos.X);
-            ObjectANormY.push_back(CubeVertex[i].NormalPos.Y);
-            ObjectANormZ.push_back(CubeVertex[i].NormalPos.Z);
-        }
-
-        for(int i = 0; i < LandVertex.size(); i++){
-            ObjectBX.push_back(LandVertex[i].Pos.X);
-            ObjectBY.push_back(LandVertex[i].Pos.Y);
-            ObjectBZ.push_back(LandVertex[i].Pos.Z);
-
-            ObjectBNormX.push_back(LandVertex[i].NormalPos.X);
-            ObjectBNormY.push_back(LandVertex[i].NormalPos.Y);
-            ObjectBNormZ.push_back(LandVertex[i].NormalPos.Z);
-        }
-
-        PhysBodyA = BasicPhysics.MakePhysicsBods(ObjectAX,ObjectAY,ObjectAZ, ObjectANormX,ObjectANormY,ObjectANormZ, ObjectAWeights);
-        PhysBodyB = BasicPhysics.MakePhysicsBods(ObjectBX,ObjectBY,ObjectBZ, ObjectBNormX,ObjectBNormY,ObjectBNormZ, ObjectBWeights);
+        PhysBodyA = BasicPhysics.MakePhysicsBods(Object.GetVertexPositions(), Object.GetVertexNormlPositions(), ObjectAWeights);
+        PhysBodyB = BasicPhysics.MakePhysicsBods(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), ObjectBWeights);
 
         SimpleColision = BasicPhysics.AABBColision(PhysBodyA, ObjectAPos, PhysBodyB, ObjectBPos);
 
-        //bool SunTest = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, SunVertex, SunVertexCount,SunPos);
+
+        if(SimpleColision.IsColision){
+            m_3dCamPos = m_3dCamPosPrevious;
+        } else {
+            m_3dCamPosPrevious = m_3dCamPos;
+        }
 
         Object.SetColision(SimpleColision.IsColision);
+
+        Object.SetPosition(m_3dCamPos.x, m_3dCamPos.y-1.0f, m_3dCamPos.z);
 
 }
 
 void TestWorld::OnUpdate(float deltaTime, float width, float height){
         glfwPollEvents();
         m_DeltaTime = deltaTime;
-        AdvancedCam.Update(m_DeltaTime, (float)m_Width/m_Height, m_FOV);
-        m_Projection = AdvancedCam.GetProj();
-        m_View = AdvancedCam.GetView();
+
+        m_Width = width;
+        m_Height = height;
+
+        
 
         // This is only going here just so i have a clear spot for it
         //m_View = glm::lookAt(
@@ -396,8 +293,9 @@ void TestWorld::OnRender(){
 
         GLCall(glClearColor(0.60f, 0.60f, 0.75f, 0.0f));
 
-        glm::vec3 camPos = AdvancedCam.GetCurrentPos();
 
+
+        
         //std::cout << AdvancedCam.GetCurrentLook().x << " | " << AdvancedCam.GetCurrentLook().y << " | " << AdvancedCam.GetCurrentLook().z << std::endl;
 
 
@@ -406,7 +304,8 @@ void TestWorld::OnRender(){
         //Sun.SetColor(1.0f,0.9059f,0.0f, 1.0f);
         Sun.SetLightColor(1.0f, 1.0f, 1.0f);
         Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
-        Sun.SetPosition(0.0f,3.0f,0.0f, m_Projection, m_View);
+        Sun.SetPosition(0.0f,3.0f,-6.0f);
+        Sun.SetDrawPos(m_Projection, m_View);
         //Sun.SetLight(Sun.GetLightColor(), Sun.GetPos());
         Sun.Paint();
 
@@ -415,9 +314,16 @@ void TestWorld::OnRender(){
         Land.BindBufferData();
         Land.SetColor(0.3373f, 0.4902f, 0.2745f, 1.0f);
         Land.SetMaterial(BasicMetalCube);
-        Land.SetPosition(0.0f,0.0f,0.0f, m_Projection, m_View);
-        Land.SetLight(Sun.GetLightInfo(), Sun.GetPos(), camPos);
+        Land.SetDrawPos(m_Projection, m_View);
+        Land.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
         Land.Paint();
+
+        SlowMovingBlock.BindBufferData();
+        SlowMovingBlock.SetColor(0.471f, 0.318f, 0.176f, 1.0f);
+        SlowMovingBlock.SetMaterial(BasicMetalCube);
+        SlowMovingBlock.SetDrawPos(m_Projection,m_View);
+        SlowMovingBlock.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
+        SlowMovingBlock.Paint();
 
 
         Object.BindBufferData();
@@ -425,7 +331,7 @@ void TestWorld::OnRender(){
         //Using this cube as as temp player for colision detection
         // This is only going to check colision with the single Land Object (IE the ground);
         // The position is only being set first so i can just call the cube object
-        Object.SetPosition(camPos.x, camPos.y-1.3f, camPos.z, m_Projection, m_View);
+        Object.SetDrawPos(m_Projection, m_View);
         if(Object.GetColision()){
             Object.SetColor(1.0f,0.0f,0.0f, 1.0f);
         } else {
@@ -437,7 +343,7 @@ void TestWorld::OnRender(){
         // for now it will be a simple bool
 
 
-        Object.SetLight(Sun.GetLightInfo(), Sun.GetPos(), camPos);
+        Object.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
         Object.SetMaterial(BasicMetalCube);
         Object.Paint();
 

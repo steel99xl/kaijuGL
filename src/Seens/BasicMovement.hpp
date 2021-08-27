@@ -12,6 +12,8 @@ class TestWorld{
         glm::vec3 m_pos2D;
         float m_FOV;
 
+        glm::vec3 m_3dCamPos, m_3dCamPosPrevious;
+
         // TODO : implement frame buffer object
         //Frame Buffer Info
         unsigned int m_FBO;
@@ -41,11 +43,10 @@ class TestWorld{
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
 
         SimpleObject Object;
-        SimpleObject Testobject;
+        SimpleObject SlowMovingBlock;
         SimpleObject Land;
         SimpleObject Sun;
 
-        SimpleObject FBOrec;
 
         SimpleMaterialInfo BasicMetalCube;
 

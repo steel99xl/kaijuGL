@@ -20,6 +20,6 @@
 #include "IndexBuffer.hpp"
 #include "Shader.hpp"
 #include "Renderer.hpp"
+#include "SimplePhysics.hpp"
 #include "SimpleObject.hpp"
 #include "Camera.hpp"
-#include "SimplePhysics.hpp"

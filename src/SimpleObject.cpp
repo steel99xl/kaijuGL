@@ -536,6 +536,35 @@ void SimpleObject::Paint(){
         renderer.Draw(*m_VAO, *m_IBO, *m_Shader);
 }
 
+// Oh boy the physics engien is creeping in to the object
+
+std::vector<PhysicsPos> SimpleObject::GetVertexPositions(){
+    std::vector<PhysicsPos> Output;
+    PhysicsPos Temp;
+    for(int i = 0; i < m_Verticies.size(); i++){
+        Temp.X = m_Verticies[i].Pos.X;
+        Temp.Y = m_Verticies[i].Pos.Y;
+        Temp.Z = m_Verticies[i].Pos.Z;
+
+        Output.push_back(Temp);
+    }
+
+    return Output;
+}
+
+std::vector<PhysicsPos> SimpleObject::GetVertexNormlPositions(){
+    std::vector<PhysicsPos> Output;
+    PhysicsPos Temp;
+    for(int i = 0; i < m_Verticies.size(); i++){
+        Temp.X = m_Verticies[i].NormalPos.X;
+        Temp.Y = m_Verticies[i].NormalPos.Y;
+        Temp.Z = m_Verticies[i].NormalPos.Z;
+
+        Output.push_back(Temp);
+    }
+
+    return Output;
+}
 
 void SimpleObject::SetShader(const std::string &filePath){
         m_Shader->SetShader(filePath);
@@ -555,11 +584,8 @@ void SimpleObject::SetShader(const std::string &filePath){
 }
 
 
-void SimpleObject::SetPosition(float X, float Y, float Z, glm::mat4 &Projection, glm::mat4 &View){
-        m_X = X;
-        m_Y = Y;
-        m_Z = Z;
-        glm::mat4 ModlePos = glm::translate(glm::mat4(1.0f), glm::vec3(X,Y,Z));
+void SimpleObject::SetDrawPos(glm::mat4 &Projection, glm::mat4 &View){
+        glm::mat4 ModlePos = glm::translate(glm::mat4(1.0f), glm::vec3(m_X,m_Y,m_Z));
         m_Shader->Bind();
         m_Shader->SetUniformMat4f("Modle", ModlePos);
         m_Shader->SetUniformMat4f("View", View);

@@ -18,7 +18,7 @@ SimplePhysics::SimplePhysics(float GravityForce, float GravityX, float GravityY,
 
 SimplePhysics::~SimplePhysics(){}
 
-std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsBods(std::vector<float>X, std::vector<float>Y, std::vector<float>Z, std::vector<float>NormX, std::vector<float>NormY, std::vector<float>NormZ, std::vector<float>Weights){
+std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsBods(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float>Weights){
     std::vector<QuadPhysicsBody> Output;
 
     QuadPhysicsBody TempQuad;
@@ -27,19 +27,19 @@ std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsBods(std::vector<float>X,
     PhysicsPoint PointC;
     PhysicsPoint PointD;
 
-    for(int i = 0; i < X.size(); i+=4){
-        PointA.X = X[i];
-        PointA.Y = Y[i];
-        PointA.Z = Z[i];
+    for(int i = 0; i < Pos.size(); i+=4){
+        PointA.X = Pos[i].X;
+        PointA.Y = Pos[i].Y;
+        PointA.Z = Pos[i].Z;
         PointA.Weight = Weights[i];
         PointA.Energy.Direction.X = 0;
         PointA.Energy.Direction.Y = 0;
         PointA.Energy.Direction.Z = 0;
         PointA.Energy.Power = 0.0f;
 
-        PointB.X = X[i+1];
-        PointB.Y = Y[i+1];
-        PointB.Z = Z[i+1];
+        PointB.X = Pos[i+1].X;
+        PointB.Y = Pos[i+1].Y;
+        PointB.Z = Pos[i+1].Z;
         PointB.Weight = Weights[i+1];
         PointB.Energy.Direction.X = 0;
         PointB.Energy.Direction.Y = 0;
@@ -47,9 +47,9 @@ std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsBods(std::vector<float>X,
         PointB.Energy.Power = 0.0f;
 
 
-        PointC.X = X[i+2];
-        PointC.Y = Y[i+2];
-        PointC.Z = Z[i+2];
+        PointC.X = Pos[i+2].X;
+        PointC.Y = Pos[i+2].Y;
+        PointC.Z = Pos[i+2].Z;
         PointC.Weight = Weights[i+2];
         PointC.Energy.Direction.X = 0;
         PointC.Energy.Direction.Y = 0;
@@ -57,9 +57,9 @@ std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsBods(std::vector<float>X,
         PointC.Energy.Power = 0.0f;
 
 
-        PointD.X = X[i+3];
-        PointD.Y = Y[i+3];
-        PointD.Z = Z[i+3];
+        PointD.X = Pos[i+3].X;
+        PointD.Y = Pos[i+3].Y;
+        PointD.Z = Pos[i+3].Z;
         PointD.Weight = Weights[i+3];
         PointD.Energy.Direction.X = 0;
         PointD.Energy.Direction.Y = 0;
@@ -70,9 +70,9 @@ std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsBods(std::vector<float>X,
         TempQuad.PosB = PointB;
         TempQuad.PosC = PointC;
         TempQuad.PosD = PointD;
-        TempQuad.PlaneNorm.X = NormX[i];
-        TempQuad.PlaneNorm.Y = NormY[i];
-        TempQuad.PlaneNorm.Z = NormZ[i];
+        TempQuad.PlaneNorm.X = Normal[i].X;
+        TempQuad.PlaneNorm.Y = Normal[i].Y;
+        TempQuad.PlaneNorm.Z = Normal[i].Z;
 
         Output.push_back(TempQuad);
 
@@ -312,7 +312,7 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, F
         }
     }
 
-    char TestChar = 'A';
+    /*char TestChar = 'A';
 
     switch(TestChar){
             case 'B':
@@ -321,7 +321,7 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, F
             case 'A':
                 std::cout << "A" << std::endl;
                 break;
-    }
+    }*/
 
     Temp.IsColision = isColision;
     if(isColision){

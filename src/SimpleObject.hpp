@@ -59,6 +59,7 @@ class SimpleObject{
     private:
         int m_MaxQuadCount;
 
+
         SimpleMaterialInfo m_Material;
         SimpleLightInfo m_Light;
 
@@ -154,27 +155,31 @@ class SimpleObject{
 
 
         inline std::vector<Vertex> GetVerticies(){ return m_Verticies;}
+        
         inline int GetVerticiesCount() {return m_UsedQuads*4;} const
         inline std::vector<unsigned int> GetIndices(){return m_Indices;}
         inline int GetIndicCount() {return (m_UsedQuads*4)*6;}; const
         inline int GetMaxQuadCound() {return m_MaxQuadCount;}
         inline int GetUsedQuads() {return m_UsedQuads;}
         inline std::vector<float> GetWeights(){return m_Weights;}
-
         inline SimpleMaterialInfo GetMaterialInfo() {return m_Material;}
         inline SimpleLightInfo GetLightInfo() {return m_Light;}
 
         inline void SetLightColor(float R, float G, float B) { m_LR = R; m_LG = G; m_LB = B;}
 
         inline glm::vec3 GetLightColor() { return glm::vec3(m_LR, m_LG, m_LB);}
-        inline glm::vec3 GetPos() {return glm::vec3(m_X, m_Y, m_Z);}
+        inline void SetPosition(float X, float Y, float Z){ m_X = X; m_Y = Y; m_Z = Z;}
+        inline glm::vec3 GetPos() {return glm::vec3(m_X,m_Y,m_Z);}
 
         inline void SetColision(bool basic){ SimpleColision = basic;}
         inline bool GetColision(){return SimpleColision;}
 
+        std::vector<PhysicsPos> GetVertexPositions();
+        std::vector<PhysicsPos> GetVertexNormlPositions();
+
         void SetShader(const std::string &filePath);
 
-        void SetPosition(float X, float Y, float Z, glm::mat4 &Projection, glm::mat4 &View);
+        void SetDrawPos(glm::mat4 &Projection, glm::mat4 &View);
 
         void SetColor(float r, float g, float b, float a);
 

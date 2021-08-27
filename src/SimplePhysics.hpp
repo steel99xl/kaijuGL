@@ -13,6 +13,13 @@ struct ForceDirection{
     float Z;
 };
 
+// Yes this is basicaly the same as the ForceDirection But with a diffrent name
+struct PhysicsPos{
+    float X;
+    float Y;
+    float Z;
+};
+
 struct Force{
     float Power;
     ForceDirection Direction;
@@ -71,7 +78,7 @@ class SimplePhysics{
 
         ColisionInfo AABBColision(std::vector<QuadPhysicsBody> ObjectA, ForceDirection ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, ForceDirection ObjectBPos);
 
-        std::vector<QuadPhysicsBody> MakePhysicsBods(std::vector<float> X, std::vector<float> Y, std::vector<float> Z, std::vector<float>NormX, std::vector<float>NormY, std::vector<float>NormZ, std::vector<float> Weights);
+        std::vector<QuadPhysicsBody> MakePhysicsBods(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
 
 
         SimplePhysics(float GravityForce, float GravityX, float GravityY, float GravityZ);

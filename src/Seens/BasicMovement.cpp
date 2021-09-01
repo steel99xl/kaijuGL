@@ -58,7 +58,7 @@ void TestWorld::Setup(){
 
     BasicMetalCube.shininess = 32.0f;
 
-    Sun.MakeLight(1.0f,1.0f,1.0f, 0.5f,0.5f,0.5f, 0.9f,0.9f,0.9f, 0.0f,-1.0f,0.0f, 12.5f, 0.014f, 0.07f);
+    Sun.MakeLight(1.0f,1.0f,1.0f, 0.5f,0.5f,0.5f, 0.9f,0.9f,0.9f, 0.0f,0.0f,0.0f, 12.5f, 0.014f, 0.07f);
 
 
 
@@ -84,7 +84,7 @@ void TestWorld::Setup(){
 
     Object.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,2.0f,1.0f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
-    SlowMovingBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    SlowMovingBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f,2.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
 
     // Yes the FaceDir matters based on where you want it to be visible
@@ -138,6 +138,8 @@ void TestWorld::Setup(){
    
     m_FOV = 75.0f;
 
+    SlowMovingBlock.SetPosition(1.0f,1.0f,-1.0f);
+    Land.SetPosition(0.0f,0.0f,-6.0f);
   //  std::cout << "Total Squares = " << Object.GetVerticiesCount()/4 << std::endl;
    // std::cout << "Total Verticies Drawn = " << (Object.GetVerticiesCount()/4)*6 << std::endl;
 
@@ -145,54 +147,71 @@ void TestWorld::Setup(){
 }
 
 void TestWorld::StaticUpdate(int MaxUpdateSpeed){
+        //glfwPostEmptyEvent();
         // camera stuff 
+        BasicPhysics.SetUpdateTime(MaxUpdateSpeed);
         AdvancedCam.Update(((float)MaxUpdateSpeed)/1000.0f, (float)m_Width/m_Height, m_FOV);
         m_Projection = AdvancedCam.GetProj();
         m_View = AdvancedCam.GetView();
         m_3dCamPos = AdvancedCam.GetCurrentPos();
 
 
-
-        Land.SetPosition(0.0f,0.0f,-6.0f);
-        SlowMovingBlock.SetPosition(0.0f,0.0f,-3.0f);
-
-        glm::vec3 CubePos = Object.GetPos();
-        glm::vec3 LandPos = Land.GetPos();
         //bool Test = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);
         // This is just to seperate the old colision system from the new one
-        ColisionInfo SimpleColision;
-        std::vector<QuadPhysicsBody> PhysBodyA, PhysBodyB;
-        std::vector<float> ObjectAWeights, ObjectBWeights;
-        ForceDirection ObjectAPos, ObjectBPos;
+        ColisionInfo PlayerTOObject, SlowMovingBlockColision;
+        std::vector<QuadPhysicsBody> Player, Lands, SlowBlock;
+        std::vector<float> PlayerWeights, LandWeights, SlowBlockWeights;
+        PhysicsPoint PreviousePlayerPos ,PlayerPos, SlowBlockFuturePos;
+        ForceDirection LeftFromOrigion;
 
-        ObjectAPos.X = CubePos[0];
-        ObjectAPos.Y = CubePos[1];
-        ObjectAPos.Z = CubePos[2];
+        LeftFromOrigion.X = -1.0f;
+        LeftFromOrigion.Y = 0.0f;
+        LeftFromOrigion.Z = 0.0f;
 
-        ObjectBPos.X = LandPos[0];
-        ObjectBPos.Y = LandPos[1];
-        ObjectBPos.Z = LandPos[2];
+        PreviousePlayerPos.X = m_3dCamPos.x;
+        PreviousePlayerPos.Y = m_3dCamPos.y-0.9f;
+        PreviousePlayerPos.Z = m_3dCamPos.z;
+        SlowBlockFuturePos = BasicPhysics.MovePhysicsObject(SlowMovingBlock.GetPhysicsPos(), LeftFromOrigion, 0.5f);
 
+        //std::cout << m_NewPlayerDirection.X << " | " << m_NewPlayerDirection.Y << " | " << m_NewPlayerDirection.Z << std::endl;
+       PlayerPos = BasicPhysics.MovePhysicsObject(PreviousePlayerPos, m_NewPlayerDirection, 5.0f);
+       //m_NewPlayerDirection.X = 0.0f;
+       //m_NewPlayerDirection.Y = 0.0f;
+       //m_NewPlayerDirection.Z = 0.0f;
 
-        ObjectAWeights = Object.GetWeights();
-        ObjectBWeights = Land.GetWeights();
+        Player = BasicPhysics.MakePhysicsBods(Object.GetVertexPositions(), Object.GetVertexNormlPositions(), Object.GetWeights());
+        Lands = BasicPhysics.MakePhysicsBods(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), Land.GetWeights());
+        SlowBlock = BasicPhysics.MakePhysicsBods(SlowMovingBlock.GetVertexPositions(), SlowMovingBlock.GetVertexNormlPositions(), SlowMovingBlock.GetWeights());
 
+        PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, Lands, Land.GetPhysicsPos());
+        SlowMovingBlockColision = BasicPhysics.AABBColision(SlowBlock, SlowBlockFuturePos, Player, PlayerPos);
 
-        PhysBodyA = BasicPhysics.MakePhysicsBods(Object.GetVertexPositions(), Object.GetVertexNormlPositions(), ObjectAWeights);
-        PhysBodyB = BasicPhysics.MakePhysicsBods(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), ObjectBWeights);
-
-        SimpleColision = BasicPhysics.AABBColision(PhysBodyA, ObjectAPos, PhysBodyB, ObjectBPos);
-
-
-        if(SimpleColision.IsColision){
-            m_3dCamPos = m_3dCamPosPrevious;
+        if(!SlowMovingBlockColision.IsColision){
+            SlowMovingBlock.SetPosition(SlowBlockFuturePos.X, SlowBlockFuturePos.Y, SlowBlockFuturePos.Z);
         } else {
-            m_3dCamPosPrevious = m_3dCamPos;
+            SlowMovingBlock.SetPosition(SlowMovingBlock.GetPhysicsPos().X, SlowMovingBlock.GetPhysicsPos().Y, SlowMovingBlock.GetPhysicsPos().Z);
+        }
+        
+
+
+        if(PlayerTOObject.IsColision){
+            //m_3dCamPosPrevious = m_3dCamPosPrevious;
+            Object.SetPosition(PreviousePlayerPos.X, PreviousePlayerPos.Y, PreviousePlayerPos.Z);
+            AdvancedCam.SetPos(PreviousePlayerPos.X, PreviousePlayerPos.Y+0.9f, PreviousePlayerPos.Z);
+            //AdvancedCam.SetPos(LastPos.x, LastPos.y + 1.0f, LastPos.z);
+            
+        } else {
+            
+            Object.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
+            AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
+
         }
 
-        Object.SetColision(SimpleColision.IsColision);
+        
 
-        Object.SetPosition(m_3dCamPos.x, m_3dCamPos.y-1.0f, m_3dCamPos.z);
+        Object.SetColision(PlayerTOObject.IsColision);
+
+        //Object.SetPosition(m_3dCamPos.x, m_3dCamPos.y-1.0f, m_3dCamPos.z);
 
 }
 
@@ -225,32 +244,38 @@ void TestWorld::KeyInput(int Keys[]){
 
         if(Keys[0] == GLFW_PRESS){
            m_pos2D[2] -= 5 + SpeedStep;
-            AdvancedCam.Move(FORWARD, SpeedStep);
+            //AdvancedCam.Move(FORWARD, SpeedStep);
+            m_NewPlayerDirection = AdvancedCam.MoveDir(FORWARD);
         }
 
         if(Keys[1] == GLFW_PRESS){
            m_pos2D[2] += 5 + SpeedStep;
-            AdvancedCam.Move(BACK, SpeedStep);
+            //AdvancedCam.Move(BACK, SpeedStep);
+            m_NewPlayerDirection = AdvancedCam.MoveDir(BACK);
         }
 
         if(Keys[2] == GLFW_PRESS){
            m_pos2D[0] -= 5 + SpeedStep;
-            AdvancedCam.Move(LEFT, SpeedStep);
+            //AdvancedCam.Move(LEFT, SpeedStep);
+            m_NewPlayerDirection = AdvancedCam.MoveDir(LEFT);
         }
 
         if(Keys[3] == GLFW_PRESS){
            m_pos2D[0] += 5 + SpeedStep;
-            AdvancedCam.Move(RIGHT, SpeedStep);
+            //AdvancedCam.Move(RIGHT, SpeedStep);
+            m_NewPlayerDirection = AdvancedCam.MoveDir(RIGHT);
         }
 
         if(Keys[5] == GLFW_PRESS){
            m_pos2D[1] += 5 + SpeedStep;
-            AdvancedCam.Move(UP, SpeedStep);
+            //AdvancedCam.Move(UP, SpeedStep);
+            m_NewPlayerDirection = AdvancedCam.MoveDir(UP);
         }
 
         if(Keys[4] == GLFW_PRESS){
            m_pos2D[1] -= 5 + SpeedStep;
-            AdvancedCam.Move(DOWN, SpeedStep);
+            //AdvancedCam.Move(DOWN, SpeedStep);
+            m_NewPlayerDirection = AdvancedCam.MoveDir(DOWN);
         }
 
         if(Keys[22] == GLFW_PRESS){
@@ -274,6 +299,7 @@ void TestWorld::KeyInput(int Keys[]){
         if(Keys[21] == GLFW_PRESS){
            AdvancedCam.UnInvertVertical();
         }
+
 
 
 }
@@ -304,7 +330,7 @@ void TestWorld::OnRender(){
         //Sun.SetColor(1.0f,0.9059f,0.0f, 1.0f);
         Sun.SetLightColor(1.0f, 1.0f, 1.0f);
         Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
-        Sun.SetPosition(0.0f,3.0f,-6.0f);
+        Sun.SetPosition(0.0f,3.0f,-1.0f);
         Sun.SetDrawPos(m_Projection, m_View);
         //Sun.SetLight(Sun.GetLightColor(), Sun.GetPos());
         Sun.Paint();

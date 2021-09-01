@@ -81,7 +81,21 @@ std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsBods(std::vector<PhysicsP
     return Output;
 }
 
-ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, ForceDirection ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, ForceDirection ObjectBPos){
+PhysicsPoint SimplePhysics::MovePhysicsObject(PhysicsPoint Object, ForceDirection NormalDir, float Speed){
+    Speed *= m_DeltaTime;
+
+    NormalDir.X *= Speed;
+    NormalDir.Y *= Speed;
+    NormalDir.Z *= Speed;
+
+    Object.X += NormalDir.X;
+    Object.Y += NormalDir.Y;
+    Object.Z += NormalDir.Z;
+
+    return Object;
+}
+
+ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos){
     ColisionInfo Temp;
 
     bool XColision = false;

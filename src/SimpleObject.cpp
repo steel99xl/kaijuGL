@@ -121,8 +121,17 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
         SqrPt[3] = Rotatez(SqrPt[3],AngleZ);
         TempLightPosVec = Rotatez(TempLightPosVec, AngleZ);
 
+        if(TempLightPosVec.x < 0.0f){
+            TempLightPosVec.x *= -1.0f;
+        }
+        if(TempLightPosVec.y < 0.0f){
+            TempLightPosVec.y *= -1.0f;
+        }
+        if(TempLightPosVec.z < 0.0f){
+            TempLightPosVec.z *= -1.0f;
+        }
+
         for(int i = 0; i < 4; i++){
-                std::cout << i << std::endl;
                 Temp.Pos = {SqrPt[i].x + TempPosVec.x, SqrPt[i].y + TempPosVec.y, SqrPt[i].z + TempPosVec.z};
                 Temp.NormalPos = {TempLightPosVec.x, TempLightPosVec.y, TempLightPosVec.z};
                 switch(i){

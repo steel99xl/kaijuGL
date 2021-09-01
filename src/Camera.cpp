@@ -86,7 +86,7 @@ void Camera3D::Input(){
 
 }
 
-void Camera3D::Move(Direction direction, float Speed){
+void Camera3D::Move(CamDirection direction, float Speed){
 
     Speed = Speed * m_DeltaTime;
 
@@ -123,6 +123,54 @@ void Camera3D::Move(Direction direction, float Speed){
 
     }
 
+}
+
+ForceDirection Camera3D::MoveDir(CamDirection direction){
+    ForceDirection Output;
+    glm::vec3 Temp;
+
+    switch(direction){
+        case UP:
+            Output.X = 0;
+            Output.Y = 1;
+            Output.Z = 0;
+            break;
+
+        case DOWN:
+            Output.X = 0;
+            Output.Y = -1;
+            Output.Z = 0;
+            break;
+
+        case LEFT:
+            Temp = glm::normalize(glm::cross(m_look, m_rotation));
+            Output.X = -Temp[0];
+            Output.Y = -Temp[1];
+            Output.Z = -Temp[2];
+            break;
+
+        case RIGHT:
+            Temp = glm::normalize(glm::cross(m_look, m_rotation));
+            Output.X = Temp[0];
+            Output.Y = Temp[1];
+            Output.Z = Temp[2];
+            break;
+
+        case FORWARD:
+            Output.X = m_WalkingDir[0];
+            Output.Y = 0.0f;
+            Output.Z = m_WalkingDir[1];
+            break;
+
+        case BACK:
+            Output.X = -1.0f*m_WalkingDir[0];
+            Output.Y = 0.0f;
+            Output.Z = -1.0f*m_WalkingDir[1];
+            break;
+
+    }
+
+    return Output;
 }
 
 void Camera3D::LookRelative(double xpos, double ypos){

@@ -69,14 +69,19 @@ struct ColisionInfo{
 
 class SimplePhysics{
     private:
+        float m_DeltaTime;
 
         Force m_Gravity;
 
 
     public:
+        inline void SetUpdateTime(int TimeInMS){m_DeltaTime = (float)TimeInMS*0.001;}
+        inline float GetUpdateTime(){return m_DeltaTime;}
         inline Force GetGravity(){return m_Gravity;}
 
-        ColisionInfo AABBColision(std::vector<QuadPhysicsBody> ObjectA, ForceDirection ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, ForceDirection ObjectBPos);
+        PhysicsPoint MovePhysicsObject(PhysicsPoint Object, ForceDirection NormalDir, float Speed);
+
+        ColisionInfo AABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos);
 
         std::vector<QuadPhysicsBody> MakePhysicsBods(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
 

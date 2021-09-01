@@ -84,7 +84,7 @@ void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
 }
 
 void SecondThread(int UpdateSpeed){
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     auto WaitTime = std::chrono::milliseconds(UpdateSpeed);
     while(true){
         auto StartTime = std::chrono::steady_clock::now();

@@ -81,7 +81,7 @@ void main(){
     vec3 norm = normalize(v_Normalized);
     vec3 lightDir = normalize(u_Light.position - v_FragPos);
 
-    float theta = dot(lightDir, normalize(-u_Light.lightPoint));
+    //float theta = dot(lightDir, normalize(-u_Light.lightPoint));
 
 
     vec3 viewDir = normalize(u_camPos - v_FragPos);

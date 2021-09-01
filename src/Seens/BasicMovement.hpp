@@ -47,6 +47,7 @@ class TestWorld{
         SimpleObject Land;
         SimpleObject Sun;
 
+        ForceDirection m_NewPlayerDirection;
 
         SimpleMaterialInfo BasicMetalCube;
 

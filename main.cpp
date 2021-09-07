@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 #include <fstream>
 #include <cstring>
 #include <sstream>
@@ -21,6 +22,7 @@ bool CursorLock = false;
 double lastX = 0;
 double lastY = 0;
 
+// This is the Main keycall back function to pass keys to the world
 void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mods){
     //std::cout << key << std::endl;
     int Keys[100];
@@ -82,7 +84,29 @@ void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
 
 }
 
+//This is the Physics thread
+void SecondThread(int UpdateSpeed){
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    auto WaitTime = std::chrono::milliseconds(UpdateSpeed);
+    while(true){
+        auto StartTime = std::chrono::steady_clock::now();
+        World.PhysicsUpdate(UpdateSpeed);
+        auto EndTime = std::chrono::steady_clock::now();
 
+        auto ElapsedTime = EndTime - StartTime;
+
+        auto FinalTime = WaitTime - ElapsedTime;
+        if(FinalTime > std::chrono::milliseconds::zero()){
+            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(FinalTime);
+        }
+    }
+    
+}
+
+void ThirdThread(){
+
+}
 
 int main(void){
     float deltaTime, lastFrame = 0.0f;
@@ -95,7 +119,7 @@ int main(void){
     float ScaleFactor[2] = {0.0f,0.0f};
     float ScaleBuffer;
 
-    int OSscaler = 1; // This is mainly for mac os
+    int OSscaler = 2; // This is mainly for mac os
 
     ScaleBuffer = (float)width/(float)height;
 
@@ -202,10 +226,12 @@ int main(void){
     ImGui_ImplOpenGL3_Init(glsl_version);
 
 
-    glfwSetInputMode(window, GLFW_STICKY_KEYS,GLFW_TRUE);
     //glfwSetKeyCallback(window, KeyCallBack);
 
     World.Setup();
+    std::thread PhysicsThread(SecondThread,15);
+    PhysicsThread.detach();
+
 
     glfwSetKeyCallback(window, KeyCallBack);
     glfwSetCursorPosCallback(window, MousePosCallBack);
@@ -248,10 +274,11 @@ int main(void){
     SimpleObject Frame;
     Frame.Setup();
     Frame.SetShader("assets/Shaders/FrameBuffer.shader");
-    Frame.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    Frame.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f, 1.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
     Frame.SetTexture(0, "u_Texture");
     Frame.SetFloatUniform("u_Size.height", height/4);
     Frame.SetFloatUniform("u_Size.width", width/4);
+
    
 // Draw LOOP
     unsigned int FrameTimeCount = 0;
@@ -290,16 +317,15 @@ int main(void){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         GLCall(glEnable(GL_DEPTH_TEST));
 
-       
+       // End of FrameBuffer Stuff for setting it to be writen to
 
         glfwPollEvents();
         glfwGetWindowSize(window, &width, &height);
 
-        // End of FrameBuffer Stuff for setting it to be writen to
-        // TO draw it you have to go to the bottom of this
-    
-        // Dont use on mac
-       glViewport(0,0, width*OSscaler, height*OSscaler);
+        
+
+
+        glViewport(0,0, width*OSscaler, height*OSscaler);
        
         /* Render here */
         renderer.Clear();

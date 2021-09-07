@@ -12,6 +12,8 @@ class TestWorld{
         glm::vec3 m_pos2D;
         float m_FOV;
 
+        glm::vec3 m_3dCamPos, m_3dCamPosPrevious;
+
         // TODO : implement frame buffer object
         //Frame Buffer Info
         unsigned int m_FBO;
@@ -41,13 +43,16 @@ class TestWorld{
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
 
         SimpleObject Object;
-        SimpleObject Testobject;
+        SimpleObject SlowMovingBlock;
         SimpleObject Land;
         SimpleObject Sun;
 
-        SimpleObject FBOrec;
+        std::vector<ForceDirection> m_NewPlayerDirection;
+        float PlayerMovmentSpeed;
 
         SimpleMaterialInfo BasicMetalCube;
+
+        SimplePhysics BasicPhysics = SimplePhysics(-10.0f ,15.0f,20.0f,10.0f);
 
         // Literaly just to show that you can set your own size
 
@@ -65,9 +70,9 @@ class TestWorld{
         Vertex *CreateQuad(Vertex *target, float X, float Y, float sizeX, float sizeY, float TextureID);
 
 
-        bool SimpleColisionFunction(std::vector<Vertex> ObjectAVerticies, int ObjectAVerticiesCount, glm::vec3 ObjecAPos, std::vector<Vertex> ObjectBVerticies, int ObjectBVerticiesCount, glm::vec3 ObjectBPos);
-
         void Setup();
+
+        void PhysicsUpdate(int MaxUpdateSpeed);
 
         void OnUpdate(float deltaTime, float width, float hight);
         void KeyInput(int Keys[]);

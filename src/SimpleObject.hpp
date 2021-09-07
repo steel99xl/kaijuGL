@@ -50,12 +50,15 @@ struct SimpleMaterialInfo{
     float shininess;
 };
 
+
+
 enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
 
 
 class SimpleObject{
     private:
-        int m_MaxQuadCount;
+        int m_MaxQuadCount, m_MaxQuads, m_UsedQuads;
+
 
         SimpleMaterialInfo m_Material;
         SimpleLightInfo m_Light;
@@ -68,15 +71,23 @@ class SimpleObject{
         unsigned int m_IndicMax;
         unsigned int m_IndicOffset;
 
-        int m_MaxQuads, m_UsedQuads;
-
+        float m_OldX, m_OldY, m_OldZ;
+        // The position of the object
         float m_X, m_Y, m_Z;
+        // The Previouse position;
         // The calculated rotation of point (0.0, 1.0, 0.0) from the origin of the object
+        // This is just so the movment calculcatons can be similar to the camera
         float m_rX, m_rY, m_rZ;
         // Object color
         float m_R, m_G, m_B;
         // Light color if object is emitting light
         float m_LR, m_LG, m_LB;
+        // The weight of the object vertexs in KG
+        std::vector<float> m_Weights;
+
+        bool SimpleColision;
+
+
 
         std::unique_ptr<VertexArray> m_VAO;
 
@@ -114,9 +125,9 @@ class SimpleObject{
 
         // This function needs to be rewriten to not take "target" from the user
         // Should append to the indexbuffer
-        void Create2dQuad(float X,float Y,float Z, float AngleX, float AngleY, float AngleZ, float sizeX, float sizeY, float tX, float tY, float TX, float TY, float TextureID);
+        void Create2dQuad(float X,float Y,float Z, float AngleX, float AngleY, float AngleZ, float sizeX, float sizeY, float Weight, float tX, float tY, float TX, float TY, float TextureID);
 
-        void CreateCube(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float SizeX, float SizeY, float SizeZ, float tX, float tY, float TX, float TY, float TexuteID);
+        void CreateCube(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float SizeX, float SizeY, float SizeZ, float Weight, float tX, float tY, float TX, float TY, float TexuteID);
 
         
 
@@ -144,23 +155,34 @@ class SimpleObject{
 
 
         inline std::vector<Vertex> GetVerticies(){ return m_Verticies;}
+        
         inline int GetVerticiesCount() {return m_UsedQuads*4;} const
         inline std::vector<unsigned int> GetIndices(){return m_Indices;}
         inline int GetIndicCount() {return (m_UsedQuads*4)*6;}; const
         inline int GetMaxQuadCound() {return m_MaxQuadCount;}
         inline int GetUsedQuads() {return m_UsedQuads;}
-
+        inline std::vector<float> GetWeights(){return m_Weights;}
         inline SimpleMaterialInfo GetMaterialInfo() {return m_Material;}
         inline SimpleLightInfo GetLightInfo() {return m_Light;}
 
         inline void SetLightColor(float R, float G, float B) { m_LR = R; m_LG = G; m_LB = B;}
 
         inline glm::vec3 GetLightColor() { return glm::vec3(m_LR, m_LG, m_LB);}
-        inline glm::vec3 GetPos() {return glm::vec3(m_X, m_Y, m_Z);}
+        inline void SetPosition(float X, float Y, float Z){m_OldX = m_X, m_OldY = m_Y, m_OldZ = m_Z, m_X = X; m_Y = Y; m_Z = Z;}
+        inline glm::vec3 GetPos() {return glm::vec3(m_X,m_Y,m_Z);}
+        inline PhysicsPoint GetPhysicsPos() {PhysicsPoint Output; Output.X = m_X; Output.Y = m_Y; Output.Z = m_Z; return Output;}
+        inline glm::vec3 GetPreviouPos(){return glm::vec3(m_OldX, m_OldY, m_OldZ);}
+        inline PhysicsPoint GetPreviouPhysicsPos() {PhysicsPoint Output; Output.X = m_OldX; Output.Y = m_OldY; Output.Z = m_OldZ; return Output;}
+
+        inline void SetColision(bool basic){ SimpleColision = basic;}
+        inline bool GetColision(){return SimpleColision;}
+
+        std::vector<PhysicsPos> GetVertexPositions();
+        std::vector<PhysicsPos> GetVertexNormlPositions();
 
         void SetShader(const std::string &filePath);
 
-        void SetPosition(float X, float Y, float Z, glm::mat4 &Projection, glm::mat4 &View);
+        void SetDrawPos(glm::mat4 &Projection, glm::mat4 &View);
 
         void SetColor(float r, float g, float b, float a);
 

@@ -2,7 +2,7 @@
 #include "Engine.hpp"
 
 
- enum Direction{UP, DOWN, LEFT, RIGHT, FORWARD, BACK};
+ enum CamDirection{UP, DOWN, LEFT, RIGHT, FORWARD, BACK};
 
 
 class Camera2D{
@@ -60,7 +60,8 @@ class Camera3D{
 
     void Update(float DeltaTime, float Ratio = 0.0f, float FOV = 0.0f, float ViewDistance = 0.0f);
     void Input();
-    void Move(Direction direction, float Speed);
+    void Move(CamDirection direction, float Speed);
+    ForceDirection MoveDir(CamDirection directoin);
     void LookRelative(double xpos, double ypos);
     // Looks at a specific point in the world
     inline void LookAbsolute(float xpos, float ypos, float zpos){m_look[0] = xpos; m_look[1] = ypos; m_look[2] = zpos;};
@@ -69,6 +70,7 @@ class Camera3D{
     inline glm::mat4 GetProj() {return m_Proj;};
     inline glm::mat4 GetView() {return m_View;};
     inline glm::vec3 GetCurrentPos() {return m_pos;};
+    inline void SetPos(float X, float Y, float Z){m_pos[0] = X; m_pos[1] = Y; m_pos[2] = Z;}
     inline glm::vec3 GetCurrentLook() {return m_look;};
     inline glm::vec3 GetCurrentRotation() {return m_rotation;};
     inline float GetCurrentFOV(){return m_FOV;};

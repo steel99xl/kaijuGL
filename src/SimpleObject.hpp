@@ -194,8 +194,6 @@ class SimpleObject{
     
         void SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos);
 
-        bool AABBColision(std::vector<Vertex> ObjectAVerticies, int ObjectAVerticiesCount, glm::vec3 ObjectAPos, std::vector<Vertex> ObjectBVerticies, int ObjectBVerticiesCount, glm::vec3 ObjectBPos);
-
         // Sets up the object to act as a source of light;
         // void SetLightEmission()
 

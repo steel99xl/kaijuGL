@@ -47,11 +47,12 @@ class TestWorld{
         SimpleObject Land;
         SimpleObject Sun;
 
-        ForceDirection m_NewPlayerDirection;
+        std::vector<ForceDirection> m_NewPlayerDirection;
+        float PlayerMovmentSpeed;
 
         SimpleMaterialInfo BasicMetalCube;
 
-        SimplePhysics BasicPhysics = SimplePhysics(-10.0f ,15.0f,20.0f,10.0f);
+        SimplePhysics BasicPhysics = SimplePhysics(2.0f ,0.0f,-1.0f,0.0f);
 
         // Literaly just to show that you can set your own size
 
@@ -71,7 +72,7 @@ class TestWorld{
 
         void Setup();
 
-        void StaticUpdate(int MaxUpdateSpeed);
+        void PhysicsUpdate(int MaxUpdateSpeed);
 
         void OnUpdate(float deltaTime, float width, float hight);
         void KeyInput(int Keys[]);

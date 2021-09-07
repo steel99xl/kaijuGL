@@ -95,10 +95,10 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
 
         glm::vec3 TempPosVec(X,Y,Z);
         std::vector<glm::vec3> SqrPt;
-        SqrPt.push_back(glm::vec3 (-0.5*sizeX, -0.5*sizeY, 0.0));
-        SqrPt.push_back(glm::vec3 (0.5*sizeX, -0.5*sizeY, 0.0));
-        SqrPt.push_back(glm::vec3 (0.5*sizeX, 0.5*sizeY, 0.0));
-        SqrPt.push_back(glm::vec3 (-0.5*sizeX, 0.5*sizeY, 0.0));
+        SqrPt.push_back(glm::vec3 (-0.5*sizeX, -0.5*sizeY, 1.0f));
+        SqrPt.push_back(glm::vec3 (0.5*sizeX, -0.5*sizeY, 1.0f));
+        SqrPt.push_back(glm::vec3 (0.5*sizeX, 0.5*sizeY, 1.0f));
+        SqrPt.push_back(glm::vec3 (-0.5*sizeX, 0.5*sizeY, 1.0f));
 
         glm::vec3 TempLightPosVec(0.0f,0.0f,1.0f);
 
@@ -109,11 +109,13 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
         SqrPt[3] = Rotatex(SqrPt[3],AngleX);
         TempLightPosVec = Rotatex(TempLightPosVec, AngleX);
 
+
         SqrPt[0] = Rotatey(SqrPt[0],AngleY);
         SqrPt[1] = Rotatey(SqrPt[1],AngleY);
         SqrPt[2] = Rotatey(SqrPt[2],AngleY);
         SqrPt[3] = Rotatey(SqrPt[3],AngleY);
         TempLightPosVec = Rotatey(TempLightPosVec, AngleY);
+
 
         SqrPt[0] = Rotatez(SqrPt[0],AngleZ);
         SqrPt[1] = Rotatez(SqrPt[1],AngleZ);
@@ -121,7 +123,7 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
         SqrPt[3] = Rotatez(SqrPt[3],AngleZ);
         TempLightPosVec = Rotatez(TempLightPosVec, AngleZ);
 
-        if(TempLightPosVec.x < 0.0f){
+       /* if(TempLightPosVec.x < 0.0f){
             TempLightPosVec.x *= -1.0f;
         }
         if(TempLightPosVec.y < 0.0f){
@@ -130,6 +132,9 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
         if(TempLightPosVec.z < 0.0f){
             TempLightPosVec.z *= -1.0f;
         }
+        */
+
+        std::cout << TempLightPosVec.z << std::endl;
 
         for(int i = 0; i < 4; i++){
                 Temp.Pos = {SqrPt[i].x + TempPosVec.x, SqrPt[i].y + TempPosVec.y, SqrPt[i].z + TempPosVec.z};
@@ -667,172 +672,6 @@ void SimpleObject::SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::
         m_Shader->SetUniform1f("u_Light.linear", lightInfo.Linear);
         m_Shader->SetUniform1f("u_Light.quadratic", lightInfo.Quadratic);
         m_Shader->SetUniform3f("u_camPos", camPos.x, camPos.y, camPos.z);
-
-}
-
-bool SimpleObject::AABBColision(std::vector<Vertex> ObjectAVerticies, int ObjectAVerticiesCount, glm::vec3 ObjectAPos, std::vector<Vertex> ObjectBVerticies, int ObjectBVerticiesCount, glm::vec3 ObjectBPos){
-    bool XColission = false;
-    bool YColission = false;
-    bool ZColission = false;
-
-    std::vector <VertexPos> MinMaxA;
-    int MinMaxACount = 0; // This is just for testing
-    std::vector <VertexPos> MinMaxB;
-    int MinMaxBCount = 0; // This is also just for testing
-
-    VertexPos Max;
-    VertexPos Min;
-
-    float XMin = INFINITY;
-    float YMin = INFINITY;
-    float ZMin = INFINITY;
-
-    float XMax = -INFINITY;
-    float YMax = -INFINITY;
-    float ZMax = -INFINITY;
-
-    int Count = 0; //This is so every min and max is pushed back every quad
-    for(int i = 0; i < ObjectAVerticiesCount; i++){
-        Count++;
-        float X = ObjectAVerticies[i].Pos.X + ObjectAPos[0];
-        float Y = ObjectAVerticies[i].Pos.Y + ObjectAPos[1];
-        float Z = ObjectAVerticies[i].Pos.Z + ObjectAPos[2];
-
-        if(X < XMin){
-            XMin = X;
-        } else if(X > XMax){
-            XMax = X;
-        }
-
-        if(Y < YMin){
-            YMin = Y;
-        } else if(Y > YMax){
-            YMax = Y;
-        }
-
-        if(Z < ZMin){
-            ZMin = Z;
-        } else if(Z > ZMax){
-            ZMax = Z;
-        }
-
-        if(Count == 4){
-            Count = 0;
-
-            Min.X = XMin;
-            Min.Y = YMin;
-            Min.Z = ZMin;
-
-            Max.X = XMax;
-            Max.Y = YMax;
-            Max.Z = ZMax;
-
-            MinMaxA.push_back(Min);
-            MinMaxA.push_back(Max);
-            MinMaxACount += 2;
-
-            XMin = INFINITY;
-            YMin = INFINITY;
-            ZMin = INFINITY;
-
-            XMax = -INFINITY;
-            YMax = -INFINITY;
-            ZMax = -INFINITY;
-
-        }
-    }
-
-    // I should not have to reset the Min and Max but this is just to be save;
-    XMin = INFINITY;
-    YMin = INFINITY;
-    ZMin = INFINITY;
-
-    XMax = -INFINITY;
-    YMax = -INFINITY;
-    ZMax = -INFINITY;
-
-    Count = 0; //This is so every min and max is pushed back every quad
-    for(int i = 0; i < ObjectBVerticiesCount; i++){
-        Count++;
-        float X = ObjectBVerticies[i].Pos.X + ObjectBPos[0];
-        float Y = ObjectBVerticies[i].Pos.Y + ObjectBPos[1];
-        float Z = ObjectBVerticies[i].Pos.Z + ObjectBPos[2];
-
-        if(X < XMin){
-            XMin = X;
-        } else if(X > XMax){
-            XMax = X;
-        }
-
-        if(Y < YMin){
-            YMin = Y;
-        } else if(Y > YMax){
-            YMax = Y;
-        }
-
-        if(Z < ZMin){
-            ZMin = Z;
-        } else if(Z > ZMax){
-            ZMax = Z;
-        }
-
-        if(Count == 4){
-            Count = 0;
-
-            Min.X = XMin;
-            Min.Y = YMin;
-            Min.Z = ZMin;
-
-            Max.X = XMax;
-            Max.Y = YMax;
-            Max.Z = ZMax;
-
-            MinMaxB.push_back(Min);
-            MinMaxB.push_back(Max);
-            MinMaxBCount += 2;
-
-            XMin = INFINITY;
-            YMin = INFINITY;
-            ZMin = INFINITY;
-
-            XMax = -INFINITY;
-            YMax = -INFINITY;
-            ZMax = -INFINITY;
-
-        }
-    }
-
-    int b,d;
-    for(int a = 0; a < MinMaxACount; a += 2){
-        b = (a + 1) % MinMaxACount;
-        
-        for( int c = 0; c < MinMaxBCount; c += 2){
-            d = (c + 1) % MinMaxBCount;
-            
-            if((MinMaxA[a].X <= MinMaxB[c].X && MinMaxA[b].X >= MinMaxB[d].X) || (MinMaxA[a].X >= MinMaxB[c].X && MinMaxA[b].X <= MinMaxB[d].X)){
-                XColission = true;
-            } else {
-                XColission = false;
-            }
-            if((MinMaxA[a].Y <= MinMaxB[c].Y && MinMaxA[b].Y >= MinMaxB[d].Y) || (MinMaxA[a].Y >= MinMaxB[c].Y && MinMaxA[b].Y <= MinMaxB[d].Y)){
-                YColission = true;
-            } else {
-                YColission = false;
-            }
-            if((MinMaxA[a].Z <= MinMaxB[c].Z && MinMaxA[b].Z >= MinMaxB[d].Z) || (MinMaxA[a].Z >= MinMaxB[c].Z && MinMaxA[b].Z <= MinMaxB[d].Z)){
-                ZColission = true;
-            } else {
-                ZColission = false;
-            }
-
-            if(XColission && ZColission && YColission){
-                return true;
-            }
-        }
-    }
-
-
-    return false;
 
 }
 

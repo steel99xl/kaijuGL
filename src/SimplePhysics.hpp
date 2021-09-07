@@ -1,7 +1,6 @@
 #pragma once
 #include <cmath>
 #include <vector>
-
 // THis is just for debuging
 #include <iostream>
 // This file should not really care about anything else in the engine, outside the data directly sent to it
@@ -20,6 +19,8 @@ struct PhysicsPos{
     float Z;
 };
 
+
+
 struct Force{
     float Power;
     ForceDirection Direction;
@@ -31,6 +32,14 @@ struct PhysicsPoint{
     float Z;
     float Weight;
     Force Energy;
+};
+
+struct PhysicsLine{
+    PhysicsPoint PosA;
+    PhysicsPoint PosB;
+    float Diff;
+    ForceDirection Normal; // This is just going to be stored here as a referance
+
 };
 
 
@@ -81,10 +90,17 @@ class SimplePhysics{
 
         PhysicsPoint MovePhysicsObject(PhysicsPoint Object, ForceDirection NormalDir, float Speed);
 
+        void QuadsToLinesVoid(std::vector<QuadPhysicsBody> Object ,std::vector<PhysicsLine> *Output);
+        std::vector<PhysicsLine> QuadsToLines(std::vector<QuadPhysicsBody> Object);
+
+        void FullQuadLineColisionVoid(std::vector<PhysicsLine> ObjectALines, PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPoint ObjectBPos, float Offset, ColisionInfo *Output);
+        ColisionInfo FullQuadLineColision(std::vector<PhysicsLine> ObjectALines,PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPoint ObjectBPos, float Offset);
+
         ColisionInfo AABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos);
 
         std::vector<QuadPhysicsBody> MakePhysicsBods(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
 
+        ForceDirection NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces);
 
         SimplePhysics(float GravityForce, float GravityX, float GravityY, float GravityZ);
         ~SimplePhysics();

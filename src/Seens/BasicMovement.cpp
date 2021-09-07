@@ -25,6 +25,7 @@ void TestWorld::Setup(){
     std::cout << "W A S D Moves the camera" << std::endl;
 
 
+
     m_VAO = std::make_unique<VertexArray>();
     m_Shader = std::make_unique<Shader>();
     m_IBO = std::make_unique<IndexBuffer>();
@@ -68,14 +69,15 @@ void TestWorld::Setup(){
    // Land.Create2dQuad(0.0f,0.0f,0.0f, F_NONE, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
     //Land.Create2dQuad(0.0f,10.0f,-10.0f, F_NORTH, 20.0f,20.0f, 0.0f,0.0f, 0.0f, 0.0f, 0.0f);
 
-    Land.Create2dQuad(0.0f,-1.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    Land.Create2dQuad(0.0f,-3.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
     Land.Create2dQuad(8.0f,1.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
     Land.Create2dQuad(0.0f,4.0f,0.0f, 90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f,0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
     Land.Create2dQuad(0.0f,-1.0f,-2.5f, 0.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-    Land.Create2dQuad(0.0f,-1.0f,2.5f, 0.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    Land.Create2dQuad(0.0f,-1.0f,-2.5f, 0.0f,180.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    Land.Create2dQuad(0.0f,-1.0f,2.5f, 0.0f,0.0f,45.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    Land.Create2dQuad(-2.5f,-1.0f,0.0f, 0.0f,-90.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    //Land.Create2dQuad(-2.5f,-1.0f,0.0f, 0.0f,-90.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
 
 
@@ -146,7 +148,7 @@ void TestWorld::Setup(){
 
 }
 
-void TestWorld::StaticUpdate(int MaxUpdateSpeed){
+void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         //glfwPostEmptyEvent();
         // camera stuff 
         BasicPhysics.SetUpdateTime(MaxUpdateSpeed);
@@ -159,31 +161,36 @@ void TestWorld::StaticUpdate(int MaxUpdateSpeed){
         //bool Test = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);
         // This is just to seperate the old colision system from the new one
         ColisionInfo PlayerTOObject, SlowMovingBlockColision;
+
         std::vector<QuadPhysicsBody> Player, Lands, SlowBlock;
-        std::vector<float> PlayerWeights, LandWeights, SlowBlockWeights;
-        PhysicsPoint PreviousePlayerPos ,PlayerPos, SlowBlockFuturePos;
+        PhysicsPoint PlayerPos, SlowBlockFuturePos;
         ForceDirection LeftFromOrigion;
 
         LeftFromOrigion.X = -1.0f;
         LeftFromOrigion.Y = 0.0f;
         LeftFromOrigion.Z = 0.0f;
 
-        PreviousePlayerPos.X = m_3dCamPos.x;
-        PreviousePlayerPos.Y = m_3dCamPos.y-0.9f;
-        PreviousePlayerPos.Z = m_3dCamPos.z;
+        //PreviousePlayerPos = Object.GetPhysicsPos();
+
         SlowBlockFuturePos = BasicPhysics.MovePhysicsObject(SlowMovingBlock.GetPhysicsPos(), LeftFromOrigion, 0.5f);
 
         //std::cout << m_NewPlayerDirection.X << " | " << m_NewPlayerDirection.Y << " | " << m_NewPlayerDirection.Z << std::endl;
-       PlayerPos = BasicPhysics.MovePhysicsObject(PreviousePlayerPos, m_NewPlayerDirection, 5.0f);
+        PlayerPos = BasicPhysics.MovePhysicsObject(Object.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed);
        //m_NewPlayerDirection.X = 0.0f;
        //m_NewPlayerDirection.Y = 0.0f;
        //m_NewPlayerDirection.Z = 0.0f;
+        m_NewPlayerDirection.clear();
 
         Player = BasicPhysics.MakePhysicsBods(Object.GetVertexPositions(), Object.GetVertexNormlPositions(), Object.GetWeights());
         Lands = BasicPhysics.MakePhysicsBods(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), Land.GetWeights());
         SlowBlock = BasicPhysics.MakePhysicsBods(SlowMovingBlock.GetVertexPositions(), SlowMovingBlock.GetVertexNormlPositions(), SlowMovingBlock.GetWeights());
 
-        PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, Lands, Land.GetPhysicsPos());
+        //PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, Lands, Land.GetPhysicsPos());
+        
+        std::vector<PhysicsLine> TempLandLines =  BasicPhysics.QuadsToLines(Lands);
+
+        PlayerTOObject = BasicPhysics.FullQuadColision(BasicPhysics.QuadsToLines(Player), PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f);
+
         SlowMovingBlockColision = BasicPhysics.AABBColision(SlowBlock, SlowBlockFuturePos, Player, PlayerPos);
 
         if(!SlowMovingBlockColision.IsColision){
@@ -195,17 +202,26 @@ void TestWorld::StaticUpdate(int MaxUpdateSpeed){
 
 
         if(PlayerTOObject.IsColision){
-            //m_3dCamPosPrevious = m_3dCamPosPrevious;
-            Object.SetPosition(PreviousePlayerPos.X, PreviousePlayerPos.Y, PreviousePlayerPos.Z);
-            AdvancedCam.SetPos(PreviousePlayerPos.X, PreviousePlayerPos.Y+0.9f, PreviousePlayerPos.Z);
-            //AdvancedCam.SetPos(LastPos.x, LastPos.y + 1.0f, LastPos.z);
-            
-        } else {
-            
-            Object.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
-            AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
+            std::cout << "Object Colision" << std::endl;
+            std::cout << PlayerTOObject.MovmentDirectionA.X << " | " << PlayerTOObject.MovmentDirectionA.Y << " | " << PlayerTOObject.MovmentDirectionA.Z << std::endl;
+            std::cout << PlayerTOObject.MovmentDirectionB.X << " | " << PlayerTOObject.MovmentDirectionB.Y << " | " << PlayerTOObject.MovmentDirectionB.Z << std::endl;
 
+            //m_3dCamPosPrevious = m_3dCamPosPrevious;
+            //Object.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
+            //AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
+            //Object.SetPosition(PreviousePlayerPos.X, PreviousePlayerPos.Y, PreviousePlayerPos.Z);
+            //AdvancedCam.SetPos(PreviousePlayerPos.X, PreviousePlayerPos.Y+0.9f, PreviousePlayerPos.Z);
+            //AdvancedCam.SetPos(LastPos.x, LastPos.y + 1.0f, LastPos.z);
+
+            PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, PlayerMovmentSpeed);
+            
         }
+
+        Object.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
+        AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
+            //AdvancedCam.SetPos(PreviousePlayerPos.X, PreviousePlayerPos.Y+0.9f, PreviousePlayerPos.Z);
+
+        
 
         
 
@@ -233,49 +249,49 @@ void TestWorld::OnUpdate(float deltaTime, float width, float height){
     }
 
 void TestWorld::KeyInput(int Keys[]){
-        float SpeedStep = 4.317f;
+        PlayerMovmentSpeed = 4.317f;
         // Keys[] will be replaced with a vector or array of keyinput structs
         // Eventualy the movment will be forcebased
 
         if(Keys[6] == GLFW_PRESS){
             //SpeedStep = 12.51f *m_DeltaTime;
-            SpeedStep = 5.612;
+            PlayerMovmentSpeed = 6.612;
         }
 
         if(Keys[0] == GLFW_PRESS){
-           m_pos2D[2] -= 5 + SpeedStep;
+           m_pos2D[2] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(FORWARD, SpeedStep);
-            m_NewPlayerDirection = AdvancedCam.MoveDir(FORWARD);
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(FORWARD));
         }
 
         if(Keys[1] == GLFW_PRESS){
-           m_pos2D[2] += 5 + SpeedStep;
+           m_pos2D[2] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(BACK, SpeedStep);
-            m_NewPlayerDirection = AdvancedCam.MoveDir(BACK);
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(BACK));
         }
 
         if(Keys[2] == GLFW_PRESS){
-           m_pos2D[0] -= 5 + SpeedStep;
+           m_pos2D[0] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(LEFT, SpeedStep);
-            m_NewPlayerDirection = AdvancedCam.MoveDir(LEFT);
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(LEFT));
         }
 
         if(Keys[3] == GLFW_PRESS){
-           m_pos2D[0] += 5 + SpeedStep;
+           m_pos2D[0] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(RIGHT, SpeedStep);
-            m_NewPlayerDirection = AdvancedCam.MoveDir(RIGHT);
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(RIGHT));
         }
 
         if(Keys[5] == GLFW_PRESS){
-           m_pos2D[1] += 5 + SpeedStep;
+           m_pos2D[1] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(UP, SpeedStep);
-            m_NewPlayerDirection = AdvancedCam.MoveDir(UP);
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(UP));
         }
 
         if(Keys[4] == GLFW_PRESS){
-           m_pos2D[1] -= 5 + SpeedStep;
+           m_pos2D[1] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(DOWN, SpeedStep);
-            m_NewPlayerDirection = AdvancedCam.MoveDir(DOWN);
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(DOWN));
         }
 
         if(Keys[22] == GLFW_PRESS){

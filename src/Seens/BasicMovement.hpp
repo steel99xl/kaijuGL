@@ -47,7 +47,8 @@ class TestWorld{
         SimpleObject Land;
         SimpleObject Sun;
 
-        ForceDirection m_NewPlayerDirection;
+        std::vector<ForceDirection> m_NewPlayerDirection;
+        float PlayerMovmentSpeed;
 
         SimpleMaterialInfo BasicMetalCube;
 
@@ -71,7 +72,7 @@ class TestWorld{
 
         void Setup();
 
-        void StaticUpdate(int MaxUpdateSpeed);
+        void PhysicsUpdate(int MaxUpdateSpeed);
 
         void OnUpdate(float deltaTime, float width, float hight);
         void KeyInput(int Keys[]);

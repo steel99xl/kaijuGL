@@ -22,6 +22,7 @@ bool CursorLock = false;
 double lastX = 0;
 double lastY = 0;
 
+// This is the Main keycall back function to pass keys to the world
 void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mods){
     //std::cout << key << std::endl;
     int Keys[100];
@@ -83,12 +84,13 @@ void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
 
 }
 
+//This is the Physics thread
 void SecondThread(int UpdateSpeed){
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     auto WaitTime = std::chrono::milliseconds(UpdateSpeed);
     while(true){
         auto StartTime = std::chrono::steady_clock::now();
-        World.StaticUpdate(UpdateSpeed);
+        World.PhysicsUpdate(UpdateSpeed);
         auto EndTime = std::chrono::steady_clock::now();
 
         auto ElapsedTime = EndTime - StartTime;
@@ -100,6 +102,10 @@ void SecondThread(int UpdateSpeed){
         }
     }
     
+}
+
+void ThirdThread(){
+
 }
 
 int main(void){
@@ -220,7 +226,6 @@ int main(void){
     ImGui_ImplOpenGL3_Init(glsl_version);
 
 
-    glfwSetInputMode(window, GLFW_STICKY_KEYS,GLFW_TRUE);
     //glfwSetKeyCallback(window, KeyCallBack);
 
     World.Setup();
@@ -312,16 +317,15 @@ int main(void){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         GLCall(glEnable(GL_DEPTH_TEST));
 
-       
+       // End of FrameBuffer Stuff for setting it to be writen to
 
         glfwPollEvents();
         glfwGetWindowSize(window, &width, &height);
 
-        // End of FrameBuffer Stuff for setting it to be writen to
-        // TO draw it you have to go to the bottom of this
-    
-        // Dont use on mac
-       glViewport(0,0, width*OSscaler, height*OSscaler);
+        
+
+
+        glViewport(0,0, width*OSscaler, height*OSscaler);
        
         /* Render here */
         renderer.Clear();

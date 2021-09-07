@@ -73,7 +73,6 @@ std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsBods(std::vector<PhysicsP
         TempQuad.PlaneNorm.X = Normal[i].X;
         TempQuad.PlaneNorm.Y = Normal[i].Y;
         TempQuad.PlaneNorm.Z = Normal[i].Z;
-
         Output.push_back(TempQuad);
 
     }
@@ -93,6 +92,171 @@ PhysicsPoint SimplePhysics::MovePhysicsObject(PhysicsPoint Object, ForceDirectio
     Object.Z += NormalDir.Z;
 
     return Object;
+}
+
+
+// Each Quad has 6 PhysicsLines generated from the 4 points
+std::vector<PhysicsLine> SimplePhysics::QuadsToLines(std::vector<QuadPhysicsBody> Object){
+    std::vector<PhysicsLine> Output;
+    PhysicsLine Temp;
+
+    for(int i = 0; i < Object.size(); i++){
+        Temp.PosA = Object[i].PosA;
+        Temp.PosB = Object[i].PosB;
+        Temp.Diff = std::sqrt( ((Temp.PosB.X - Temp.PosA.X)*(Temp.PosB.X - Temp.PosA.X)) + ((Temp.PosB.Y - Temp.PosA.Y)*(Temp.PosB.Y - Temp.PosA.Y)) + ((Temp.PosB.Z - Temp.PosA.Z)*(Temp.PosB.Z - Temp.PosA.Z)) );
+        Temp.Normal = Object[i].PlaneNorm;
+
+        Output.push_back(Temp);
+
+        Temp.PosA = Object[i].PosB;
+        Temp.PosB = Object[i].PosC;
+        Temp.Diff = std::sqrt( ((Temp.PosB.X - Temp.PosA.X)*(Temp.PosB.X - Temp.PosA.X)) + ((Temp.PosB.Y - Temp.PosA.Y)*(Temp.PosB.Y - Temp.PosA.Y)) + ((Temp.PosB.Z - Temp.PosA.Z)*(Temp.PosB.Z - Temp.PosA.Z)) );
+        Temp.Normal = Object[i].PlaneNorm;
+
+        Output.push_back(Temp);
+
+        Temp.PosA = Object[i].PosC;
+        Temp.PosB = Object[i].PosD;
+        Temp.Diff = std::sqrt( ((Temp.PosB.X - Temp.PosA.X)*(Temp.PosB.X - Temp.PosA.X)) + ((Temp.PosB.Y - Temp.PosA.Y)*(Temp.PosB.Y - Temp.PosA.Y)) + ((Temp.PosB.Z - Temp.PosA.Z)*(Temp.PosB.Z - Temp.PosA.Z)) );
+        Temp.Normal = Object[i].PlaneNorm;
+
+        Output.push_back(Temp);
+
+        Temp.PosA = Object[i].PosD;
+        Temp.PosB = Object[i].PosA;
+        Temp.Diff = std::sqrt( ((Temp.PosB.X - Temp.PosA.X)*(Temp.PosB.X - Temp.PosA.X)) + ((Temp.PosB.Y - Temp.PosA.Y)*(Temp.PosB.Y - Temp.PosA.Y)) + ((Temp.PosB.Z - Temp.PosA.Z)*(Temp.PosB.Z - Temp.PosA.Z)) );
+        Temp.Normal = Object[i].PlaneNorm;
+
+        Output.push_back(Temp);
+
+        Temp.PosA = Object[i].PosA;
+        Temp.PosB = Object[i].PosC;
+        Temp.Diff = std::sqrt( ((Temp.PosB.X - Temp.PosA.X)*(Temp.PosB.X - Temp.PosA.X)) + ((Temp.PosB.Y - Temp.PosA.Y)*(Temp.PosB.Y - Temp.PosA.Y)) + ((Temp.PosB.Z - Temp.PosA.Z)*(Temp.PosB.Z - Temp.PosA.Z)) );
+        Temp.Normal = Object[i].PlaneNorm;
+
+        Output.push_back(Temp);
+
+        Temp.PosA = Object[i].PosB;
+        Temp.PosB = Object[i].PosD;
+        Temp.Diff = std::sqrt( ((Temp.PosB.X - Temp.PosA.X)*(Temp.PosB.X - Temp.PosA.X)) + ((Temp.PosB.Y - Temp.PosA.Y)*(Temp.PosB.Y - Temp.PosA.Y)) + ((Temp.PosB.Z - Temp.PosA.Z)*(Temp.PosB.Z - Temp.PosA.Z)) );
+        Temp.Normal = Object[i].PlaneNorm;
+
+        Output.push_back(Temp);
+
+    }
+
+    return Output;
+}
+
+ColisionInfo SimplePhysics::FullQuadColision(std::vector<PhysicsLine> ObjectALines, PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPoint ObjectBPos, float Offset){
+    ColisionInfo Output;
+    Output.IsColision = false;
+    float A,B,C,D;
+
+    PhysicsPos Line1A, Line1B, Line2A, Line2B;
+
+  
+
+    for(int i = 0; i < ObjectALines.size(); i++){
+        for(int j = 0; j < ObjectBLines.size(); j++){
+            Line1A.X = ObjectALines[i].PosA.X + ObjectAPos.X;
+            Line1A.Y = ObjectALines[i].PosA.Y + ObjectAPos.Y;
+            Line1A.Z = ObjectALines[i].PosA.Z + ObjectAPos.Z;
+
+            Line1B.X = ObjectALines[i].PosB.X + ObjectAPos.X;
+            Line1B.Y = ObjectALines[i].PosB.Y + ObjectAPos.Y;
+            Line1B.Z = ObjectALines[i].PosB.Z + ObjectAPos.Z;
+
+            Line2A.X = ObjectBLines[j].PosA.X + ObjectBPos.X;
+            Line2A.Y = ObjectBLines[j].PosA.Y + ObjectBPos.Y;
+            Line2A.Z = ObjectBLines[j].PosA.Z + ObjectBPos.Z;
+
+            Line2B.X = ObjectBLines[j].PosB.X + ObjectBPos.X;
+            Line2B.Y = ObjectBLines[j].PosB.Y + ObjectBPos.Y;
+            Line2B.Z = ObjectBLines[j].PosB.Z + ObjectBPos.Z;
+
+            A =  std::sqrt( (Line2A.X - Line1A.X)*(Line2A.X-Line1A.X) + (Line2A.Y - Line1A.Y)*(Line2A.Y - Line1A.Y) + (Line2A.Z - Line1A.Z)*(Line2A.Z - Line1A.Z));
+            B =  std::sqrt( (Line2B.X - Line1A.X)*(Line2B.X-Line1A.X) + (Line2B.Y - Line1A.Y)*(Line2B.Y - Line1A.Y) + (Line2B.Z - Line1A.Z)*(Line2B.Z - Line1A.Z));
+            C =  std::sqrt( (Line2A.X - Line1B.X)*(Line2A.X-Line1B.X) + (Line2A.Y - Line1B.Y)*(Line2A.Y - Line1B.Y) + (Line2A.Z - Line1B.Z)*(Line2A.Z - Line1B.Z));
+            D =  std::sqrt( (Line2B.X - Line1B.X)*(Line2B.X-Line1B.X) + (Line2B.Y - Line1B.Y)*(Line2B.Y - Line1B.Y) + (Line2B.Z - Line1B.Z)*(Line2B.Z - Line1B.Z));
+            //std::cout << "Just some Numbers" << std::endl;
+            //std::cout << A+B << " | " << ObjectBLines[i].Diff * Offset << std::endl;
+            //std::cout << C+D << " | " << ObjectBLines[i].Diff << std::endl;
+            if((A+B) <= (ObjectBLines[j].Diff * Offset) && (C+D) <= (ObjectBLines[j].Diff * Offset)){
+                //std::cout << A << " | " << B << " | " << C << " | " << D  << std::endl;
+                /*
+                std::cout << "Colision diffs" << std::endl;
+                std::cout << i << "/" << ObjectALines.size() << " | " << j <<"/"<< ObjectBLines.size() << std::endl;
+                std::cout << ObjectALines[i].PosA.X << " | " <<  ObjectALines[i].PosA.Y << " | " << ObjectALines[i].PosA.Z << std::endl;
+                std::cout << "2 other points" << std::endl;
+                std::cout << ObjectBLines[i].PosA.X << " | " <<  ObjectBLines[i].PosA.Y << " | " << ObjectBLines[i].PosA.Z << std::endl;
+                std::cout << ObjectBLines[i].PosB.X << " | " <<  ObjectBLines[i].PosB.Y << " | " << ObjectBLines[i].PosB.Z << std::endl;
+
+                
+                std::cout << "Added off set" << std::endl;
+                std::cout << ObjectAPos.X << " | " << ObjectAPos.Y << " | " << ObjectAPos.Z << std::endl;
+                std::cout << ObjectBPos.X << " | " << ObjectBPos.Y << " | " << ObjectBPos.Z << std::endl;  
+                std::cout << A << " | " << B << " | " << C << " | " << D  << std::endl;
+                std::cout << A+B << " | " << ObjectBLines[j].Diff * Offset << std::endl;
+                std::cout << C+D << " | " << ObjectBLines[j].Diff << std::endl; 
+                */
+                Output.IsColision = true;
+                Output.MovmentDirectionA = ObjectALines[i].Normal;
+                Output.MovmentDirectionB = ObjectBLines[j].Normal;
+                Output.Force = 2.0f;
+                break;
+            }
+
+        }
+        if(Output.IsColision){
+            break;
+        }
+
+    }
+
+    if(!Output.IsColision){
+        for(int i = 0; i < ObjectBLines.size(); i++){
+            for(int j = 0; j < ObjectALines.size(); j++){
+                Line1A.X = ObjectALines[j].PosA.X + ObjectAPos.X;
+                Line1A.Y = ObjectALines[j].PosA.Y + ObjectAPos.Y;
+                Line1A.Z = ObjectALines[j].PosA.Z + ObjectAPos.Z;
+
+                Line1B.X = ObjectALines[j].PosB.X + ObjectAPos.X;
+                Line1B.Y = ObjectALines[j].PosB.Y + ObjectAPos.Y;
+                Line1B.Z = ObjectALines[j].PosB.Z + ObjectAPos.Z;
+
+                Line2A.X = ObjectBLines[i].PosA.X + ObjectBPos.X;
+                Line2A.Y = ObjectBLines[i].PosA.Y + ObjectBPos.Y;
+                Line2A.Z = ObjectBLines[i].PosA.Z + ObjectBPos.Z;
+
+                Line2B.X = ObjectBLines[i].PosB.X + ObjectBPos.X;
+                Line2B.Y = ObjectBLines[i].PosB.Y + ObjectBPos.Y;
+                Line2B.Z = ObjectBLines[i].PosB.Z + ObjectBPos.Z;
+
+                A =  std::sqrt( (Line2A.X - Line1A.X)*(Line2A.X-Line1A.X) + (Line2A.Y - Line1A.Y)*(Line2A.Y - Line1A.Y) + (Line2A.Z - Line1A.Z)*(Line2A.Z - Line1A.Z));
+                B =  std::sqrt( (Line2B.X - Line1A.X)*(Line2B.X-Line1A.X) + (Line2B.Y - Line1A.Y)*(Line2B.Y - Line1A.Y) + (Line2B.Z - Line1A.Z)*(Line2B.Z - Line1A.Z));
+                C =  std::sqrt( (Line2A.X - Line1B.X)*(Line2A.X-Line1B.X) + (Line2A.Y - Line1B.Y)*(Line2A.Y - Line1B.Y) + (Line2A.Z - Line1B.Z)*(Line2A.Z - Line1B.Z));
+                D =  std::sqrt( (Line2B.X - Line1B.X)*(Line2B.X-Line1B.X) + (Line2B.Y - Line1B.Y)*(Line2B.Y - Line1B.Y) + (Line2B.Z - Line1B.Z)*(Line2B.Z - Line1B.Z));
+
+                if((A+C) <= (ObjectALines[j].Diff * Offset) && (B+D) <= (ObjectALines[j].Diff * Offset)){
+                    Output.IsColision = true;
+                    Output.MovmentDirectionA = ObjectALines[j].Normal;
+                    Output.MovmentDirectionB = ObjectBLines[i].Normal;
+                    Output.Force = 2.0f;
+                    break;
+                }
+
+            }
+            if(Output.IsColision){
+                break;
+            }
+
+        }
+    }
+    
+
+
+    return Output;
 }
 
 ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos){
@@ -339,8 +503,8 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, P
 
     Temp.IsColision = isColision;
     if(isColision){
-        Temp.MovmentDirectionA = ObjectB[IntexIntersectB].PlaneNorm;
-        Temp.MovmentDirectionB = ObjectA[IndexIntersectA].PlaneNorm;
+        Temp.MovmentDirectionA = ObjectA[IndexIntersectA].PlaneNorm;
+        Temp.MovmentDirectionB = ObjectB[IntexIntersectB].PlaneNorm;
     } else {
         Temp.MovmentDirectionA.X = 0.0f;
         Temp.MovmentDirectionA.Y = 0.0f;
@@ -361,4 +525,33 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, P
 
 
     return Temp;
+}
+
+ForceDirection SimplePhysics::NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces){
+    ForceDirection Output;
+    int VectorSize = VectorOfForces.size();
+    float Temp;
+    Output.X = 0.0f;
+    Output.Y = 0.0f;
+    Output.Z = 0.0f;
+
+    if(!(VectorSize == 0)){
+        for(int i = 0; i < VectorSize; i ++){
+            Output.X += VectorOfForces[i].X;
+            Output.Y += VectorOfForces[i].Y;
+            Output.Z += VectorOfForces[i].Z;
+        }
+
+        Temp = std::sqrt(Output.X * Output.X + Output.Y * Output.Y + Output.Z * Output.Z);
+        
+        if(Temp != 0.){
+            Output.X /= Temp;
+            Output.Y /= Temp;
+            Output.Z /= Temp;
+        }
+
+    }
+
+
+    return Output;
 }

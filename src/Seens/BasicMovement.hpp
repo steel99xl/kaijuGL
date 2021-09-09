@@ -61,7 +61,7 @@ class TestWorld{
         Camera3D AdvancedCam = Camera3D(glm::vec3(0.0, 0.0, 2.0f), glm::vec3(0.0, 0.0, -1.0f), glm::vec3(0.0, 1.0, 0.0f), 0.1f, 1.0f, 75.0f, 10000.0f );
 
     public:
-             
+
         bool m_running;
         TestWorld();
         ~TestWorld();

@@ -74,16 +74,16 @@ glm::vec3 SimpleObject::Rotatey(glm::vec3 Start, float Angle){
 }
 
 glm::vec3 SimpleObject::Rotatez(glm::vec3 Start, float Angle){
-    float Cosin, Sin;
-    glm::vec3 Buffer;
-    Cosin = cos(glm::radians(Angle));
-    Sin = sin(glm::radians(Angle));
+        float Cosin, Sin;
+        glm::vec3 Buffer;
+        Cosin = cos(glm::radians(Angle));
+        Sin = sin(glm::radians(Angle));
 
-    Buffer.x = (Cosin * Start.x) + (-Sin * Start.y) + (0 * Start.z);
-    Buffer.y = (Sin * Start.x) + (Cosin * Start.y) + (0 * Start.z);
-    Buffer.z = (0 * Start.x) + (0 * Start.y) + (1 * Start.z);
+        Buffer.x = (Cosin * Start.x) + (-Sin * Start.y) + (0 * Start.z);
+        Buffer.y = (Sin * Start.x) + (Cosin * Start.y) + (0 * Start.z);
+        Buffer.z = (0 * Start.x) + (0 * Start.y) + (1 * Start.z);
 
-    return Buffer;
+        return Buffer;
 }
 
 void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float sizeX, float sizeY, float Weight, float tX, float tY, float TX, float TY, float TextureID){
@@ -123,7 +123,7 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
         SqrPt[3] = Rotatez(SqrPt[3],AngleZ);
         TempLightPosVec = Rotatez(TempLightPosVec, AngleZ);
 
-       /* if(TempLightPosVec.x < 0.0f){
+        /* if(TempLightPosVec.x < 0.0f){
             TempLightPosVec.x *= -1.0f;
         }
         if(TempLightPosVec.y < 0.0f){
@@ -133,8 +133,6 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
             TempLightPosVec.z *= -1.0f;
         }
         */
-
-        std::cout << TempLightPosVec.z << std::endl;
 
         for(int i = 0; i < 4; i++){
                 Temp.Pos = {SqrPt[i].x + TempPosVec.x, SqrPt[i].y + TempPosVec.y, SqrPt[i].z + TempPosVec.z};
@@ -555,7 +553,7 @@ void SimpleObject::Paint(){
 std::vector<PhysicsPos> SimpleObject::GetVertexPositions(){
     std::vector<PhysicsPos> Output;
     PhysicsPos Temp;
-    for(int i = 0; i < m_Verticies.size(); i++){
+    for(long unsigned int i = 0; i < m_Verticies.size(); i++){
         Temp.X = m_Verticies[i].Pos.X;
         Temp.Y = m_Verticies[i].Pos.Y;
         Temp.Z = m_Verticies[i].Pos.Z;
@@ -569,7 +567,7 @@ std::vector<PhysicsPos> SimpleObject::GetVertexPositions(){
 std::vector<PhysicsPos> SimpleObject::GetVertexNormlPositions(){
     std::vector<PhysicsPos> Output;
     PhysicsPos Temp;
-    for(int i = 0; i < m_Verticies.size(); i++){
+    for(long unsigned int i = 0; i < m_Verticies.size(); i++){
         Temp.X = m_Verticies[i].NormalPos.X;
         Temp.Y = m_Verticies[i].NormalPos.Y;
         Temp.Z = m_Verticies[i].NormalPos.Z;

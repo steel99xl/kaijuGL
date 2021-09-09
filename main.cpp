@@ -143,7 +143,7 @@ int main(void){
     glm::vec3 posOff(100,100,0);
     glm::mat4 modle = glm::translate(glm::mat4(1.0f), posOff);
 
-    glm::mat4 mvp = proj * view * modle;
+    //glm::mat4 mvp = proj * view * modle;
     glm::mat4 pv = proj * view; 
 
     if(PixelMode){
@@ -281,7 +281,6 @@ int main(void){
 
    
 // Draw LOOP
-    unsigned int FrameTimeCount = 0;
     float FPS = 0;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)){

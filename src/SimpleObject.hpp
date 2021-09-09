@@ -156,9 +156,9 @@ class SimpleObject{
 
         inline std::vector<Vertex> GetVerticies(){ return m_Verticies;}
         
-        inline int GetVerticiesCount() {return m_UsedQuads*4;} const
+        inline int GetVerticiesCount() {return m_UsedQuads*4;}
         inline std::vector<unsigned int> GetIndices(){return m_Indices;}
-        inline int GetIndicCount() {return (m_UsedQuads*4)*6;}; const
+        inline int GetIndicCount() {return (m_UsedQuads*4)*6;}
         inline int GetMaxQuadCound() {return m_MaxQuadCount;}
         inline int GetUsedQuads() {return m_UsedQuads;}
         inline std::vector<float> GetWeights(){return m_Weights;}

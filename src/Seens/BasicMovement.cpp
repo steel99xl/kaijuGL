@@ -76,14 +76,6 @@ void TestWorld::Setup(){
         }
     }
 
-    //Land.Create2dQuad(8.0f,1.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-    //Land.Create2dQuad(0.0f,4.0f,0.0f, 90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f,0.0f,0.0f, 1.0f,1.0f, 0.0f);
-
-    //Land.Create2dQuad(0.0f,-1.0f,-2.5f, 0.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-
-    //Land.Create2dQuad(-2.5f,-1.0f,0.0f, 0.0f,-90.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-
-
 
 
     Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.10f,0.10f,0.10f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
@@ -141,7 +133,7 @@ void TestWorld::Setup(){
     std::cout << "Shader set" << std::endl;
 
     //int samplers[3] = {0 ,1,2};
-   
+
     m_FOV = 75.0f;
 
     SlowMovingBlock.SetPosition(1.0f,1.0f,-1.0f);
@@ -196,18 +188,19 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         //PlayerTOObject = BasicPhysics.FullQuadColision(BasicPhysics.QuadsToLines(Player), PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f);
         PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, Lands, Land.GetPhysicsPos());
         if(PlayerTOObject.IsColision){
+            //std::cout << "Ground Collision" << std::endl;
             PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, BasicPhysics.GetGravity().Power);
         }
         Object.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
         AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
+        PlayerTOObject.IsColision = false;
 
 
 
         PlayerPos = BasicPhysics.MovePhysicsObject(Object.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed);
         m_NewPlayerDirection.clear();
 
-        
-        BasicPhysics.FullQuadLineColisionVoid(TempPlayerLines, PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f, &PlayerTOObject);
+        //BasicPhysics.FullQuadLineColisionVoid(TempPlayerLines, PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f, &PlayerTOObject);
 
         SlowMovingBlockColision = BasicPhysics.AABBColision(SlowBlock, SlowBlockFuturePos, Player, PlayerPos);
 
@@ -270,37 +263,37 @@ void TestWorld::KeyInput(int Keys[]){
         }
 
         if(Keys[0] == GLFW_PRESS){
-           m_pos2D[2] -= 5 + PlayerMovmentSpeed;
+            m_pos2D[2] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(FORWARD, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(FORWARD));
         }
 
         if(Keys[1] == GLFW_PRESS){
-           m_pos2D[2] += 5 + PlayerMovmentSpeed;
+            m_pos2D[2] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(BACK, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(BACK));
         }
 
         if(Keys[2] == GLFW_PRESS){
-           m_pos2D[0] -= 5 + PlayerMovmentSpeed;
+            m_pos2D[0] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(LEFT, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(LEFT));
         }
 
         if(Keys[3] == GLFW_PRESS){
-           m_pos2D[0] += 5 + PlayerMovmentSpeed;
+            m_pos2D[0] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(RIGHT, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(RIGHT));
         }
 
         if(Keys[5] == GLFW_PRESS){
-           m_pos2D[1] += 5 + PlayerMovmentSpeed;
+            m_pos2D[1] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(UP, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(UP));
         }
 
         if(Keys[4] == GLFW_PRESS){
-           m_pos2D[1] -= 5 + PlayerMovmentSpeed;
+            m_pos2D[1] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(DOWN, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(DOWN));
         }
@@ -320,11 +313,11 @@ void TestWorld::KeyInput(int Keys[]){
         }
 
         if(Keys[20] == GLFW_PRESS){
-           AdvancedCam.InvertVertical();
+            AdvancedCam.InvertVertical();
         }
 
         if(Keys[21] == GLFW_PRESS){
-           AdvancedCam.UnInvertVertical();
+            AdvancedCam.UnInvertVertical();
         }
 
 

@@ -53,13 +53,13 @@ void TestWorld::Setup(){
     BasicMetalCube.diffuse.G = 0.6f;
     BasicMetalCube.diffuse.B = 0.6f;
 
-    BasicMetalCube.specular.R = 1.0f;
-    BasicMetalCube.specular.G = 1.0f;
-    BasicMetalCube.specular.B = 1.0f;
+    BasicMetalCube.specular.R = 0.1f;
+    BasicMetalCube.specular.G = 0.1f;
+    BasicMetalCube.specular.B = 0.1f;
 
     BasicMetalCube.shininess = 32.0f;
 
-    Sun.MakeLight(1.0f,1.0f,1.0f, 0.5f,0.5f,0.5f, 0.9f,0.9f,0.9f, 0.0f,0.0f,0.0f, 12.5f, 0.014f, 0.07f);
+    Sun.MakeLight(1.0f,1.0f,1.0f, 0.5f,0.5f,0.5f, 0.9f,0.9f,0.9f, 0.0f,0.0f,0.0f, 12.5f, 0.045f, 0.0075f);
 
 
 
@@ -122,10 +122,10 @@ void TestWorld::Setup(){
     //FBOrec.SetShader("assets/Shaders/FrameBuffer.shader");
     Land.SetShader("assets/Shaders/BlinnPhong.shader");
     Object.SetShader("assets/Shaders/BlinnPhong.shader");
-    SlowMovingBlock.SetShader("assets/Shaders/BlinnPhong.shader");
+    SlowMovingBlock.SetShader("assets/Shaders/BasicLighting.shader");
     //TestObject.SetShader("assets/Shaders/MultiImg.shader");
 
-    Sun.SetShader("assets/Shaders/BasicLight.shader");
+    Sun.SetShader("assets/Shaders/BasicLightObject.shader");
 
     //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
     //m_Shader->Bind();
@@ -136,7 +136,7 @@ void TestWorld::Setup(){
 
     m_FOV = 75.0f;
 
-    SlowMovingBlock.SetPosition(1.0f,1.0f,-1.0f);
+    SlowMovingBlock.SetPosition(20.0f,-2.0f,8.0f);
     Land.SetPosition(0.0f,0.0f,0.0f);
   //  std::cout << "Total Squares = " << Object.GetVerticiesCount()/4 << std::endl;
    // std::cout << "Total Verticies Drawn = " << (Object.GetVerticiesCount()/4)*6 << std::endl;
@@ -179,39 +179,56 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         
         //PreviousePlayerPos = Object.GetPhysicsPos();
 
-        SlowBlockFuturePos = BasicPhysics.MovePhysicsObject(SlowMovingBlock.GetPhysicsPos(), LeftFromOrigion, 0.5f);
+        //SlowBlockFuturePos = BasicPhysics.MovePhysicsObject(SlowMovingBlock.GetPhysicsPos(), LeftFromOrigion, 0.5f);
 
         //std::cout << m_NewPlayerDirection.X << " | " << m_NewPlayerDirection.Y << " | " << m_NewPlayerDirection.Z << std::endl;
 
         // Gravity acting befor player input
-        PlayerPos = BasicPhysics.MovePhysicsObject(Object.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
+        //PlayerPos = BasicPhysics.MovePhysicsObject(Object.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
         //PlayerTOObject = BasicPhysics.FullQuadColision(BasicPhysics.QuadsToLines(Player), PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f);
-        PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, Lands, Land.GetPhysicsPos());
-        if(PlayerTOObject.IsColision){
-            //std::cout << "Ground Collision" << std::endl;
-            PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, BasicPhysics.GetGravity().Power);
+        //PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, Lands, Land.GetPhysicsPos());
+        //if(PlayerTOObject.IsColision){
+        //    PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, BasicPhysics.GetGravity().Power);
+        //}
+        //Object.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
+        //AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
+
+
+
+        SlowBlockFuturePos = BasicPhysics.MovePhysicsObject(SlowMovingBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
+        SlowMovingBlockColision = BasicPhysics.AABBColision(SlowBlock, SlowBlockFuturePos, Lands, Land.GetPhysicsPos());
+        if(SlowMovingBlockColision.IsColision){
+            SlowBlockFuturePos = BasicPhysics.MovePhysicsObject(SlowBlockFuturePos, SlowMovingBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Power);
         }
-        Object.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
-        AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
-        PlayerTOObject.IsColision = false;
+        SlowMovingBlock.SetPosition(SlowBlockFuturePos.X, SlowBlockFuturePos.Y, SlowBlockFuturePos.Z);
 
 
 
+        // Move Player based on player input
         PlayerPos = BasicPhysics.MovePhysicsObject(Object.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed);
         m_NewPlayerDirection.clear();
 
+        PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, Lands, Land.GetPhysicsPos());
+        if(PlayerTOObject.IsColision){
+            PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, PlayerMovmentSpeed);
+        }
+        Object.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
+        AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
+
         //BasicPhysics.FullQuadLineColisionVoid(TempPlayerLines, PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f, &PlayerTOObject);
 
-        SlowMovingBlockColision = BasicPhysics.AABBColision(SlowBlock, SlowBlockFuturePos, Player, PlayerPos);
+        //SlowMovingBlockColision = BasicPhysics.AABBColision(SlowBlock, SlowBlockFuturePos, Player, PlayerPos);
+        SlowMovingBlockColision = BasicPhysics.FullQuadLineColision(BasicPhysics.QuadsToLines(SlowBlock), SlowMovingBlock.GetPhysicsPos(), BasicPhysics.QuadsToLines(Player), PlayerPos, 1.5f);
 
-        if(!SlowMovingBlockColision.IsColision){
-            SlowMovingBlock.SetPosition(SlowBlockFuturePos.X, SlowBlockFuturePos.Y, SlowBlockFuturePos.Z);
-        } else {
-            SlowMovingBlock.SetPosition(SlowMovingBlock.GetPhysicsPos().X, SlowMovingBlock.GetPhysicsPos().Y, SlowMovingBlock.GetPhysicsPos().Z);
+        if(SlowMovingBlockColision.IsColision){
+            SlowBlockFuturePos = BasicPhysics.MovePhysicsObject(SlowMovingBlock.GetPhysicsPos(), SlowMovingBlockColision.MovmentDirectionB, 20.0f);
+            //SlowMovingBlock.SetPosition(SlowBlockFuturePos.X, SlowBlockFuturePos.Y, SlowBlockFuturePos.Z);
         }
+        SlowMovingBlock.SetPosition(SlowBlockFuturePos.X, SlowBlockFuturePos.Y, SlowBlockFuturePos.Z);
+
         
 
-
+        /*
         if(PlayerTOObject.IsColision){
             std::cout << "Object Colision" << std::endl;
             std::cout << PlayerTOObject.MovmentDirectionA.X << " | " << PlayerTOObject.MovmentDirectionA.Y << " | " << PlayerTOObject.MovmentDirectionA.Z << std::endl;
@@ -220,6 +237,7 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
             PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, PlayerMovmentSpeed);
             
         }
+        */
 
         Object.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
         AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
@@ -340,17 +358,11 @@ void TestWorld::OnRender(){
         GLCall(glClearColor(0.60f, 0.60f, 0.75f, 0.0f));
 
 
-
-        
-        //std::cout << AdvancedCam.GetCurrentLook().x << " | " << AdvancedCam.GetCurrentLook().y << " | " << AdvancedCam.GetCurrentLook().z << std::endl;
-
-
-
         Sun.BindBufferData();
         //Sun.SetColor(1.0f,0.9059f,0.0f, 1.0f);
         Sun.SetLightColor(1.0f, 1.0f, 1.0f);
         Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
-        Sun.SetPosition(0.0f,3.0f,-1.0f);
+        Sun.SetPosition(15.0f,0.0f,10.0f);
         Sun.SetDrawPos(m_Projection, m_View);
         //Sun.SetLight(Sun.GetLightColor(), Sun.GetPos());
         Sun.Paint();
@@ -365,7 +377,8 @@ void TestWorld::OnRender(){
         Land.Paint();
 
         SlowMovingBlock.BindBufferData();
-        SlowMovingBlock.SetColor(0.471f, 0.318f, 0.176f, 1.0f);
+        //SlowMovingBlock.SetColor(0.471f, 0.318f, 0.176f, 1.0f);
+        SlowMovingBlock.SetColor(0.5f, 0.75f, 0.75f, 1.0f);
         SlowMovingBlock.SetMaterial(BasicMetalCube);
         SlowMovingBlock.SetDrawPos(m_Projection,m_View);
         SlowMovingBlock.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);

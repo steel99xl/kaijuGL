@@ -42,8 +42,8 @@ class TestWorld{
         std::unique_ptr<Shader> m_Shader;
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
 
-        SimpleObject Object;
-        SimpleObject SlowMovingBlock;
+        SimpleObject PlayerBlock;
+        SimpleObject TealBlock;
         SimpleObject Land;
         SimpleObject Sun;
 

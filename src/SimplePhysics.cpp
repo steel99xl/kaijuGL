@@ -164,6 +164,23 @@ std::vector<PhysicsLine> SimplePhysics::QuadsToLines(std::vector<QuadPhysicsBody
         Temp.Normal = Object[i].PlaneNorm;
 
         Output.push_back(Temp);
+        // IDK if i need these
+        /*
+        Temp.PosA = Object[i].PosA;
+        Temp.PosB = Object[i].PosC;
+        Temp.Diff = std::sqrt( ((Temp.PosB.X - Temp.PosA.X)*(Temp.PosB.X - Temp.PosA.X)) + ((Temp.PosB.Y - Temp.PosA.Y)*(Temp.PosB.Y - Temp.PosA.Y)) + ((Temp.PosB.Z - Temp.PosA.Z)*(Temp.PosB.Z - Temp.PosA.Z)) );
+        Temp.Normal = Object[i].PlaneNorm;
+
+        Output.push_back(Temp);
+
+        Temp.PosA = Object[i].PosB;
+        Temp.PosB = Object[i].PosD;
+        Temp.Diff = std::sqrt( ((Temp.PosB.X - Temp.PosA.X)*(Temp.PosB.X - Temp.PosA.X)) + ((Temp.PosB.Y - Temp.PosA.Y)*(Temp.PosB.Y - Temp.PosA.Y)) + ((Temp.PosB.Z - Temp.PosA.Z)*(Temp.PosB.Z - Temp.PosA.Z)) );
+        Temp.Normal = Object[i].PlaneNorm;
+
+        Output.push_back(Temp);
+        */
+
 
     }
 
@@ -344,6 +361,187 @@ ColisionInfo SimplePhysics::SATColision(std::vector<PhysicsLine> ObjectA, Physic
     return Output;
 }
 
+std::vector<PlaneMinMax> SimplePhysics::MinMaxFromQuads(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos){
+    std::vector<PlaneMinMax> Output;
+
+    PlaneMinMax TempMinMax;
+    float XMin, YMin, ZMin, XMax, YMax, ZMax;
+
+    float AX, BX, CX, DX;
+    float AY, BY, CY, DY;
+    float AZ, BZ, CZ, DZ;
+
+    for(long unsigned int i = 0; i < Object.size(); i++){
+
+        AX = Object[i].PosA.X + ObjectPos.X;
+        AY = Object[i].PosA.Y + ObjectPos.Y;
+        AZ = Object[i].PosA.Z + ObjectPos.Z;
+
+        BX = Object[i].PosB.X + ObjectPos.X;
+        BY = Object[i].PosB.Y + ObjectPos.Y;
+        BZ = Object[i].PosB.Z + ObjectPos.Z;
+
+        CX = Object[i].PosC.X + ObjectPos.X;
+        CY = Object[i].PosC.Y + ObjectPos.Y;
+        CZ = Object[i].PosC.Z + ObjectPos.Z;
+
+        DX = Object[i].PosD.X + ObjectPos.X;
+        DY = Object[i].PosD.Y + ObjectPos.Y;
+        DZ = Object[i].PosD.Z + ObjectPos.Z;
+
+        if(AX >= BX && AX >= CX && AX >= DX){
+            XMax = AX;
+        } else if(BX >= AX && BX >= CX && BX >= DX){
+            XMax = BX;
+        } else if(CX >= AX && CX >= BX && CX >= DX){
+            XMax = CX;
+        } else if(DX >= AX && DX >= CX && DX >= BX){
+            XMax = DX;
+        }
+
+        if(AY >= BY && AY >= CY && AY >= DY){
+            YMax = AY;
+        } else if(BY >= AY && BY >= CY && BY >= DY){
+            YMax = BY;
+        } else if(CY >= AY && CY >= BY && CY >= DY){
+            YMax = CY;
+        } else if(DY >= AY && DY >= CY && DY >= BY){
+            YMax = DY;
+        }
+
+        if(AZ >= BZ && AZ >= CZ && AZ >= DZ){
+            ZMax = AZ;
+        } else if(BZ >= AZ && BZ >= CZ && BZ >= DZ){
+            ZMax = BZ;
+        } else if(CZ >= AZ && CZ >= BZ && CZ >= DZ){
+            ZMax = CZ;
+        } else if(DZ >= AZ && DZ >= CZ && DZ >= BZ){
+            ZMax = DZ;
+        }
+
+
+        if(AX <= BX && AX <= CX && AX <= DX){
+            XMin = AX;
+        } else if(BX <= AX && BX <= CX && BX <= DX){
+            XMin = BX;
+        } else if(CX <= AX && CX <= BX && CX <= DX){
+            XMin = CX;
+        } else if(DX <= AX && DX <= CX && DX <= BX){
+            XMin = DX;
+        }
+
+        if(AY <= BY && AY <= CY && AY <= DY){
+            YMin = AY;
+        } else if(BY <= AY && BY <= CY && BY <= DY){
+            YMin = BY;
+        } else if(CY <= AY && CY <= BY && CY <= DY){
+            YMin = CY;
+        } else if(DY <= AY && DY <= CY && DY <= BY){
+            YMin = DY;
+        }
+
+        if(AZ <= BZ && AZ <= CZ && AZ <= DZ){
+            ZMin = AZ;
+        } else if(BZ <= AZ && BZ <= CZ && BZ <= DZ){
+            ZMin = BZ;
+        } else if(CZ <= AZ && CZ <= BZ && CZ <= DZ){
+            ZMin = CZ;
+        } else if(DZ <= AZ && DZ <= CZ && DZ <= BZ){
+            ZMin = DZ;
+        }
+
+        TempMinMax.Min.X = XMin;
+        TempMinMax.Min.Y = YMin;
+        TempMinMax.Min.Z = ZMin;
+
+        TempMinMax.Max.X = XMax;
+        TempMinMax.Max.Y = YMax;
+        TempMinMax.Max.Z = ZMax;
+
+        TempMinMax.Normal = Object[i].PlaneNorm;
+
+        Output.push_back(TempMinMax);
+    }
+
+
+
+    return Output;
+}
+
+ColisionInfo SimplePhysics::PointsToAABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<PlaneMinMax> ObjectB){
+    ColisionInfo Output;
+    Output.IsColision = false;
+
+    PhysicsPoint ComparePoint;
+
+    bool XColision = false;
+    bool YColision = false;
+    bool ZColision = false;
+
+
+    for(long unsigned int i = 0; i < ObjectA.size(); i++){
+        for(long unsigned int j = 0; j < ObjectB.size(); j++){
+            for(int n = 0; n < 4; n++){
+                switch(n){
+                    case 0:
+                        ComparePoint.X = ObjectA[i].PosA.X + ObjectAPos.X;
+                        ComparePoint.Y = ObjectA[i].PosA.Y + ObjectAPos.Y;
+                        ComparePoint.Z = ObjectA[i].PosA.Z + ObjectAPos.Z;
+                        break;
+                    case 1:
+                        ComparePoint.X = ObjectA[i].PosB.X + ObjectAPos.X;
+                        ComparePoint.Y = ObjectA[i].PosB.Y + ObjectAPos.Y;
+                        ComparePoint.Z = ObjectA[i].PosB.Z + ObjectAPos.Z;
+                        break;
+                    case 2:
+                        ComparePoint.X = ObjectA[i].PosC.X + ObjectAPos.X;
+                        ComparePoint.Y = ObjectA[i].PosC.Y + ObjectAPos.Y;
+                        ComparePoint.Z = ObjectA[i].PosC.Z + ObjectAPos.Z;
+                        break;
+                    case 3:
+                        ComparePoint.X = ObjectA[i].PosD.X + ObjectAPos.X;
+                        ComparePoint.Y = ObjectA[i].PosD.Y + ObjectAPos.Y;
+                        ComparePoint.Z = ObjectA[i].PosD.Z + ObjectAPos.Z;
+                        break;
+                }
+
+                if(ComparePoint.X >= ObjectB[j].Min.X && ComparePoint.X <=ObjectB[j].Max.X){
+                    XColision = true;
+                } else {
+                    XColision = false;
+                }
+
+                if(ComparePoint.Y >= ObjectB[j].Min.Y && ComparePoint.Y <=ObjectB[j].Max.Y){
+                    YColision = true;
+                } else {
+                    YColision = false;
+                }
+
+                if(ComparePoint.Z >= ObjectB[j].Min.Z && ComparePoint.Z <=ObjectB[j].Max.Z){
+                    ZColision = true;
+                } else {
+                    ZColision = false;
+                }
+
+                if(XColision && YColision && ZColision){
+                    Output.IsColision = true;
+                    Output.MovmentDirectionA = ObjectA[i].PlaneNorm;
+                    Output.MovmentDirectionB = ObjectB[j].Normal;
+                    return Output;
+                }
+
+
+
+            }
+        } 
+    }
+
+
+
+
+    return Output;
+}
+
 ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos){
     ColisionInfo Temp;
 
@@ -450,6 +648,8 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, P
         TempMinMax.Max.Y = YMax;
         TempMinMax.Max.Z = ZMax;
 
+        TempMinMax.Normal = ObjectA[i].PlaneNorm;
+
         MinMaxA.push_back(TempMinMax);
 
     }
@@ -541,6 +741,8 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, P
         TempMinMax.Max.Y = YMax;
         TempMinMax.Max.Z = ZMax;
 
+        TempMinMax.Normal = ObjectA[i].PlaneNorm;
+
         MinMaxB.push_back(TempMinMax);
     }
 
@@ -610,6 +812,24 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, P
 
 
     return Temp;
+}
+
+ForceDirection SimplePhysics::MakeForceDirection(PhysicsPoint ObjectA, PhysicsPoint ObjectB){
+    ForceDirection Output;
+    float Length;
+    Output.X = ObjectB.X - ObjectA.X;
+    Output.Y = ObjectB.Y - ObjectA.Y;
+    Output.Z = ObjectB.Z - ObjectA.Z;
+
+    Length = std::sqrt(Output.X * Output.X + Output.Y * Output.Y + Output.Z * Output.Z);
+
+    if(Length != 0.){
+        Output.X /= Length;
+        Output.Y /= Length;
+        Output.Z /= Length;
+    }
+
+    return Output;
 }
 
 ForceDirection SimplePhysics::NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces){

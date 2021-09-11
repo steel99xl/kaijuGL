@@ -64,6 +64,7 @@ struct TriPhysicsBody{
 struct PlaneMinMax{
     ForceDirection Min;
     ForceDirection Max;
+    ForceDirection Normal;
 };
 
 
@@ -98,9 +99,16 @@ class SimplePhysics{
 
         ColisionInfo SATColision(std::vector<PhysicsLine> ObjectA, PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectB, PhysicsPoint ObjectBPos);
 
+        // The returned minmax is based on world cordinates
+        std::vector<PlaneMinMax> MinMaxFromQuads(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos);
+
+        // This Function only does the comparison 1 way : PointsA to BoxB
+        ColisionInfo PointsToAABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<PlaneMinMax> ObjectB);
         ColisionInfo AABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos);
 
         std::vector<QuadPhysicsBody> MakePhysicsBods(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
+
+        ForceDirection MakeForceDirection(PhysicsPoint ObjectA, PhysicsPoint ObjectB);
 
         ForceDirection NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces);
 

@@ -88,7 +88,7 @@ void TestWorld::Setup(){
 
     PlayerBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,2.0f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
-    TealBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,45.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    TealBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
 
     // Yes the FaceDir matters based on where you want it to be visible
@@ -207,6 +207,7 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         if(!TealBlockColision.IsColision){
             TealBlockColision = BasicPhysics.PointsToAABBColision(PhysicsLand, Land.GetPhysicsPos(), BasicPhysics.MinMaxFromQuads(PhysicsTealBlock, TealBlockFuturePos));
         }
+        //TealBlockColision = BasicPhysics.SATColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, Land.GetPhysicsPos());
         //TealBlockColision = BasicPhysics.FullQuadLineColision(BasicPhysics.QuadsToLines(PhysicsTealBlock), TealBlock.GetPhysicsPos(), BasicPhysics.QuadsToLines(PhysicsLand), Land.GetPhysicsPos(), 1.01);
         if(TealBlockColision.IsColision){
             TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlockFuturePos, TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Power);
@@ -235,9 +236,9 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         TealBlockColision = BasicPhysics.SATColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
 
         if(TealBlockColision.IsColision){
-            ForceDirection NewTealBlockDirecton =  BasicPhysics.MakeForceDirection(PlayerPos,TealBlockFuturePos);
-            NewTealBlockDirecton.Y = 0.1f;
-            TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton, PlayerMovmentSpeed);
+            ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionA;
+            //NewTealBlockDirecton.Y = 0.1f;
+            TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton , PlayerMovmentSpeed);
             //TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
         }
         TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);

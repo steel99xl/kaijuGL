@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <vector>
+#include <thread>
 // THis is just for debuging
 #include <iostream>
 // This file should not really care about anything else in the engine, outside the data directly sent to it
@@ -83,6 +84,8 @@ class SimplePhysics{
 
         Force m_Gravity;
 
+        
+
 
     public:
         inline void SetUpdateTime(int TimeInMS){m_DeltaTime = (float)TimeInMS*0.001;}
@@ -97,7 +100,7 @@ class SimplePhysics{
         void FullQuadLineColisionVoid(std::vector<PhysicsLine> ObjectALines, PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPoint ObjectBPos, float Offset, ColisionInfo *Output);
         ColisionInfo FullQuadLineColision(std::vector<PhysicsLine> ObjectALines,PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPoint ObjectBPos, float Offset);
 
-        ColisionInfo SATColision(std::vector<PhysicsLine> ObjectA, PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectB, PhysicsPoint ObjectBPos);
+        ColisionInfo SATColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos);
 
         // The returned minmax is based on world cordinates
         std::vector<PlaneMinMax> MinMaxFromQuads(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos);
@@ -108,6 +111,11 @@ class SimplePhysics{
 
         std::vector<QuadPhysicsBody> MakePhysicsBods(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
 
+        float DotPointToForce(PhysicsPoint Point, ForceDirection Projection, PhysicsPoint ProjectionPos);
+
+        PhysicsPoint CenterPoint(PhysicsPoint PointA, PhysicsPoint PointB);
+
+        // Returns froce to move ObjectA to ObjectB
         ForceDirection MakeForceDirection(PhysicsPoint ObjectA, PhysicsPoint ObjectB);
 
         ForceDirection NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces);

@@ -345,17 +345,70 @@ ColisionInfo SimplePhysics::FullQuadLineColision(std::vector<PhysicsLine> Object
     return Output;
 }
 
-ColisionInfo SimplePhysics::SATColision(std::vector<PhysicsLine> ObjectA, PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectB, PhysicsPoint ObjectBPos){
+ColisionInfo SimplePhysics::SATColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos){
     ColisionInfo Output;
-    PhysicsPoint edge;
+    Output.IsColision = false; 
 
-
+    std::vector<float> ObjectAShadow, ObjectBShadow;
+    float ObjectAMin = INFINITY;
+    float ObjectAMax = -INFINITY;
+    float ObjectBMin = INFINITY;
+    float ObjectBMax = -INFINITY;
+    // Take the norm or each polly and crush each point to 1D to compare
+    // The origion of the vector will be the origin of the object
     for(long unsigned int i = 0; i < ObjectA.size(); i++){
-        edge.X = (ObjectA[i].PosB.X - ObjectA[i].PosA.X); 
-        edge.Y = (ObjectA[i].PosB.Y - ObjectA[i].PosA.Y); 
-        edge.Z = (ObjectA[i].PosB.Z - ObjectA[i].PosA.Z); 
-        
-    } 
+        ObjectAShadow.clear();
+        ObjectBShadow.clear();
+
+        for(long unsigned int j = 0; j < ObjectA.size(); j++){
+            ObjectAShadow.push_back(SimplePhysics::DotPointToForce(ObjectA[j].PosA, ObjectA[i].PlaneNorm, SimplePhysics::CenterPoint(ObjectA[j].PosA, ObjectA[j].PosD)));
+        }
+
+        for(long unsigned int n = 0; n < ObjectB.size(); n++){
+            ObjectBShadow.push_back(SimplePhysics::DotPointToForce(ObjectB[n].PosA, ObjectA[i].PlaneNorm, SimplePhysics::CenterPoint(ObjectB[n].PosA, ObjectB[n].PosD)));
+        }
+
+        for(long unsigned int j =0; j < ObjectAShadow.size(); j++){
+            if(ObjectAShadow[j] < ObjectAMin){
+                ObjectAMin = ObjectAShadow[j];
+            }
+
+            if(ObjectAShadow[j] > ObjectAMin){
+                ObjectAMax = ObjectAShadow[j];
+            }
+        }
+
+        for(long unsigned int j =0; j < ObjectBShadow.size(); j++){
+            if(ObjectBShadow[j] < ObjectBMin){
+                ObjectBMin = ObjectBShadow[j];
+            }
+
+            if(ObjectBShadow[j] > ObjectBMin){
+                ObjectBMax = ObjectBShadow[j];
+            }
+        }
+
+
+        if(ObjectAMin >= ObjectBMin && ObjectAMin <= ObjectBMax){
+
+        } else if (ObjectAMax >= ObjectBMin && ObjectAMax <= ObjectAMax){
+
+        } else {
+            // Know colission
+            //Output.IsColision = false;
+            return Output;
+        }
+
+
+    }
+
+    Output.IsColision = true;
+    Output.MovmentDirectionB = SimplePhysics::MakeForceDirection(ObjectAPos, ObjectBPos);
+    Output.MovmentDirectionA = SimplePhysics::MakeForceDirection(ObjectBPos, ObjectAPos);
+    //take the noral of each polly and dot product each point to it to make a "shadow"
+    
+
+
 
 
     return Output;
@@ -556,6 +609,13 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, P
 
     PlaneMinMax TempMinMax;
     float XMin, YMin, ZMin, XMax, YMax, ZMax;
+    XMax = -INFINITY;
+    XMin = INFINITY;
+    YMax = -INFINITY;
+    YMin = INFINITY;
+    ZMax = -INFINITY;
+    ZMin = INFINITY;
+
 
     float AX, BX, CX, DX;
     float AY, BY, CY, DY;
@@ -653,6 +713,13 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, P
         MinMaxA.push_back(TempMinMax);
 
     }
+
+    XMax = -INFINITY;
+    XMin = INFINITY;
+    YMax = -INFINITY;
+    YMin = INFINITY;
+    ZMax = -INFINITY;
+    ZMin = INFINITY;
 
     for(long unsigned int i = 0; i < ObjectB.size(); i++){
 
@@ -812,6 +879,24 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, P
 
 
     return Temp;
+}
+
+float SimplePhysics::DotPointToForce(PhysicsPoint Point, ForceDirection Projection, PhysicsPoint ProjectionPos){
+    float Output;
+
+    Output = (Point.X * (Projection.X + ProjectionPos.X) + Point.Y * (Projection.Y + ProjectionPos.Y) + Point.Z * (Projection.Z + ProjectionPos.Z));
+
+    return Output;
+}
+
+PhysicsPoint SimplePhysics::CenterPoint(PhysicsPoint PointA, PhysicsPoint PointB){
+    PhysicsPoint Output;
+    Output.X = (PointA.X + PointB.X)/2.0f;
+    Output.Y = (PointA.Y + PointB.Y)/2.0f;
+    Output.Z = (PointA.Z + PointB.Z)/2.0f;
+
+    return Output;
+
 }
 
 ForceDirection SimplePhysics::MakeForceDirection(PhysicsPoint ObjectA, PhysicsPoint ObjectB){

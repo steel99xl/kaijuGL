@@ -200,8 +200,12 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
 
         TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
         TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, Land.GetPhysicsPos());
+        //TealBlockColision.IsColision = false;
         if(!TealBlockColision.IsColision){
             TealBlockColision = BasicPhysics.PointsToAABBColision(PhysicsTealBlock, TealBlockFuturePos, BasicPhysics.MinMaxFromQuads(PhysicsLand, Land.GetPhysicsPos()));
+        }
+        if(!TealBlockColision.IsColision){
+            TealBlockColision = BasicPhysics.PointsToAABBColision(PhysicsLand, Land.GetPhysicsPos(), BasicPhysics.MinMaxFromQuads(PhysicsTealBlock, TealBlockFuturePos));
         }
         //TealBlockColision = BasicPhysics.FullQuadLineColision(BasicPhysics.QuadsToLines(PhysicsTealBlock), TealBlock.GetPhysicsPos(), BasicPhysics.QuadsToLines(PhysicsLand), Land.GetPhysicsPos(), 1.01);
         if(TealBlockColision.IsColision){
@@ -216,8 +220,10 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         m_NewPlayerDirection.clear();
 
         //PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, PhysicsLand, Land.GetPhysicsPos());
+        //PlayerTOObject = BasicPhysics.SATColision(Player, PlayerPos, PhysicsLand, Land.GetPhysicsPos());
         //if(PlayerTOObject.IsColision){
-        //    PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, PlayerMovmentSpeed);
+            //PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, PlayerMovmentSpeed);
+        //    std::cout << PlayerTOObject.MovmentDirectionB.X << " | " << PlayerTOObject.MovmentDirectionB.Y << " | " << PlayerTOObject.MovmentDirectionB.Z << std::endl;
         //}
         PlayerBlock.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
         AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
@@ -225,7 +231,8 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         //BasicPhysics.FullQuadLineColisionVoid(TempPlayerLines, PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f, &PlayerTOObject);
 
         //TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
-        TealBlockColision = BasicPhysics.FullQuadLineColision(BasicPhysics.QuadsToLines(PhysicsTealBlock), TealBlock.GetPhysicsPos(), BasicPhysics.QuadsToLines(Player), PlayerPos, 1.5f);
+        //TealBlockColision = BasicPhysics.FullQuadLineColision(BasicPhysics.QuadsToLines(PhysicsTealBlock), TealBlock.GetPhysicsPos(), BasicPhysics.QuadsToLines(Player), PlayerPos, 1.5f);
+        TealBlockColision = BasicPhysics.SATColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
 
         if(TealBlockColision.IsColision){
             ForceDirection NewTealBlockDirecton =  BasicPhysics.MakeForceDirection(PlayerPos,TealBlockFuturePos);

@@ -26,15 +26,15 @@ void TestWorld::Setup(){
 
 
 
-    m_VAO = std::make_unique<VertexArray>();
-    m_Shader = std::make_unique<Shader>();
-    m_IBO = std::make_unique<IndexBuffer>();
-    m_Texture = std::make_unique<Texture>();
-    m_VertexBuffer = std::make_unique<VertexBuffer>();
+    //m_VAO = std::make_unique<VertexArray>();
+    //m_Shader = std::make_unique<Shader>();
+    //m_IBO = std::make_unique<IndexBuffer>();
+    //m_Texture = std::make_unique<Texture>();
+    //m_VertexBuffer = std::make_unique<VertexBuffer>();
 
 
     //FrameBufferTexture = m_Texture->MakeTexture("NULL", 800,600);
-    TestTexture = m_Texture->MakeTexture("assets/Textures/OtherBox.png");
+    //TestTexture = m_Texture->MakeTexture("assets/Textures/OtherBox.png");
 
     AdvancedCam.SetHorizontalSensitivity(0.1f);
     AdvancedCam.SetVerticalSensitivity(0.08f);
@@ -147,7 +147,17 @@ void TestWorld::Setup(){
   //  std::cout << "Total Squares = " << Object.GetVerticiesCount()/4 << std::endl;
    // std::cout << "Total Verticies Drawn = " << (Object.GetVerticiesCount()/4)*6 << std::endl;
 
+   // Stuff that is only set once for an object
+    Sun.SetLightColor(1.0f, 1.0f, 1.0f);
+    Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
+    Sun.SetPosition(15.0f,0.0f,10.0f);
 
+
+    Land.SetColor(0.3373f, 0.4902f, 0.2745f, 1.0f);
+    Land.SetMaterial(BasicMetalCube);
+
+
+    TealBlock.SetColor(0.5f, 0.75f, 0.75f, 1.0f);
 }
 
 void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
@@ -357,9 +367,7 @@ void TestWorld::OnRender(){
 
         Sun.BindBufferData();
         //Sun.SetColor(1.0f,0.9059f,0.0f, 1.0f);
-        Sun.SetLightColor(1.0f, 1.0f, 1.0f);
-        Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
-        Sun.SetPosition(15.0f,0.0f,10.0f);
+        
         Sun.SetDrawPos(m_Projection, m_View);
         //Sun.SetLight(Sun.GetLightColor(), Sun.GetPos());
         Sun.Paint();
@@ -367,15 +375,14 @@ void TestWorld::OnRender(){
 
 
         Land.BindBufferData();
-        Land.SetColor(0.3373f, 0.4902f, 0.2745f, 1.0f);
-        Land.SetMaterial(BasicMetalCube);
+        
         Land.SetDrawPos(m_Projection, m_View);
         Land.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
         Land.Paint();
 
         TealBlock.BindBufferData();
         //TealBlock.SetColor(0.471f, 0.318f, 0.176f, 1.0f);
-        TealBlock.SetColor(0.5f, 0.75f, 0.75f, 1.0f);
+        
         TealBlock.SetMaterial(BasicMetalCube);
         TealBlock.SetDrawPos(m_Projection,m_View);
         TealBlock.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
@@ -383,7 +390,6 @@ void TestWorld::OnRender(){
 
 
         PlayerBlock.BindBufferData();
-
         //Using this cube as as temp player for colision detection
         // This is only going to check colision with the single Land Object (IE the ground);
         // The position is only being set first so i can just call the cube object

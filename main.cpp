@@ -119,7 +119,7 @@ int main(void){
     float ScaleFactor[2] = {0.0f,0.0f};
     float ScaleBuffer;
 
-    int OSscaler = 2; // This is mainly for mac os
+    int OSscaler = 1; // This is mainly for mac os
 
     ScaleBuffer = (float)width/(float)height;
 

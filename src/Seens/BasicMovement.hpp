@@ -33,19 +33,19 @@ class TestWorld{
 
        // VertexArray m_TestVAO;
         
-        std::unique_ptr<VertexArray> m_VAO;
+        //std::unique_ptr<VertexArray> m_VAO;
         //std::unique_ptr<VertexArray> m_TestVAO;
-        std::unique_ptr<IndexBuffer> m_IBO;
+        //std::unique_ptr<IndexBuffer> m_IBO;
 
     
-        std::unique_ptr<Texture> m_Texture;
-        std::unique_ptr<Shader> m_Shader;
-        std::unique_ptr<VertexBuffer> m_VertexBuffer;
+        //std::unique_ptr<Texture> m_Texture;
+        //std::unique_ptr<Shader> m_Shader;
+        //std::unique_ptr<VertexBuffer> m_VertexBuffer;
 
-        SimpleObject PlayerBlock;
-        SimpleObject TealBlock;
-        SimpleObject Land;
-        SimpleObject Sun;
+        SimpleObject PlayerBlock = SimpleObject(6, DynamicBuffer);
+        SimpleObject TealBlock = SimpleObject(6, DynamicBuffer);
+        SimpleObject Land; //SimpleObject(6 StaticBuffer);
+        SimpleObject Sun = SimpleObject(6, DynamicBuffer);
 
         std::vector<ForceDirection> m_NewPlayerDirection;
         float PlayerMovmentSpeed;

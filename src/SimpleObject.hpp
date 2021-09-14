@@ -53,6 +53,7 @@ struct SimpleMaterialInfo{
 
 
 enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
+enum BufferType{StaticBuffer, DynamicBuffer};
 
 
 class SimpleObject{
@@ -87,6 +88,7 @@ class SimpleObject{
 
         bool SimpleColision;
 
+        BufferType m_BufferType;
 
 
         std::unique_ptr<VertexArray> m_VAO;
@@ -112,7 +114,7 @@ class SimpleObject{
 
     public:
 
-        SimpleObject(int MaxQuads = 10000);
+        SimpleObject(int MaxQuads = 10000, BufferType buffertype = DynamicBuffer);
         ~SimpleObject();
 
         void Setup();

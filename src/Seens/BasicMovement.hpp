@@ -43,7 +43,7 @@ class TestWorld{
         //std::unique_ptr<VertexBuffer> m_VertexBuffer;
 
         SimpleObject PlayerBlock = SimpleObject(6, DynamicBuffer);
-        SimpleObject TealBlock = SimpleObject(6, DynamicBuffer);
+        SimpleObject TealBlock = SimpleObject(18, DynamicBuffer);
         SimpleObject Land; //SimpleObject(6 StaticBuffer);
         SimpleObject Sun = SimpleObject(6, DynamicBuffer);
 

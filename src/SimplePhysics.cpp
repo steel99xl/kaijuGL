@@ -345,7 +345,7 @@ ColisionInfo SimplePhysics::FullQuadLineColision(std::vector<PhysicsLine> Object
     return Output;
 }
 
-ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos){
+ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos, float OffSet){
     ColisionInfo Output;
     Output.IsColision = false;
     
@@ -375,7 +375,9 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
 
     SimplePhysics::PointsToPoints(TranslatedA, TranslatedB, &Compare);
 
+    
 
+    /*
     for(int i = 0; i < Compare.size(); i++){
         if(Compare[i].X < XMin){
             XMin = Compare[i].X;
@@ -399,7 +401,7 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
     }
 
 
-    if((XMin <= 0.0f && XMax >= 0.0f) && (YMin <= 0.0f && YMax >= 0.0f)  && (ZMin <= 0.0f && ZMax >= 0.0f)){
+    if((XMin < 0.0f && XMax > 0.0f) && (YMin < 0.0f && YMax > 0.0f)  && (ZMin < 0.0f && ZMax > 0.0f)){
         Output.IsColision = true;
         // This just some place holder information
         Output.MovmentDirectionA.X =  TranslatedA[0].X;
@@ -410,6 +412,71 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
         Output.MovmentDirectionB.Y =  TranslatedB[0].Y;
         Output.MovmentDirectionB.Z =  TranslatedB[0].Z;
     }
+    */
+    //Generate Base line
+    float BaseX, BaseY, BaseZ;
+    // In this case Positive is true and negative is false;
+    bool BaseXPosNeg, BaseYPosNeg, BaseZPosNeg;
+    BaseX = ObjectBPos.X - ObjectAPos.X;
+    BaseY = ObjectBPos.Y - ObjectAPos.Y;
+    BaseZ = ObjectBPos.Z - ObjectAPos.Z; 
+
+    if(BaseX < OffSet){
+        BaseXPosNeg = false;
+    } else {
+        BaseXPosNeg = true;
+    }
+
+    if(BaseY < OffSet){
+        BaseYPosNeg = false;
+    } else {
+        BaseYPosNeg = true;
+    }
+
+    if(BaseZ < OffSet){
+        BaseZPosNeg = false;
+    } else {
+        BaseZPosNeg = true;
+    }
+
+    // Same as the Base[]PosNeg, Positive is true and negative is false;
+    bool XPosNeg, YPosNeg, ZPosNeg;
+
+    for(int i = 0; i < Compare.size(); i++){
+        if(Compare[i].X < 0.0f){
+            XPosNeg = false;
+        } else {
+            XPosNeg = true;
+        }
+
+        if(Compare[i].Y < 0.0f){
+            YPosNeg = false;
+        } else {
+            YPosNeg = true;
+        }
+
+        if(Compare[i].Z < 0.0f){
+            ZPosNeg = false;
+        } else {
+            ZPosNeg = true;
+        }
+
+        //TODO : Make Proper peroint colission output;
+        if((BaseXPosNeg != XPosNeg) && (BaseYPosNeg != YPosNeg) && (BaseZPosNeg != ZPosNeg)){
+            Output.IsColision = true;
+        // This just some place holder information
+            Output.MovmentDirectionA.X =  Compare[0].X;
+            Output.MovmentDirectionA.Y =  Compare[0].Y;
+            Output.MovmentDirectionA.Z =  Compare[0].Z;
+
+            Output.MovmentDirectionB.X =  Compare[i].X;
+            Output.MovmentDirectionB.Y =  Compare[i].Y;
+            Output.MovmentDirectionB.Z =  Compare[i].Z;
+            return Output;
+        }
+
+    }
+    
 
 
     

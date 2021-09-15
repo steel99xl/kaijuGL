@@ -345,6 +345,136 @@ ColisionInfo SimplePhysics::FullQuadLineColision(std::vector<PhysicsLine> Object
     return Output;
 }
 
+ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos){
+    ColisionInfo Output;
+    Output.IsColision = false;
+    
+    // Each point after being translated to its world Pos
+    std::vector<PhysicsPoint> TranslatedA, TranslatedB;
+    
+    std::vector<PhysicsPoint> Compare;
+
+    float XMin, YMin, ZMin;
+    float XMax, YMax, ZMax;
+
+    XMin = INFINITY;
+    YMin = INFINITY;
+    ZMin = INFINITY;
+
+    XMax = -INFINITY;
+    YMax = -INFINITY;
+    ZMax = -INFINITY;
+
+
+    SimplePhysics::QuadPosToPoints(ObjectA, ObjectAPos, &TranslatedA); 
+    SimplePhysics::QuadPosToPoints(ObjectB, ObjectBPos, &TranslatedB);
+
+    //TranslationThreadA.join();
+    //TranslationThreadB.join();
+
+
+    SimplePhysics::PointsToPoints(TranslatedA, TranslatedB, &Compare);
+
+
+    for(int i = 0; i < Compare.size(); i++){
+        if(Compare[i].X < XMin){
+            XMin = Compare[i].X;
+        }
+        if(Compare[i].Y < YMin){
+            YMin = Compare[i].Y;
+        }
+        if(Compare[i].Z < ZMin){
+            ZMin = Compare[i].Z;
+        }
+
+        if(Compare[i].X > XMax){
+            XMax = Compare[i].X;
+        }
+        if(Compare[i].Y > YMax){
+            YMax = Compare[i].Y;
+        }
+        if(Compare[i].Z > ZMax){
+            ZMax = Compare[i].Z;
+        }
+    }
+
+
+    if((XMin <= 0.0f && XMax >= 0.0f) && (YMin <= 0.0f && YMax >= 0.0f)  && (ZMin <= 0.0f && ZMax >= 0.0f)){
+        Output.IsColision = true;
+        // This just some place holder information
+        Output.MovmentDirectionA.X =  TranslatedA[0].X;
+        Output.MovmentDirectionA.Y =  TranslatedA[0].Y;
+        Output.MovmentDirectionA.Z =  TranslatedA[0].Z;
+
+        Output.MovmentDirectionB.X =  TranslatedB[0].X;
+        Output.MovmentDirectionB.Y =  TranslatedB[0].Y;
+        Output.MovmentDirectionB.Z =  TranslatedB[0].Z;
+    }
+
+
+    
+    
+
+    return Output;
+}
+
+void SimplePhysics::QuadPosToPoints(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos, std::vector<PhysicsPoint> *Output){
+    PhysicsPoint Temp;
+    for(long unsigned int i = 0; i < Object.size(); i++){
+        Temp.X = Object[i].PosA.X + ObjectPos.X;
+        Temp.Y = Object[i].PosA.Y + ObjectPos.Y;
+        Temp.Z = Object[i].PosA.Z + ObjectPos.Z;
+        Temp.Weight = Object[i].PosA.Weight;
+        Temp.Energy = Object[i].PosA.Energy;
+
+        Output->push_back(Temp);
+
+
+        Temp.X = Object[i].PosB.X + ObjectPos.X;
+        Temp.Y = Object[i].PosB.Y + ObjectPos.Y;
+        Temp.Z = Object[i].PosB.Z + ObjectPos.Z;
+        Temp.Weight = Object[i].PosB.Weight;
+        Temp.Energy = Object[i].PosB.Energy;
+
+        Output->push_back(Temp);
+
+
+        Temp.X = Object[i].PosC.X + ObjectPos.X;
+        Temp.Y = Object[i].PosC.Y + ObjectPos.Y;
+        Temp.Z = Object[i].PosC.Z + ObjectPos.Z;
+        Temp.Weight = Object[i].PosC.Weight;
+        Temp.Energy = Object[i].PosC.Energy;
+
+        Output->push_back(Temp);
+
+
+        Temp.X = Object[i].PosD.X + ObjectPos.X;
+        Temp.Y = Object[i].PosD.Y + ObjectPos.Y;
+        Temp.Z = Object[i].PosD.Z + ObjectPos.Z;
+        Temp.Weight = Object[i].PosD.Weight;
+        Temp.Energy = Object[i].PosD.Energy;
+
+        Output->push_back(Temp);
+
+    }
+}
+
+void SimplePhysics::PointsToPoints(std::vector<PhysicsPoint> ObjectA, std::vector<PhysicsPoint> ObjectB, std::vector<PhysicsPoint> *Output){
+    PhysicsPoint Temp;
+
+    for(long unsigned int i = 0; i < ObjectA.size(); i++){
+        for(long unsigned int j = 0; j < ObjectB.size(); j++){
+            Temp.X = ObjectB[j].X - ObjectA[i].X;
+            Temp.Y = ObjectB[j].Y - ObjectA[i].Y;
+            Temp.Z = ObjectB[j].Z - ObjectA[i].Z;
+            Temp.Weight = ObjectB[j].Weight;
+            Temp.Energy = ObjectB[j].Energy;
+
+            Output->push_back(Temp);
+        }
+    }
+}
+
 ColisionInfo SimplePhysics::SATColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos){
     ColisionInfo Output;
     Output.IsColision = false; 

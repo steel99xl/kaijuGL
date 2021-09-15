@@ -243,11 +243,12 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
 
         //TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
         //TealBlockColision = BasicPhysics.FullQuadLineColision(BasicPhysics.QuadsToLines(PhysicsTealBlock), TealBlock.GetPhysicsPos(), BasicPhysics.QuadsToLines(Player), PlayerPos, 1.5f);
-        TealBlockColision = BasicPhysics.SATColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
+        //TealBlockColision = BasicPhysics.SATColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
+        TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
 
         if(TealBlockColision.IsColision){
-            ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionA;
-            //NewTealBlockDirecton.Y = 0.1f;
+            ForceDirection NewTealBlockDirecton =  BasicPhysics.MakeForceDirection(PlayerPos, TealBlockFuturePos);
+            NewTealBlockDirecton.Y = 0.1f;
             TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton , PlayerMovmentSpeed);
             //TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
         }

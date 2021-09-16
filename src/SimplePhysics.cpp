@@ -352,7 +352,7 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
     // Each point after being translated to its world Pos
     std::vector<PhysicsLine> TranslatedA, TranslatedB;
     
-    std::vector<PhysicsLine> Compare;
+    std::vector<PhysicsLine> Compare, AltCompare;
     /*
     float XMin, YMin, ZMin;
     float XMax, YMax, ZMax;
@@ -376,6 +376,7 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
 
 
     SimplePhysics::PointsToPointsNormal(TranslatedA, TranslatedB, &Compare);
+    SimplePhysics::PointsToPointsNormal(TranslatedB, TranslatedA, &AltCompare);
 
     
 
@@ -467,15 +468,15 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
         if((BaseXPosNeg != XPosNeg) && (BaseYPosNeg != YPosNeg) && (BaseZPosNeg != ZPosNeg)){
             Output.IsColision = true;
         // This just some place holder information
-            Output.MovmentDirectionA = MakeForceDirection(Compare[i].PosB, BasePoint);
-            Output.MovmentDirectionB = MakeForceDirection(BasePoint, Compare[i].PosB);
+            Output.MovmentDirectionB = MakeForceDirection(Compare[i].PosB, AltCompare[i].PosB);
+            Output.MovmentDirectionA = MakeForceDirection(AltCompare[i].PosB, Compare[i].PosB);
             //Output.MovmentDirectionA.X = Compare[i].PosB.X;
             //Output.MovmentDirectionA.Y = Compare[i].PosB.Y;
             //Output.MovmentDirectionA.Z = Compare[i].PosB.Z;
 
-            //Output.MovmentDirectionB.X = -Compare[i].PosB.X;
-            //Output.MovmentDirectionB.Y = -Compare[i].PosB.Y;
-            //Output.MovmentDirectionB.Z = -Compare[i].PosB.Z;
+            //Output.MovmentDirectionB.X = -1.0f*Compare[i].PosB.X;
+            //Output.MovmentDirectionB.Y = -1.0f*Compare[i].PosB.Y;
+            //Output.MovmentDirectionB.Z = -1.0f*Compare[i].PosB.Z;
             return Output;
         }
 
@@ -607,7 +608,7 @@ void SimplePhysics::PointsToPointsNormal(std::vector<PhysicsLine> ObjectA, std::
             Temp.PosA.X = ObjectB[j].PosA.X - ObjectA[i].PosA.X;
             Temp.PosA.Y = ObjectB[j].PosA.Y - ObjectA[i].PosA.Y;
             Temp.PosA.Z = ObjectB[j].PosA.Z - ObjectA[i].PosA.Z;
-            Temp.PosB = ObjectB[i].PosB;
+            Temp.PosB = ObjectB[j].PosA;
             Temp.PosA.Weight = ObjectB[j].PosA.Weight;
             Temp.PosA.Energy = ObjectB[j].PosA.Energy;
 

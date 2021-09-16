@@ -226,6 +226,7 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
 
         
         //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, Land.GetPhysicsPos());
+        //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsLand, Land.GetPhysicsPos(), PhysicsTealBlock, TealBlockFuturePos);
         if(TealBlockColision.IsColision){
             TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlockFuturePos, TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Power);
         }
@@ -251,12 +252,13 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         //TealBlockColision = BasicPhysics.FullQuadLineColision(BasicPhysics.QuadsToLines(PhysicsTealBlock), TealBlock.GetPhysicsPos(), BasicPhysics.QuadsToLines(Player), PlayerPos, 1.01f);
         //TealBlockColision = BasicPhysics.SATColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
         TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos, 0.3f);
+        //TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.3f);
         //if(!TealBlockColision.IsColision){
         //    TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.9f);
         //}
 
         if(TealBlockColision.IsColision){
-            ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionB;
+            ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionA;
             //ForceDirection NewTealBlockDirecton = BasicPhysics.MakeForceDirection(PlayerPos, TealBlockFuturePos);
             NewTealBlockDirecton.Y = 0.1f;
             TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton , PlayerMovmentSpeed);
@@ -429,7 +431,7 @@ void TestWorld::OnRender(){
 
 }
 
-
+// This will be replaces with an internal GUI system;
 void TestWorld::OnImGui(){
     {
     ImGui::Begin("Box Colors");   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)

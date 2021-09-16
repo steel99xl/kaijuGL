@@ -1,4 +1,4 @@
-# kijuwGL
+# kaijuGL
 A "strange beast" of a engine
 
 Hello, for this test branch main.cpp is only being used to build and manage the window/ input context. Everything you see and should need to interact with lives insise the file BasicMovment.cpp/hpp (and every other source file), but this file specificaly affects what is drawn and bound or really exists...

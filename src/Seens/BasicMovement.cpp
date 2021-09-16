@@ -86,7 +86,7 @@ void TestWorld::Setup(){
 
     Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.10f,0.10f,0.10f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    PlayerBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,0.6f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    PlayerBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,2.0f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     TealBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
     TealBlock.CreateCube(1.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
@@ -175,6 +175,7 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         //bool Test = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);
         // This is just to seperate the old colision system from the new one
         ColisionInfo PlayerTOObject, TealBlockColision;
+        PlayerTOObject.IsColision = false;
 
         std::vector<QuadPhysicsBody> Player, PhysicsLand, PhysicsTealBlock;
         PhysicsPoint PlayerPos, TealBlockFuturePos;
@@ -213,7 +214,6 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
 
         TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, Land.GetPhysicsPos());
-        //TealBlockColision.IsColision = false;
         if(!TealBlockColision.IsColision){
             TealBlockColision = BasicPhysics.PointsToAABBColision(PhysicsTealBlock, TealBlockFuturePos, BasicPhysics.MinMaxFromQuads(PhysicsLand, Land.GetPhysicsPos()));
         }
@@ -234,7 +234,6 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
 
         // Move Player based on player input
         PlayerPos = BasicPhysics.MovePhysicsObject(PlayerBlock.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed);
-        m_NewPlayerDirection.clear();
 
         //PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, PhysicsLand, Land.GetPhysicsPos());
         //PlayerTOObject = BasicPhysics.SATColision(Player, PlayerPos, PhysicsLand, Land.GetPhysicsPos());
@@ -256,7 +255,7 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         //}
 
         if(TealBlockColision.IsColision){
-            ForceDirection NewTealBlockDirecton =  BasicPhysics.MakeForceDirection(PlayerPos, TealBlockFuturePos);
+            ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionB;
             NewTealBlockDirecton.Y = 0.1f;
             TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton , PlayerMovmentSpeed);
             //TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
@@ -288,6 +287,7 @@ void TestWorld::OnUpdate(float deltaTime, float width, float height){
     }
 
 void TestWorld::KeyInput(int Keys[]){
+        m_NewPlayerDirection.clear();    
         PlayerMovmentSpeed = 4.317f;
         // Keys[] will be replaced with a vector or array of keyinput structs
         // Eventualy the movment will be forcebased

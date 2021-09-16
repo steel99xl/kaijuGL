@@ -350,30 +350,32 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
     Output.IsColision = false;
     
     // Each point after being translated to its world Pos
-    std::vector<PhysicsPoint> TranslatedA, TranslatedB;
+    std::vector<PhysicsLine> TranslatedA, TranslatedB;
     
-    std::vector<PhysicsPoint> Compare;
-
+    std::vector<PhysicsLine> Compare;
+    /*
     float XMin, YMin, ZMin;
     float XMax, YMax, ZMax;
 
-    XMin = INFINITY;
-    YMin = INFINITY;
+
+
     ZMin = INFINITY;
 
     XMax = -INFINITY;
     YMax = -INFINITY;
     ZMax = -INFINITY;
 
+    */
 
-    SimplePhysics::QuadPosToPoints(ObjectA, ObjectAPos, &TranslatedA); 
-    SimplePhysics::QuadPosToPoints(ObjectB, ObjectBPos, &TranslatedB);
+
+    SimplePhysics::QuadPosToPointsNormal(ObjectA, ObjectAPos, &TranslatedA); 
+    SimplePhysics::QuadPosToPointsNormal(ObjectB, ObjectBPos, &TranslatedB);
 
     //TranslationThreadA.join();
     //TranslationThreadB.join();
 
 
-    SimplePhysics::PointsToPoints(TranslatedA, TranslatedB, &Compare);
+    SimplePhysics::PointsToPointsNormal(TranslatedA, TranslatedB, &Compare);
 
     
 
@@ -414,26 +416,26 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
     }
     */
     //Generate Base line
-    float BaseX, BaseY, BaseZ;
+    PhysicsPoint BasePoint;
     // In this case Positive is true and negative is false;
     bool BaseXPosNeg, BaseYPosNeg, BaseZPosNeg;
-    BaseX = ObjectBPos.X - ObjectAPos.X;
-    BaseY = ObjectBPos.Y - ObjectAPos.Y;
-    BaseZ = ObjectBPos.Z - ObjectAPos.Z; 
+    BasePoint.X = ObjectBPos.X - ObjectAPos.X;
+    BasePoint.Y = ObjectBPos.Y - ObjectAPos.Y;
+    BasePoint.Z = ObjectBPos.Z - ObjectAPos.Z; 
 
-    if(BaseX < OffSet){
+    if(BasePoint.X < OffSet){
         BaseXPosNeg = false;
     } else {
         BaseXPosNeg = true;
     }
 
-    if(BaseY < OffSet){
+    if(BasePoint.Y < OffSet){
         BaseYPosNeg = false;
     } else {
         BaseYPosNeg = true;
     }
 
-    if(BaseZ < OffSet){
+    if(BasePoint.Z < OffSet){
         BaseZPosNeg = false;
     } else {
         BaseZPosNeg = true;
@@ -443,19 +445,19 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
     bool XPosNeg, YPosNeg, ZPosNeg;
 
     for(int i = 0; i < Compare.size(); i++){
-        if(Compare[i].X < 0.0f){
+        if(Compare[i].PosA.X < 0.0f){
             XPosNeg = false;
         } else {
             XPosNeg = true;
         }
 
-        if(Compare[i].Y < 0.0f){
+        if(Compare[i].PosA.Y < 0.0f){
             YPosNeg = false;
         } else {
             YPosNeg = true;
         }
 
-        if(Compare[i].Z < 0.0f){
+        if(Compare[i].PosA.Z < 0.0f){
             ZPosNeg = false;
         } else {
             ZPosNeg = true;
@@ -465,13 +467,15 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
         if((BaseXPosNeg != XPosNeg) && (BaseYPosNeg != YPosNeg) && (BaseZPosNeg != ZPosNeg)){
             Output.IsColision = true;
         // This just some place holder information
-            Output.MovmentDirectionA.X =  Compare[0].X;
-            Output.MovmentDirectionA.Y =  Compare[0].Y;
-            Output.MovmentDirectionA.Z =  Compare[0].Z;
+            Output.MovmentDirectionA = MakeForceDirection(Compare[i].PosB, BasePoint);
+            Output.MovmentDirectionB = MakeForceDirection(BasePoint, Compare[i].PosB);
+            //Output.MovmentDirectionA.X = Compare[i].PosB.X;
+            //Output.MovmentDirectionA.Y = Compare[i].PosB.Y;
+            //Output.MovmentDirectionA.Z = Compare[i].PosB.Z;
 
-            Output.MovmentDirectionB.X =  Compare[i].X;
-            Output.MovmentDirectionB.Y =  Compare[i].Y;
-            Output.MovmentDirectionB.Z =  Compare[i].Z;
+            //Output.MovmentDirectionB.X = -Compare[i].PosB.X;
+            //Output.MovmentDirectionB.Y = -Compare[i].PosB.Y;
+            //Output.MovmentDirectionB.Z = -Compare[i].PosB.Z;
             return Output;
         }
 
@@ -536,6 +540,76 @@ void SimplePhysics::PointsToPoints(std::vector<PhysicsPoint> ObjectA, std::vecto
             Temp.Z = ObjectB[j].Z - ObjectA[i].Z;
             Temp.Weight = ObjectB[j].Weight;
             Temp.Energy = ObjectB[j].Energy;
+
+            Output->push_back(Temp);
+        }
+    }
+}
+
+void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos, std::vector<PhysicsLine> *Output){
+    PhysicsLine Temp;
+    for(long unsigned int i = 0; i < Object.size(); i++){
+        Temp.PosA.X = Object[i].PosA.X + ObjectPos.X;
+        Temp.PosA.Y = Object[i].PosA.Y + ObjectPos.Y;
+        Temp.PosA.Z = Object[i].PosA.Z + ObjectPos.Z;
+        Temp.PosB.X = Object[i].PlaneNorm.X;
+        Temp.PosB.Y = Object[i].PlaneNorm.Y;
+        Temp.PosB.Z = Object[i].PlaneNorm.Z;
+        Temp.PosA.Weight = Object[i].PosA.Weight;
+        Temp.PosA.Energy = Object[i].PosA.Energy;
+
+        Output->push_back(Temp);
+
+
+        Temp.PosA.X = Object[i].PosB.X + ObjectPos.X;
+        Temp.PosA.Y = Object[i].PosB.Y + ObjectPos.Y;
+        Temp.PosA.Z = Object[i].PosB.Z + ObjectPos.Z;
+        Temp.PosB.X = Object[i].PlaneNorm.X;
+        Temp.PosB.Y = Object[i].PlaneNorm.Y;
+        Temp.PosB.Z = Object[i].PlaneNorm.Z;
+        Temp.PosA.Weight = Object[i].PosB.Weight;
+        Temp.PosA.Energy = Object[i].PosB.Energy;
+
+        Output->push_back(Temp);
+
+
+        Temp.PosA.X = Object[i].PosC.X + ObjectPos.X;
+        Temp.PosA.Y = Object[i].PosC.Y + ObjectPos.Y;
+        Temp.PosA.Z = Object[i].PosC.Z + ObjectPos.Z;
+        Temp.PosB.X = Object[i].PlaneNorm.X;
+        Temp.PosB.Y = Object[i].PlaneNorm.Y;
+        Temp.PosB.Z = Object[i].PlaneNorm.Z;
+        Temp.PosA.Weight = Object[i].PosC.Weight;
+        Temp.PosA.Energy = Object[i].PosC.Energy;
+
+        Output->push_back(Temp);
+
+
+        Temp.PosA.X = Object[i].PosD.X + ObjectPos.X;
+        Temp.PosA.Y = Object[i].PosD.Y + ObjectPos.Y;
+        Temp.PosA.Z = Object[i].PosD.Z + ObjectPos.Z;
+        Temp.PosB.X = Object[i].PlaneNorm.X;
+        Temp.PosB.Y = Object[i].PlaneNorm.Y;
+        Temp.PosB.Z = Object[i].PlaneNorm.Z;
+        Temp.PosA.Weight = Object[i].PosD.Weight;
+        Temp.PosA.Energy = Object[i].PosD.Energy;
+
+        Output->push_back(Temp);
+
+    }
+}
+
+void SimplePhysics::PointsToPointsNormal(std::vector<PhysicsLine> ObjectA, std::vector<PhysicsLine> ObjectB, std::vector<PhysicsLine> *Output){
+    PhysicsLine Temp;
+
+    for(long unsigned int i = 0; i < ObjectA.size(); i++){
+        for(long unsigned int j = 0; j < ObjectB.size(); j++){
+            Temp.PosA.X = ObjectB[j].PosA.X - ObjectA[i].PosA.X;
+            Temp.PosA.Y = ObjectB[j].PosA.Y - ObjectA[i].PosA.Y;
+            Temp.PosA.Z = ObjectB[j].PosA.Z - ObjectA[i].PosA.Z;
+            Temp.PosB = ObjectB[i].PosB;
+            Temp.PosA.Weight = ObjectB[j].PosA.Weight;
+            Temp.PosA.Energy = ObjectB[j].PosA.Energy;
 
             Output->push_back(Temp);
         }
@@ -667,8 +741,8 @@ ColisionInfo SimplePhysics::SATColision(std::vector<QuadPhysicsBody> ObjectA, Ph
     }
 
     Output.IsColision = true;
-    Output.MovmentDirectionB = SimplePhysics::MakeForceDirection(ObjectAPos, ObjectBPos);
-    Output.MovmentDirectionA = SimplePhysics::MakeForceDirection(ObjectBPos, ObjectAPos);
+    Output.MovmentDirectionA = SimplePhysics::MakeForceDirection(ObjectAPos, ObjectBPos);
+    Output.MovmentDirectionB = SimplePhysics::MakeForceDirection(ObjectBPos, ObjectAPos);
     //take the noral of each polly and dot product each point to it to make a "shadow"
     
 

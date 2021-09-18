@@ -135,16 +135,13 @@ int main(void){
     std::cout << ScaleFactor[0] << std::endl;
     std::cout << ScaleFactor[1] << std::endl;
 
+    /*
     glm::mat4 proj;
     // View can be camera
     glm::mat4 view = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
     // Modles position
     //glm::mat4 modle = glm::translate(glm::mat4(1.0f), glm::vec3(100,100,0));
     glm::vec3 posOff(100,100,0);
-    glm::mat4 modle = glm::translate(glm::mat4(1.0f), posOff);
-
-    //glm::mat4 mvp = proj * view * modle;
-    glm::mat4 pv = proj * view; 
 
     if(PixelMode){
 
@@ -156,6 +153,7 @@ int main(void){
         proj = glm::ortho(-ScaleFactor[0]*ScalePixle, ScaleFactor[0]*ScalePixle, -ScaleFactor[1]*ScalePixle, ScaleFactor[1]*ScalePixle, -1.0f, 1.0f);
 
     }
+    */
 
 
 

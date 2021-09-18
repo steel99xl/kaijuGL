@@ -4,7 +4,7 @@
 
 
 
-TestWorld::TestWorld() : m_running(false), m_Effect(false), m_Width(800), m_Height(680){
+TestWorld::TestWorld() :  m_Effect(false), m_Width(800), m_Height(680),  m_running(false){
 // This is just to set some basic vars
 
 

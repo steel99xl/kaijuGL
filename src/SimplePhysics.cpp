@@ -622,7 +622,7 @@ ColisionInfo SimplePhysics::SATColision(std::vector<QuadPhysicsBody> ObjectA, Ph
     Output.IsColision = false; 
 
     std::vector<float> ObjectAShadow, ObjectBShadow;
-    PhysicsPoint TempAPoint, TempBPoint, CenterPoint, CenterPointA, CenterPointB;
+    PhysicsPoint TempAPoint, TempBPoint, CenterPoint;
     float ObjectAMin = INFINITY;
     float ObjectAMax = -INFINITY;
     float ObjectBMin = INFINITY;

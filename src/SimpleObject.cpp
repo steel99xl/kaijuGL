@@ -593,7 +593,7 @@ void SimpleObject::SetShader(const std::string &filePath){
 
         // this is just for testing
         //int samplers[] = {0, 1, 2};
-        int samplers[] = {0};
+        //int samplers[] = {0};
         //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
         //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
         //m_Shader->SetUniform1i("u_Texture", 0);

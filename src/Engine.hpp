@@ -23,3 +23,4 @@
 #include "SimplePhysics.hpp"
 #include "SimpleObject.hpp"
 #include "Camera.hpp"
+#include "FrameBufferObject.hpp"

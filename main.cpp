@@ -16,6 +16,7 @@
 
 // Test 
 TestWorld World;
+FrameBufferObject FrameBuffer;
 
 
 bool CursorLock = false;
@@ -104,6 +105,7 @@ void SecondThread(int UpdateSpeed){
     
 }
 
+// Reserved for future use
 void ThirdThread(){
 
 }
@@ -114,40 +116,23 @@ int main(void){
     std::string Title = "DUMB OPENGL WINDOW";
     int width = 720;
     int height = 480;
+    int OSscaler = 2; // This is mainly for mac os
     //bool PixelMode = true;
-    //float ScalePixle = 8.0f;
+
+
+
+    // IDK why but macOS needs this or opengl just fails for some reason
+    float ScalePixle = 8.0f;
     float ScaleFactor[2] = {0.0f,0.0f};
     float ScaleBuffer;
-
-    int OSscaler = 1; // This is mainly for mac os
-
-    ScaleBuffer = (float)width/(float)height;
-
-    if(ScaleBuffer < 1.0f){
-        ScaleBuffer = (float)height/(float)width;
-        ScaleFactor[0] = 1.0f;
-        ScaleFactor[1] = ScaleBuffer;
-    } else {
-        ScaleFactor[0] = ScaleBuffer;
-        ScaleFactor[1] = 1.0f;
-    }
-
-    std::cout << ScaleFactor[0] << std::endl;
-    std::cout << ScaleFactor[1] << std::endl;
-
-    /*
-    // View can be camera
+    glm::mat4 proj;
     glm::mat4 view = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
-    // Modles position
-    //glm::mat4 modle = glm::translate(glm::mat4(1.0f), glm::vec3(100,100,0));
     glm::vec3 posOff(100,100,0);
-
     glm::mat4 modle = glm::translate(glm::mat4(1.0f), posOff);
-    glm::mat4 = proj * view
-
+    glm::mat4 pv = proj * view;
     proj = glm::ortho(0.0f, (float)width*ScalePixle, 0.0f, (float)height*ScalePixle, -1.0f, 1.0f);
 
-    */
+    
 
 
 
@@ -232,6 +217,10 @@ int main(void){
     //Temp Fixes/Places
     glEnable(GL_CULL_FACE);
 
+    // Frame Buffer Object
+    //FrameBufferObject TestFrameBuffer;
+    FrameBuffer.Setup(width,height,OSscaler);
+    /*
     unsigned int FBO;
 
     glGenFramebuffers(1, &FBO);
@@ -262,14 +251,16 @@ int main(void){
         if(fboStatus != GL_FRAMEBUFFER_COMPLETE){
             std::cout << "ERROR FRAMEBUFFER " << fboStatus << std::endl;
         }
-
-    SimpleObject Frame;
+    */
+    SimpleObject Frame = SimpleObject(2);
     Frame.Setup();
     Frame.SetShader("assets/Shaders/FrameBuffer.shader");
-    Frame.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f, 1.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    Frame.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f, 1.0f, 0.0f,0.0f,1.0f,1.0f, 5.0f);
     Frame.SetTexture(0, "u_Texture");
     Frame.SetFloatUniform("u_Size.height", height/4);
     Frame.SetFloatUniform("u_Size.width", width/4);
+
+    // End of framebuffer object
 
    
 // Draw LOOP
@@ -287,7 +278,8 @@ int main(void){
 
 
         // Frame Buffer Object Stuff
-
+        FrameBuffer.Update(width,height,OSscaler);
+        /*
         glBindFramebuffer(GL_FRAMEBUFFER,  FBO);
 
         glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
@@ -308,6 +300,8 @@ int main(void){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         GLCall(glEnable(GL_DEPTH_TEST));
 
+        */
+
        // End of FrameBuffer Stuff for setting it to be writen to
 
         glfwPollEvents();
@@ -317,7 +311,7 @@ int main(void){
 
 
         glViewport(0,0, width*OSscaler, height*OSscaler);
-       
+
         /* Render here */
         renderer.Clear();
 
@@ -347,16 +341,13 @@ int main(void){
 
         // Frame Buffer Object Drawing..
         // The Frame Buffer Object SHould be provided by the window
-        glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
+        glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
+        glBindTexture(GL_TEXTURE_2D, FrameBuffer.GetTexture());
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         GLCall(glDisable(GL_DEPTH_TEST)); 
         Frame.BindBufferData();
 
-        //float Twidth = (float)width;
-        //float Theight = (float)height;
-
-        //Frame.SetFloatUniform("u_Size.height", Twidth);
-        //Frame.SetFloatUniform("u_Size.width", Theight);
         Frame.Paint();
 
         

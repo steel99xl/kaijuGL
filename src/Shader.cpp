@@ -100,7 +100,7 @@ ShaderProgramSource Shader::ParseShader(){
                 std::cout << "fragment found" << std::endl;
             }
         }  else {
-          ss[(int)type] << lines << "\n";
+        ss[(int)type] << lines << "\n";
         }
 
     }
@@ -137,7 +137,7 @@ unsigned int Shader::CompileShader(unsigned int type, std::string &source){
     if(result == GL_FALSE){
         int length;
         glGetShaderiv(id, GL_INFO_LOG_LENGTH,&length);
-        char message[length];
+        char *message = (char *)alloca(length * sizeof(char));
         glGetShaderInfoLog(id, length, &length, message);
         std::cout  << "Error " << message << std::endl;
         glDeleteShader(id);

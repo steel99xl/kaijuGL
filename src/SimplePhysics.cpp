@@ -445,7 +445,7 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
     // Same as the Base[]PosNeg, Positive is true and negative is false;
     bool XPosNeg, YPosNeg, ZPosNeg;
 
-    for(int i = 0; i < Compare.size(); i++){
+    for(long unsigned int i = 0; i < Compare.size(); i++){
         if(Compare[i].PosA.X < 0.0f){
             XPosNeg = false;
         } else {

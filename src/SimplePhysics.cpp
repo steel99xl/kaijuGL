@@ -468,8 +468,8 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
         if((BaseXPosNeg != XPosNeg) && (BaseYPosNeg != YPosNeg) && (BaseZPosNeg != ZPosNeg)){
             Output.IsColision = true;
         // This just some place holder information
-            Output.MovmentDirectionB = MakeForceDirection(Compare[i].PosB, AltCompare[i].PosB);
-            Output.MovmentDirectionA = MakeForceDirection(AltCompare[i].PosB, Compare[i].PosB);
+            Output.MovmentDirectionB = MakeForceDirection(Compare[i].PosA, AltCompare[i].PosA);
+            Output.MovmentDirectionA = MakeForceDirection(AltCompare[i].PosA, Compare[i].PosA);
             //Output.MovmentDirectionA.X = Compare[i].PosB.X;
             //Output.MovmentDirectionA.Y = Compare[i].PosB.Y;
             //Output.MovmentDirectionA.Z = Compare[i].PosB.Z;
@@ -549,13 +549,17 @@ void SimplePhysics::PointsToPoints(std::vector<PhysicsPoint> ObjectA, std::vecto
 
 void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos, std::vector<PhysicsLine> *Output){
     PhysicsLine Temp;
+    //PhysicsPoint TempPoint;
     for(long unsigned int i = 0; i < Object.size(); i++){
+        //TempPoint = Center4Point(&Object[i].PosA, &Object[i].PosB, &Object[i].PosC, &Object[i].PosD);
+
         Temp.PosA.X = Object[i].PosA.X + ObjectPos.X;
         Temp.PosA.Y = Object[i].PosA.Y + ObjectPos.Y;
         Temp.PosA.Z = Object[i].PosA.Z + ObjectPos.Z;
         Temp.PosB.X = Object[i].PlaneNorm.X;
         Temp.PosB.Y = Object[i].PlaneNorm.Y;
         Temp.PosB.Z = Object[i].PlaneNorm.Z;
+        //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosA.Weight;
         Temp.PosA.Energy = Object[i].PosA.Energy;
 
@@ -568,6 +572,7 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
         Temp.PosB.X = Object[i].PlaneNorm.X;
         Temp.PosB.Y = Object[i].PlaneNorm.Y;
         Temp.PosB.Z = Object[i].PlaneNorm.Z;
+        //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosB.Weight;
         Temp.PosA.Energy = Object[i].PosB.Energy;
 
@@ -580,6 +585,7 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
         Temp.PosB.X = Object[i].PlaneNorm.X;
         Temp.PosB.Y = Object[i].PlaneNorm.Y;
         Temp.PosB.Z = Object[i].PlaneNorm.Z;
+        //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosC.Weight;
         Temp.PosA.Energy = Object[i].PosC.Energy;
 
@@ -592,6 +598,7 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
         Temp.PosB.X = Object[i].PlaneNorm.X;
         Temp.PosB.Y = Object[i].PlaneNorm.Y;
         Temp.PosB.Z = Object[i].PlaneNorm.Z;
+        //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosD.Weight;
         Temp.PosA.Energy = Object[i].PosD.Energy;
 
@@ -608,7 +615,7 @@ void SimplePhysics::PointsToPointsNormal(std::vector<PhysicsLine> ObjectA, std::
             Temp.PosA.X = ObjectB[j].PosA.X - ObjectA[i].PosA.X;
             Temp.PosA.Y = ObjectB[j].PosA.Y - ObjectA[i].PosA.Y;
             Temp.PosA.Z = ObjectB[j].PosA.Z - ObjectA[i].PosA.Z;
-            Temp.PosB = ObjectB[j].PosA;
+            Temp.PosB = ObjectB[j].PosB;
             Temp.PosA.Weight = ObjectB[j].PosA.Weight;
             Temp.PosA.Energy = ObjectB[j].PosA.Energy;
 
@@ -1228,11 +1235,21 @@ float SimplePhysics::DotPointToForce(PhysicsPoint Point, ForceDirection Projecti
     return Output;
 }
 
-PhysicsPoint SimplePhysics::CenterPoint(PhysicsPoint PointA, PhysicsPoint PointB){
+PhysicsPoint SimplePhysics::Center2Point(PhysicsPoint PointA, PhysicsPoint PointB){
     PhysicsPoint Output;
     Output.X = (PointA.X + PointB.X)/2.0f;
     Output.Y = (PointA.Y + PointB.Y)/2.0f;
     Output.Z = (PointA.Z + PointB.Z)/2.0f;
+
+    return Output;
+
+}
+
+PhysicsPoint SimplePhysics::Center4Point(PhysicsPoint *PointA, PhysicsPoint *PointB, PhysicsPoint *PointC, PhysicsPoint *PointD){
+    PhysicsPoint Output;
+    Output.X = (PointA->X + PointB->X + PointC->X + PointD->X)/4.0f;
+    Output.Y = (PointA->Y + PointB->Y + PointC->Y + PointD->Y)/4.0f;
+    Output.Z = (PointA->Z + PointB->Z + PointC->Z + PointD->Z)/4.0f;
 
     return Output;
 

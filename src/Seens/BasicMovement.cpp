@@ -180,11 +180,11 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
 
         std::vector<QuadPhysicsBody> Player, PhysicsLand, PhysicsTealBlock;
         PhysicsPoint PlayerPos, TealBlockFuturePos;
-        ForceDirection LeftFromOrigion;
+        //ForceDirection LeftFromOrigion;
 
-        LeftFromOrigion.X = -1.0f;
-        LeftFromOrigion.Y = 0.0f;
-        LeftFromOrigion.Z = 0.0f;
+        //LeftFromOrigion.X = -1.0f;
+        //LeftFromOrigion.Y = 0.0f;
+        //LeftFromOrigion.Z = 0.0f;
 
         Player = BasicPhysics.MakePhysicsBods(PlayerBlock.GetVertexPositions(), PlayerBlock.GetVertexNormlPositions(), PlayerBlock.GetWeights());
         PhysicsLand = BasicPhysics.MakePhysicsBods(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), Land.GetWeights());
@@ -258,7 +258,7 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         //}
 
         if(TealBlockColision.IsColision){
-            ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionA;
+            ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionB;
             //ForceDirection NewTealBlockDirecton = BasicPhysics.MakeForceDirection(PlayerPos, TealBlockFuturePos);
             NewTealBlockDirecton.Y = 0.1f;
             TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton , PlayerMovmentSpeed);

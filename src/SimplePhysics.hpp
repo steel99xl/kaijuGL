@@ -124,7 +124,8 @@ class SimplePhysics{
 
         float DotPointToForce(PhysicsPoint Point, ForceDirection Projection, PhysicsPoint ProjectionPos);
 
-        PhysicsPoint CenterPoint(PhysicsPoint PointA, PhysicsPoint PointB);
+        PhysicsPoint Center2Point(PhysicsPoint PointA, PhysicsPoint PointB);
+        PhysicsPoint Center4Point(PhysicsPoint *PointA, PhysicsPoint *PointB, PhysicsPoint *PointC, PhysicsPoint *PointD);
 
         // Returns froce to move ObjectA to ObjectB
         ForceDirection MakeForceDirection(PhysicsPoint ObjectA, PhysicsPoint ObjectB);

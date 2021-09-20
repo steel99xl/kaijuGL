@@ -376,7 +376,7 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
 
 
     SimplePhysics::PointsToPointsNormal(TranslatedA, TranslatedB, &Compare);
-    SimplePhysics::PointsToPointsNormal(TranslatedB, TranslatedA, &AltCompare);
+    //SimplePhysics::PointsToPointsNormal(TranslatedB, TranslatedA, &AltCompare);
 
     
 
@@ -468,8 +468,8 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
         if((BaseXPosNeg != XPosNeg) && (BaseYPosNeg != YPosNeg) && (BaseZPosNeg != ZPosNeg)){
             Output.IsColision = true;
         // This just some place holder information
-            Output.MovmentDirectionB = MakeForceDirection(Compare[i].PosA, AltCompare[i].PosA);
-            Output.MovmentDirectionA = MakeForceDirection(AltCompare[i].PosA, Compare[i].PosA);
+            Output.MovmentDirectionA = MakeForceDirection(Compare[i].PosA, BasePoint);
+            Output.MovmentDirectionB = MakeForceDirection(BasePoint, Compare[i].PosA);
             //Output.MovmentDirectionA.X = Compare[i].PosB.X;
             //Output.MovmentDirectionA.Y = Compare[i].PosB.Y;
             //Output.MovmentDirectionA.Z = Compare[i].PosB.Z;

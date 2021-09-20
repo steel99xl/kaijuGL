@@ -4,7 +4,7 @@
 
 
 
-TestWorld::TestWorld() :  m_Effect(false), m_Width(800), m_Height(680),  m_running(false){
+TestWorld::TestWorld() :  m_Effect(false), m_Width(800.0f), m_Height(680.0f), m_Scale(1.0f),  m_running(false){
 // This is just to set some basic vars
 
 
@@ -25,20 +25,17 @@ void TestWorld::Setup(){
     std::cout << "W A S D Moves the camera" << std::endl;
 
 
-
-    //m_VAO = std::make_unique<VertexArray>();
-    //m_Shader = std::make_unique<Shader>();
-    //m_IBO = std::make_unique<IndexBuffer>();
-    //m_Texture = std::make_unique<Texture>();
-    //m_VertexBuffer = std::make_unique<VertexBuffer>();
-
-
-    //FrameBufferTexture = m_Texture->MakeTexture("NULL", 800,600);
-    //TestTexture = m_Texture->MakeTexture("assets/Textures/OtherBox.png");
-
     AdvancedCam.SetHorizontalSensitivity(0.1f);
     AdvancedCam.SetVerticalSensitivity(0.08f);
     AdvancedCam.InvertVertical();
+
+    m_FBO.Setup((int)m_Width, (int)m_Height,(int)m_Scale);
+    Frame.Setup();
+    Frame.SetShader("assets/Shaders/FrameKernel.shader");
+    Frame.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f, 1.0f, 0.0f,0.0f,1.0f,1.0f, 5.0f);
+    Frame.SetTexture(0, "u_Texture");
+    Frame.SetFloatUniform("u_Size.height", m_Height);
+    Frame.SetFloatUniform("u_Size.width", m_Width);
 
     PlayerBlock.Setup();
     Land.Setup();
@@ -59,15 +56,11 @@ void TestWorld::Setup(){
 
     BasicMetalCube.shininess = 32.0f;
 
-    Sun.MakeLight(1.0f,1.0f,1.0f, 0.5f,0.5f,0.5f, 0.9f,0.9f,0.9f, 0.0f,0.0f,0.0f, 12.5f, 0.045f, 0.0075f);
+    Sun.MakeLight(0.9f,0.9f,0.9f, 0.7f,0.7f,0.7f, 0.9f,0.9f,0.9f, 0.0f,0.0f,0.0f, 12.5f, 0.027f, 0.0028f);
 
 
 
 
-    // This add 1 quad to the land object
-    //Land.CreateCube(0.0f,0.0f,0.0f, 45.0f,0.0f,45.0f, 1.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-   // Land.Create2dQuad(0.0f,0.0f,0.0f, F_NONE, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
-    //Land.Create2dQuad(0.0f,10.0f,-10.0f, F_NORTH, 20.0f,20.0f, 0.0f,0.0f, 0.0f, 0.0f, 0.0f);
     Land.Create2dQuad(0.0f,-3.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
     for(int i = 1; i < 21; i++){
@@ -90,67 +83,23 @@ void TestWorld::Setup(){
     //PlayerBlock.CreateCube(1.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,2.0f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     TealBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
-    TealBlock.CreateCube(1.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
-    TealBlock.CreateCube(0.0f,0.0f,1.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
 
-    // Yes the FaceDir matters based on where you want it to be visible
-    //Object.Create2dQuad(0.0f,0.0f,0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-    //Object.Create2dQuad(0.0f,0.0f,-0.5f, F_DOWN ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-
-    //Object.Create2dQuad(0.0f,0.0f,0.5f, F_NORTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
-    //Object.Create2dQuad(0.0f,0.0f,-0.5f, F_SOUTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
-
-    //Object.Create2dQuad(0.0f,0.0f,0.5f, F_EAST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
-    //Object.Create2dQuad(0.0f,0.0f,-0.5f, F_WEST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
-    // If i want to be able to rotate the squares it the cube face would have to be like this
-    //North Face(positive X from origin) Object.Create2dQuad(0.5f, 0.5f, 0.0f, )
-
-    //Object.Create2dQuad(2.0f,2.0f,2.0f, F_NONE, 1.0f,1.0f, 0.0f,0.0f,1.0f,1.0f, 1.0f);
-
-
-    //Object.Create2dQuad(0.0f,0.0f,-5.0f, F_UP, 3.0f,3.0f, 0.0f,0.0f, 1.0f,1.0f, 2.0f);
-
-
-   // Object.Create2dQuad(1.0f,3.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-   // Object.Create2dQuad(1.0f,1.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-
-    //Object.Create2dQuad(3.0f,1.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-
-
-
-        //Take info and put it in a vertex
-
-
-
-    //m_IBO->MakeBuffer(Object.GetIndices().data(), Object.GetIndicCount() );
-    //m_IBO->MakeBuffer(NULL, (Object.GetMaxQuadCound() * 4) * 6);
-   // std::cout << "Index information " << std::endl;
-    //m_IBO->Bind();
-    //std::cout << "set index buffer" << std::endl;
-    //FBOrec.SetShader("assets/Shaders/FrameBuffer.shader");
     Land.SetShader("assets/Shaders/BasicLighting.shader");
     PlayerBlock.SetShader("assets/Shaders/BasicLighting.shader");
     TealBlock.SetShader("assets/Shaders/BasicLighting.shader");
-    //TestObject.SetShader("assets/Shaders/MultiImg.shader");
 
     Sun.SetShader("assets/Shaders/BasicLightObject.shader");
 
-    //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
-    //m_Shader->Bind();
 
     std::cout << "Shader set" << std::endl;
 
-    //int samplers[3] = {0 ,1,2};
 
     m_FOV = 75.0f;
 
     TealBlock.SetPosition(8.0f,10.0f,8.0f);
     Land.SetPosition(0.0f,0.0f,0.0f);
-  //  std::cout << "Total Squares = " << Object.GetVerticiesCount()/4 << std::endl;
-   // std::cout << "Total Verticies Drawn = " << (Object.GetVerticiesCount()/4)*6 << std::endl;
 
-   // Stuff that is only set once for an object
     Sun.SetLightColor(1.0f, 1.0f, 1.0f);
     Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
     Sun.SetPosition(15.0f,0.0f,10.0f);
@@ -273,12 +222,13 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
 
 }
 
-void TestWorld::OnUpdate(float deltaTime, float width, float height){
+void TestWorld::OnUpdate(float deltaTime, float width, float height, float scale){
         glfwPollEvents();
         m_DeltaTime = deltaTime;
 
         m_Width = width;
         m_Height = height;
+        m_Scale = scale;
 
         
 
@@ -375,6 +325,7 @@ void TestWorld::OnRender(){
             // Pre darw stuff if needed
 
         }
+        m_FBO.Update((int)m_Width,(int)m_Height,(int)m_Scale);
 
         GLCall(glClearColor(0.60f, 0.60f, 0.75f, 0.0f));
 
@@ -427,6 +378,15 @@ void TestWorld::OnRender(){
             // Post Draw Stuff if needed
 
         }
+
+        glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
+        glBindTexture(GL_TEXTURE_2D, m_FBO.GetTexture());
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        GLCall(glDisable(GL_DEPTH_TEST)); 
+        Frame.BindBufferData();
+
+        Frame.Paint();
 
 
 }

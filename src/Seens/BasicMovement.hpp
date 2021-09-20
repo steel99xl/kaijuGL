@@ -14,33 +14,17 @@ class TestWorld{
 
         glm::vec3 m_3dCamPos, m_3dCamPosPrevious;
 
-        // TODO : implement frame buffer object
-        //Frame Buffer Info
-        unsigned int m_FBO;
-        unsigned int FrameBufferTexture;
-        unsigned int TestTexture;
-
-        unsigned int m_RBO;
-
         glm::mat4 m_Projection, m_View;
 
         ImVec4 m_Color, m_Color2, m_Color3;
 
         //float m_yaw, m_pitch, m_lastX, m_lastY;
+        // These are stored as floats so the rounding can be ajusted
+        float m_Width, m_Height, m_Scale;
 
-        int m_Width, m_Height;
+        FrameBufferObject m_FBO;
+        SimpleObject Frame =  SimpleObject(2);
 
-
-       // VertexArray m_TestVAO;
-        
-        //std::unique_ptr<VertexArray> m_VAO;
-        //std::unique_ptr<VertexArray> m_TestVAO;
-        //std::unique_ptr<IndexBuffer> m_IBO;
-
-    
-        //std::unique_ptr<Texture> m_Texture;
-        //std::unique_ptr<Shader> m_Shader;
-        //std::unique_ptr<VertexBuffer> m_VertexBuffer;
 
         SimpleObject PlayerBlock = SimpleObject(18, DynamicBuffer);
         SimpleObject TealBlock = SimpleObject(18, DynamicBuffer);
@@ -74,7 +58,7 @@ class TestWorld{
 
         void PhysicsUpdate(int MaxUpdateSpeed);
 
-        void OnUpdate(float deltaTime, float width, float hight);
+        void OnUpdate(float deltaTime, float width, float hight, float scale);
         void KeyInput(int Keys[]);
         void MouseInput(double xpos, double ypos);
         void OnRender();

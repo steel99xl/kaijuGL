@@ -16,10 +16,10 @@
 
 // Test 
 TestWorld World;
-FrameBufferObject FrameBuffer;
 
 
 bool CursorLock = false;
+bool VSync = true;
 double lastX = 0;
 double lastY = 0;
 
@@ -66,6 +66,15 @@ void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mod
         } else {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             glfwSetCursorPos(window,lastX,lastY);
+        }
+    }
+
+    if(key == GLFW_KEY_V && action == GLFW_PRESS){
+        VSync = !VSync;
+        if(VSync){
+            glfwSwapInterval(1);
+        } else {
+            glfwSwapInterval(0);
         }
     }
     
@@ -116,24 +125,7 @@ int main(void){
     std::string Title = "DUMB OPENGL WINDOW";
     int width = 720;
     int height = 480;
-    int OSscaler = 2; // This is mainly for mac os
-    //bool PixelMode = true;
-
-
-
-    // IDK why but macOS needs this or opengl just fails for some reason
-    float ScalePixle = 8.0f;
-    float ScaleFactor[2] = {0.0f,0.0f};
-    float ScaleBuffer;
-    glm::mat4 proj;
-    glm::mat4 view = glm::translate(glm::mat4(1.0f),glm::vec3(0,0,0));
-    glm::vec3 posOff(100,100,0);
-    glm::mat4 modle = glm::translate(glm::mat4(1.0f), posOff);
-    glm::mat4 pv = proj * view;
-    proj = glm::ortho(0.0f, (float)width*ScalePixle, 0.0f, (float)height*ScalePixle, -1.0f, 1.0f);
-
-    
-
+    int OSscaler = 1; // This is mainly for macOS
 
 
     GLFWwindow* window;
@@ -149,6 +141,7 @@ int main(void){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 
 
     /* Create a windowed mode window and its OpenGL context */
@@ -216,52 +209,28 @@ int main(void){
     
     //Temp Fixes/Places
     glEnable(GL_CULL_FACE);
-
-    // Frame Buffer Object
-    //FrameBufferObject TestFrameBuffer;
-    FrameBuffer.Setup(width,height,OSscaler);
+    //glEnable(GL_FRAMEBUFFER_SRGB);
     /*
-    unsigned int FBO;
+    unsigned int ShadowMapFBO, ShadowMapTexture;
 
-    glGenFramebuffers(1, &FBO);
-    GLCall(glBindFramebuffer(GL_FRAMEBUFFER ,FBO));
-
-    unsigned int FrameBuffTexture;
-
-    glGenTextures(1, &FrameBuffTexture);
-    glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0 , GL_RGB, width*OSscaler, height*OSscaler, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST ));
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D ,FrameBuffTexture, 0);
+    const unsigned ShadowRes = 1024
     
-    unsigned int RBO;
-    glGenRenderbuffers(1, &RBO);
-    glBindRenderbuffer(GL_RENDERBUFFER, RBO);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width*OSscaler, height*OSscaler);
+    glGenFramebuffers(1, &ShadowMapFBO);
 
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
+    glGenTextures(1, &ShadowMapTexture);
+    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowRes, ShadowRes, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);  
 
-
-    auto fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-        if(fboStatus != GL_FRAMEBUFFER_COMPLETE){
-            std::cout << "ERROR FRAMEBUFFER " << fboStatus << std::endl;
-        }
+    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ShadowMapTexture, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);  
     */
-    SimpleObject Frame = SimpleObject(2);
-    Frame.Setup();
-    Frame.SetShader("assets/Shaders/FrameBuffer.shader");
-    Frame.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f, 1.0f, 0.0f,0.0f,1.0f,1.0f, 5.0f);
-    Frame.SetTexture(0, "u_Texture");
-    Frame.SetFloatUniform("u_Size.height", height/4);
-    Frame.SetFloatUniform("u_Size.width", width/4);
-
-    // End of framebuffer object
-
    
 // Draw LOOP
     float FPS = 0;
@@ -275,40 +244,11 @@ int main(void){
         FPS = 1.0f/deltaTime;
         std::string NewTile = Title + " " + "( " + std::to_string(FPS) + "FPS)";
         glfwSetWindowTitle(window, NewTile.c_str());
-
-
-        // Frame Buffer Object Stuff
-        FrameBuffer.Update(width,height,OSscaler);
-        /*
-        glBindFramebuffer(GL_FRAMEBUFFER,  FBO);
-
-        glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0 , GL_RGB, width*OSscaler, height*OSscaler, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST ));
-        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-        GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D ,FrameBuffTexture, 0);
-
-
-        glBindRenderbuffer(GL_RENDERBUFFER, RBO);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width*OSscaler, height*OSscaler);
-
-
-
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        GLCall(glEnable(GL_DEPTH_TEST));
-
-        */
-
-       // End of FrameBuffer Stuff for setting it to be writen to
-
         glfwPollEvents();
         glfwGetWindowSize(window, &width, &height);
 
-        
 
+        // Make Shadows hopefully
 
         glViewport(0,0, width*OSscaler, height*OSscaler);
 
@@ -321,36 +261,16 @@ int main(void){
         ImGui::NewFrame();
         // Set Shader, Draw Object
 
-        World.OnUpdate(deltaTime, width, height);
+        World.OnUpdate(deltaTime, width, height, OSscaler);
         World.OnImGui();
         World.OnRender();
 
-        // Simple window to display fps
-        {
-            //ImGui::Begin("Simple Info Display");
-            //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            //ImGui::Text("Resolution of window | %d width    %d height", width, height);
-            //ImGui::End();
-        }
 
         // This has to be drawn on the bottom buffer on mac but on linux it has to be the top
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         
 
-
-        // Frame Buffer Object Drawing..
-        // The Frame Buffer Object SHould be provided by the window
-        glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
-        glBindTexture(GL_TEXTURE_2D, FrameBuffer.GetTexture());
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        GLCall(glDisable(GL_DEPTH_TEST)); 
-        Frame.BindBufferData();
-
-        Frame.Paint();
-
-        
 
 
         /* Swap front and back buffers */

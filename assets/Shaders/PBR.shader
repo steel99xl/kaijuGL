@@ -69,9 +69,9 @@ uniform sampler2D u_Texture1;
 uniform sampler2D u_Texture2;
 
 void main(){
-    vec4 texColor;
-    vec4 ObjectColor;
-    int index  = int(v_TexIndex);
+    //vec4 texColor;
+    //vec4 ObjectColor;
+    //int index  = int(v_TexIndex);
 
     float distance = length(u_Light.position - v_FragPos);
     float attenuation = 1.0 / (u_Light.constant + u_Light.linear * distance + 
@@ -81,7 +81,7 @@ void main(){
     vec3 norm = normalize(v_Normalized);
     vec3 lightDir = normalize(u_Light.position - v_FragPos);
 
-    //float theta = dot(u_Light.position, normalize(-u_Light.lightPoint));
+    //float theta = dot(lightDir, normalize(-u_Light.lightPoint));
 
 
     vec3 viewDir = normalize(u_camPos - v_FragPos);
@@ -91,32 +91,27 @@ void main(){
 
     vec3 ambient = u_Material.ambient * u_Light.ambient;
 
-    float diff = max(dot(norm, u_Light.position), 0.0);
+    float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = (diff * u_Material.diffuse) * u_Light.diffuse;
 
     float spec = pow(max(dot(norm, hlafwayDir), 0.0), u_Material.shininess);
     vec3 specular = (spec) * u_Light.specular;
 
-    if(index == 1){
-        texColor = texture(u_Texture0, v_TexCord); 
-    } else if(index == 2){
-        texColor = texture(u_Texture1, v_TexCord); 
-    } else if(index == 3){
-            texColor = texture(u_Texture2, v_TexCord); 
-    } else {
-        texColor = u_Color;
-    }
-    if(texColor == u_Color){
-        ObjectColor = texColor;
-    } else{
-        ObjectColor = texColor + u_Color;
-    }
 
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
 
-    Finalcolor = vec4((ambient+ diffuse+ specular), 1.0) * ObjectColor;
-    // else, use ambient light so scene isn't completely dark outside the spotlight.
+        
+    //if(theta > u_Light.Asize) {          
+  // do lighting calculations
+   //    Finalcolor = vec4((ambient+ diffuse+ specular), 1.0) * ObjectColor; 
+ //   }else{
+
+//        Finalcolor = vec4(ambient,1.0f) * ObjectColor;
+
+//    }  // else, use ambient light so scene isn't completely
+
+   Finalcolor = vec4((ambient+ diffuse+ specular), 1.0) * u_Color; 
     
 }

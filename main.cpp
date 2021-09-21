@@ -185,15 +185,15 @@ int main(void){
     const char *glsl_version = "#version 330 core";
 
 
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    //ImGui::CreateContext();
+    //ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsDark();
     //ImGui::StyleColorsClassic();
 
     // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
+    //ImGui_ImplGlfw_InitForOpenGL(window, true);
+    //ImGui_ImplOpenGL3_Init(glsl_version);
 
 
     //glfwSetKeyCallback(window, KeyCallBack);
@@ -232,7 +232,7 @@ int main(void){
 
         // Make Shadows hopefully
         glViewport(0,0, 1024,1024);
-        World.GenShadows();
+        //World.GenShadows();
         glBindFramebuffer(GL_FRAMEBUFFER,0);
 
         glViewport(0,0, width*OSscaler, height*OSscaler);
@@ -241,18 +241,18 @@ int main(void){
         renderer.Clear();
 
          // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        World.OnImGui();
+        //ImGui_ImplOpenGL3_NewFrame();
+        //ImGui_ImplGlfw_NewFrame();
+        //ImGui::NewFrame();
+        World.OnGui();
         // Set Shader, Draw Object
 
         World.OnRender();
 
 
         // This has to be drawn on the bottom buffer on mac but on linux it has to be the top
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        //ImGui::Render();
+        //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         
 
 
@@ -266,9 +266,9 @@ int main(void){
 
 
 
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    //ImGui_ImplOpenGL3_Shutdown();
+    //ImGui_ImplGlfw_Shutdown();
+    //ImGui::DestroyContext();
 
 
     glfwTerminate();

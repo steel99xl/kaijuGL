@@ -93,11 +93,11 @@ ShaderProgramSource Shader::ParseShader(){
             if(lines.find("vertex") != std::string::npos){
                 //set to vertex
                 type = ShaderType::VERTEX;
-                std::cout << "vertex found" << std::endl;
+                //std::cout << "vertex found" << std::endl;
             } else if(lines.find("fragment") != std::string::npos){
                 //set to fragment
                 type = ShaderType::FRAGMENT;
-                std::cout << "fragment found" << std::endl;
+                //std::cout << "fragment found" << std::endl;
             }
         }  else {
         ss[(int)type] << lines << "\n";

@@ -107,15 +107,20 @@ void TestWorld::Setup(){
     glGenFramebuffers(1, &ShadowMapFBO);
 
     glGenTextures(1, &ShadowMapTexture);
-    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowRes, ShadowRes, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);  
+    glBindTexture(GL_TEXTURE_CUBE_MAP, ShadowMapTexture);
+
+    for(unsigned int i = 0; i < 6; i++){
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, ShadowWidth, ShadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ShadowMapTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X ,ShadowMapTexture, 0);
 
     //glGenRenderbuffers(1, &ShadowMapRBO);
     //glBindRenderbuffer(GL_RENDERBUFFER, ShadowMapRBO);
@@ -338,36 +343,30 @@ void TestWorld::GenShadows(){
     //glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
     //glClear(GL_DEPTH_BUFFER_BIT);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
-    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowRes, ShadowRes, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);  
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ShadowMapTexture, 0);
-
-    //glBindRenderbuffer(GL_RENDERBUFFER, ShadowMapRBO);
-    //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, ShadowRes, ShadowRes);
-
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     GLCall(glEnable(GL_DEPTH_TEST));
 
     float near_plane = 1.0f, far_plane = 75.0f;
-    glm::mat4 lightProjection = glm::ortho(-30.0f, 30.0f, -30.0f, 30.0f, near_plane, far_plane);
+    glm::mat4 ShadowView = glm::perspective(glm::radians(90.0f), (float)ShadowWidth/(float)ShadowHeight, near_plane, far_plane);
+    
+    std::vector<glm::mat4> ShadowTransforms;
+    glm::vec3 LightPos = Sun.GetPos();
 
-    glm::mat4 lightView = glm::lookAt(Sun.GetPos(), glm::vec3( 0.0f, 0.0f,  0.0f), glm::vec3( 0.0f, 1.0f,  0.0f)); 
+    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(1.0f,0.0f,0.0f), glm::vec3(0.0f,-1.0f,0.0f)));
+    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(-1.0f,0.0f,0.0f), glm::vec3(0.0f,-1.0f,0.0f)));
+    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(0.0f,1.0f,0.0f), glm::vec3(0.0f,0.0f,1.0f)));
+    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(0.0f,-1.0f,0.0f), glm::vec3(0.0f,0.0f,-1.0f)));
+    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(0.0f,0.0f,1.0f), glm::vec3(0.0f,-1.0f,0.0f)));
+    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(0.0f,0.0f,-1.0f), glm::vec3(0.0f,-1.0f,0.0f)));
 
-    glm::mat4 lightSpaceMatrix = lightProjection * lightView;
     
     //PlayerBlock.SetShadowPos(lightProjection, lightView);
     //Land.SetShadowPos(lightProjection, lightView);
     //TealBlock.SetShadowPos(lightProjection, lightView);
 
-    PlayerBlock.SetShadowPos(lightSpaceMatrix);
-    Land.SetShadowPos(lightSpaceMatrix);
-    TealBlock.SetShadowPos(lightSpaceMatrix);
+    //PlayerBlock.SetShadowPos(lightSpaceMatrix);
+    //Land.SetShadowPos(lightSpaceMatrix);
+    //TealBlock.SetShadowPos(lightSpaceMatrix);
 
 
     Land.PaintShadow();
@@ -460,14 +459,7 @@ void TestWorld::OnRender(){
 }
 
 // This will be replaces with an internal GUI system;
-void TestWorld::OnImGui(){
-    {
-    ImGui::Begin("Box Colors");   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-    ImGui::DragFloat("FOV", &m_FOV, 1.0f, 10.0f, 150.0f, "%.03f Camera FOV");
-    ImGui::ColorEdit4("Color", (float *)&m_Color);
-    ImGui::ColorEdit4("Color 2", (float *)&m_Color2);
-    ImGui::ColorEdit4("Color 3", (float *)&m_Color3);
-    ImGui::End();
-    }
+void TestWorld::OnGui(){
+
 
 }

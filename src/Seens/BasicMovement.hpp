@@ -16,7 +16,8 @@ class TestWorld{
 
         glm::mat4 m_Projection, m_View;
 
-        ImVec4 m_Color, m_Color2, m_Color3;
+        //ImVec4 m_Color, m_Color2, m_Color3;
+        glm::vec4 m_Color = glm::vec4(0.0f,0.0f,1.0f,0.75f);
 
         //float m_yaw, m_pitch, m_lastX, m_lastY;
         // These are stored as floats so the rounding can be ajusted
@@ -26,7 +27,8 @@ class TestWorld{
         SimpleObject Frame =  SimpleObject(2);
 
         unsigned int ShadowMapFBO, ShadowMapRBO,ShadowMapTexture;
-        unsigned int ShadowRes = 1024;
+        unsigned int ShadowWidth = 1024;
+        unsigned int ShadowHeight = 1024;
 
 
 
@@ -66,7 +68,7 @@ class TestWorld{
         // Yes this needs to be called every frame if you have moving objects;
         void GenShadows();
         void OnRender();
-        void OnImGui();
+        void OnGui();
 
 
         inline void Test(double xpos, double ypos){std::cout << xpos << " | " << ypos << std::endl;};

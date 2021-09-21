@@ -210,27 +210,9 @@ int main(void){
     //Temp Fixes/Places
     glEnable(GL_CULL_FACE);
     //glEnable(GL_FRAMEBUFFER_SRGB);
-    /*
-    unsigned int ShadowMapFBO, ShadowMapTexture;
-
-    const unsigned ShadowRes = 1024
+    /* 
     
-    glGenFramebuffers(1, &ShadowMapFBO);
-
-    glGenTextures(1, &ShadowMapTexture);
-    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowRes, ShadowRes, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);  
-
-    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ShadowMapTexture, 0);
-    glDrawBuffer(GL_NONE);
-    glReadBuffer(GL_NONE);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);  
-    */
+    */ 
    
 // Draw LOOP
     float FPS = 0;
@@ -246,9 +228,12 @@ int main(void){
         glfwSetWindowTitle(window, NewTile.c_str());
         glfwPollEvents();
         glfwGetWindowSize(window, &width, &height);
-
+        World.OnUpdate(deltaTime, width, height, OSscaler);
 
         // Make Shadows hopefully
+        glViewport(0,0, 1024,1024);
+        World.GenShadows();
+        glBindFramebuffer(GL_FRAMEBUFFER,0);
 
         glViewport(0,0, width*OSscaler, height*OSscaler);
 
@@ -259,10 +244,9 @@ int main(void){
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        World.OnImGui();
         // Set Shader, Draw Object
 
-        World.OnUpdate(deltaTime, width, height, OSscaler);
-        World.OnImGui();
         World.OnRender();
 
 

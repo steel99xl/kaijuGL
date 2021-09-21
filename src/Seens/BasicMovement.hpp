@@ -25,6 +25,10 @@ class TestWorld{
         FrameBufferObject m_FBO;
         SimpleObject Frame =  SimpleObject(2);
 
+        unsigned int ShadowMapFBO, ShadowMapRBO,ShadowMapTexture;
+        unsigned int ShadowRes = 1024;
+
+
 
         SimpleObject PlayerBlock = SimpleObject(18, DynamicBuffer);
         SimpleObject TealBlock = SimpleObject(18, DynamicBuffer);
@@ -37,8 +41,6 @@ class TestWorld{
         SimpleMaterialInfo BasicMetalCube;
 
         SimplePhysics BasicPhysics = SimplePhysics(2.0f ,0.0f,-1.0f,0.0f);
-
-        // Literaly just to show that you can set your own size
 
         Camera2D SimpleCam = Camera2D(glm::vec3(0.0f,0.0f,0.0f) , 1.0f, 200.0f, 200.0f, 100.0f );
         //SimpleObject Object;// = SimpleObject(1000);
@@ -61,6 +63,8 @@ class TestWorld{
         void OnUpdate(float deltaTime, float width, float hight, float scale);
         void KeyInput(int Keys[]);
         void MouseInput(double xpos, double ypos);
+        // Yes this needs to be called every frame if you have moving objects;
+        void GenShadows();
         void OnRender();
         void OnImGui();
 

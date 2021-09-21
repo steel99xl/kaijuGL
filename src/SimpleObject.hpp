@@ -100,6 +100,8 @@ class SimpleObject{
         std::unique_ptr<Shader> m_Shader;
         std::unique_ptr<IndexBuffer> m_IBO;
 
+        std::unique_ptr<Shader> m_ShadowShader;
+
 
         glm::vec3 Rotatex(glm::vec3 Start, float Angle);
         glm::vec3 Rotatey(glm::vec3 Start, float Angle);
@@ -144,14 +146,12 @@ class SimpleObject{
             // Remove Quad from object
             // This would have to go back and remove stuff from the index buffer
         
-        // Set Shader for object
-        void SetShader();
-
 
         // Draw object
         // It is called paint for right now cause Renderer has a .Draw function
         // if all things drawn only read data, then the drawing could me moved to a seperate thread
         void Paint();
+        void PaintShadow();
 
 
 
@@ -184,7 +184,13 @@ class SimpleObject{
 
         void SetShader(const std::string &filePath);
 
+        void SetShadowShader(const std::string &filePath);
+
         void SetDrawPos(glm::mat4 &Projection, glm::mat4 &View);
+
+        void SetShadowPos(glm::mat4 &ShadowMatrix);
+
+        //void SetShadowMatrix(glm::mat4 &ShadowMatrix);
 
         void SetColor(float r, float g, float b, float a);
 

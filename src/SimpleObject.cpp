@@ -20,6 +20,7 @@ void SimpleObject::Setup(){
         m_VAO = std::make_unique<VertexArray>();
         m_VertexBuffer = std::make_unique<VertexBuffer>();
         m_Shader = std::make_unique<Shader>();
+        m_ShadowShader = std::make_unique<Shader>();
         m_IBO = std::make_unique<IndexBuffer>();
         //m_Texture = std::make_unique<Texture>();
 
@@ -558,6 +559,12 @@ void SimpleObject::Paint(){
         renderer.Draw(*m_VAO, *m_IBO, *m_Shader);
 }
 
+void SimpleObject::PaintShadow(){
+        Renderer renderer;
+
+        renderer.Draw(*m_VAO, *m_IBO, *m_ShadowShader);
+}
+
 // Oh boy the physics engien is creeping in to the object
 
 std::vector<PhysicsPos> SimpleObject::GetVertexPositions(){
@@ -597,12 +604,16 @@ void SimpleObject::SetShader(const std::string &filePath){
         //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
         //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
         //m_Shader->SetUniform1i("u_Texture", 0);
-        m_Shader->SetUniform1i("u_Texture0", 1);
+        //m_Shader->SetUniform1i("u_Texture0", 1);
         //                      u_Texture0
         //m_Shader->SetUniform1i("u_Texture1", 2);
         //m_Shader->SetUniform1i("u_Texture2", 3);
 
 
+}
+
+void SimpleObject::SetShadowShader(const std::string &filePath){
+        m_ShadowShader->SetShader(filePath);
 }
 
 
@@ -613,6 +624,14 @@ void SimpleObject::SetDrawPos(glm::mat4 &Projection, glm::mat4 &View){
         m_Shader->SetUniformMat4f("View", View);
         m_Shader->SetUniformMat4f("Projection", Projection);
 }
+
+void SimpleObject::SetShadowPos(glm::mat4 &ShadowMatrix){
+        glm::mat4 ModlePos = glm::translate(glm::mat4(1.0f), glm::vec3(m_X, m_Y, m_Z));
+        m_ShadowShader->Bind();
+        m_ShadowShader->SetUniformMat4f("Modle", ModlePos);
+        m_ShadowShader->SetUniformMat4f("LightSpaceMatrix", ShadowMatrix);
+}
+
 
 void SimpleObject::SetColor(float r, float g, float b, float a){
         m_R = r;

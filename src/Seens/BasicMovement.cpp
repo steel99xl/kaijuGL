@@ -84,18 +84,53 @@ void TestWorld::Setup(){
 
     TealBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
+    m_FOV = 75.0f;
+
+
+    Land.SetShadowShader("assets/Shaders/SimpleDepth.shader");
+    PlayerBlock.SetShadowShader("assets/Shaders/SimpleDepth.shader");
+    TealBlock.SetShadowShader("assets/Shaders/SimpleDepth.shader");
+
+    //Land.SetShadowShader("assets/Shaders/BasicLighting.shader");
+    //PlayerBlock.SetShadowShader("assets/Shaders/BasicLighting.shader");
+    //TealBlock.SetShadowShader("assets/Shaders/BasicLighting.shader");
+
 
     Land.SetShader("assets/Shaders/BasicLighting.shader");
     PlayerBlock.SetShader("assets/Shaders/BasicLighting.shader");
     TealBlock.SetShader("assets/Shaders/BasicLighting.shader");
-
+    // The light does not get a shadow shader
     Sun.SetShader("assets/Shaders/BasicLightObject.shader");
 
 
-    std::cout << "Shader set" << std::endl;
+    
+    glGenFramebuffers(1, &ShadowMapFBO);
+
+    glGenTextures(1, &ShadowMapTexture);
+    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowRes, ShadowRes, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);  
+
+    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ShadowMapTexture, 0);
+
+    //glGenRenderbuffers(1, &ShadowMapRBO);
+    //glBindRenderbuffer(GL_RENDERBUFFER, ShadowMapRBO);
+    //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, ShadowRes, ShadowRes);
+    //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, ShadowMapRBO);
 
 
-    m_FOV = 75.0f;
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+
+
+
+
+
 
     TealBlock.SetPosition(8.0f,10.0f,8.0f);
     Land.SetPosition(0.0f,0.0f,0.0f);
@@ -139,25 +174,6 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         PhysicsLand = BasicPhysics.MakePhysicsBods(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), Land.GetWeights());
         PhysicsTealBlock = BasicPhysics.MakePhysicsBods(TealBlock.GetVertexPositions(), TealBlock.GetVertexNormlPositions(), TealBlock.GetWeights());
 
-        //BasicPhysics.QuadsToLinesVoid(Player, &TempPlayerLines);
-        //BasicPhysics.QuadsToLinesVoid(PhysicsLand, &TempLandLines);
-
-        //PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, PhysicsLand, Land.GetPhysicsPos());
-        
-        //PreviousePlayerPos = Object.GetPhysicsPos();
-
-        //TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), LeftFromOrigion, 0.5f);
-
-        //std::cout << m_NewPlayerDirection.X << " | " << m_NewPlayerDirection.Y << " | " << m_NewPlayerDirection.Z << std::endl;
-
-        // Gravity acting befor player input
-        //PlayerPos = BasicPhysics.MovePhysicsObject(PlayerBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
-        //PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, PhysicsLand, Land.GetPhysicsPos());
-        //if(PlayerTOObject.IsColision){
-        //    PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, BasicPhysics.GetGravity().Power);
-        //}
-        //PlayerBlock.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
-        //AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
 
 
 
@@ -215,10 +231,8 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         }
         TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
 
-        
+        // Just sets a bool for now 
         PlayerBlock.SetColision(PlayerTOObject.IsColision);
-
-        //Object.SetPosition(m_3dCamPos.x, m_3dCamPos.y-1.0f, m_3dCamPos.z);
 
 }
 
@@ -319,6 +333,60 @@ void TestWorld::MouseInput(double xpos, double ypos){
 
 }
 
+
+void TestWorld::GenShadows(){
+    //glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
+    //glClear(GL_DEPTH_BUFFER_BIT);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
+    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowRes, ShadowRes, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);  
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ShadowMapTexture, 0);
+
+    //glBindRenderbuffer(GL_RENDERBUFFER, ShadowMapRBO);
+    //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, ShadowRes, ShadowRes);
+
+    GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    GLCall(glEnable(GL_DEPTH_TEST));
+
+    float near_plane = 1.0f, far_plane = 75.0f;
+    glm::mat4 lightProjection = glm::ortho(-30.0f, 30.0f, -30.0f, 30.0f, near_plane, far_plane);
+
+    glm::mat4 lightView = glm::lookAt(Sun.GetPos(), glm::vec3( 0.0f, 0.0f,  0.0f), glm::vec3( 0.0f, 1.0f,  0.0f)); 
+
+    glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+    
+    //PlayerBlock.SetShadowPos(lightProjection, lightView);
+    //Land.SetShadowPos(lightProjection, lightView);
+    //TealBlock.SetShadowPos(lightProjection, lightView);
+
+    PlayerBlock.SetShadowPos(lightSpaceMatrix);
+    Land.SetShadowPos(lightSpaceMatrix);
+    TealBlock.SetShadowPos(lightSpaceMatrix);
+
+
+    Land.PaintShadow();
+    PlayerBlock.PaintShadow();
+    TealBlock.PaintShadow();
+
+    /*
+    glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
+    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    GLCall(glDisable(GL_DEPTH_TEST)); 
+    Frame.BindBufferData();
+
+    Frame.Paint();
+
+    */
+
+}
 
 void TestWorld::OnRender(){
         if(m_Effect){

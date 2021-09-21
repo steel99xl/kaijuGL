@@ -184,6 +184,14 @@ class SimpleObject{
 
         void SetShader(const std::string &filePath);
 
+        void FinishShader();
+
+        std::vector<unsigned int> ExportShaders();
+        void ImportShaders(std::vector<unsigned int> Import);
+        
+        // This removes the indevidual compiled shaders and only keeps the final output for the object
+        void ClearShaderCache();
+
         void SetShadowShader(const std::string &filePath);
 
         void SetDrawPos(glm::mat4 &Projection, glm::mat4 &View);

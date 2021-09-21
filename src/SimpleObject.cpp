@@ -612,6 +612,22 @@ void SimpleObject::SetShader(const std::string &filePath){
 
 }
 
+void SimpleObject::FinishShader(){
+        m_Shader->Finish();
+}
+
+std::vector<unsigned int> SimpleObject::ExportShaders(){
+        return m_Shader->GetCompiledShaders();
+}
+
+void SimpleObject::ImportShaders(std::vector<unsigned int> Import){
+        m_Shader->SetCompiledShaders(Import);
+}
+
+void SimpleObject::ClearShaderCache(){
+        m_Shader->ClearCompiledShaders();
+}
+
 void SimpleObject::SetShadowShader(const std::string &filePath){
         m_ShadowShader->SetShader(filePath);
 }

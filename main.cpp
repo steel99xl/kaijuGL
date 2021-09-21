@@ -125,7 +125,7 @@ int main(void){
     std::string Title = "DUMB OPENGL WINDOW";
     int width = 720;
     int height = 480;
-    int OSscaler = 1; // This is mainly for macOS
+    int OSscaler = 2; // This is mainly for macOS
 
 
     GLFWwindow* window;
@@ -182,7 +182,7 @@ int main(void){
 
     // This can be set once, it does not depend on shader
 
-    const char *glsl_version = "#version 330 core";
+    //const char *glsl_version = "#version 330 core";
 
 
     //ImGui::CreateContext();

@@ -31,7 +31,9 @@ void TestWorld::Setup(){
 
     m_FBO.Setup((int)m_Width, (int)m_Height,(int)m_Scale);
     Frame.Setup();
-    Frame.SetShader("assets/Shaders/FrameKernel.shader");
+    Frame.SetShader("assets/Shaders/FrameVertex.shader");
+    Frame.SetShader("assets/Shaders/FrameBuffer.shader");
+    Frame.FinishShader();
     Frame.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f, 1.0f, 0.0f,0.0f,1.0f,1.0f, 5.0f);
     Frame.SetTexture(0, "u_Texture");
     Frame.SetFloatUniform("u_Size.height", m_Height);
@@ -87,20 +89,36 @@ void TestWorld::Setup(){
     m_FOV = 75.0f;
 
 
-    Land.SetShadowShader("assets/Shaders/SimpleDepth.shader");
-    PlayerBlock.SetShadowShader("assets/Shaders/SimpleDepth.shader");
-    TealBlock.SetShadowShader("assets/Shaders/SimpleDepth.shader");
+    //Land.SetShadowShader("assets/Shaders/SimpleDepth.shader");
+    //PlayerBlock.SetShadowShader("assets/Shaders/SimpleDepth.shader");
+    //TealBlock.SetShadowShader("assets/Shaders/SimpleDepth.shader");
 
     //Land.SetShadowShader("assets/Shaders/BasicLighting.shader");
     //PlayerBlock.SetShadowShader("assets/Shaders/BasicLighting.shader");
     //TealBlock.SetShadowShader("assets/Shaders/BasicLighting.shader");
 
-
+    Land.SetShader("assets/Shaders/BasicVertex.shader");
     Land.SetShader("assets/Shaders/BasicLighting.shader");
-    PlayerBlock.SetShader("assets/Shaders/BasicLighting.shader");
-    TealBlock.SetShader("assets/Shaders/BasicLighting.shader");
+    Land.FinishShader();
+
+    //PlayerBlock.SetShader("assets/Shaders/BasicVertex.shader");
+    //PlayerBlock.SetShader("assets/Shaders/BasicLighting.shader");
+    PlayerBlock.ImportShaders(Land.ExportShaders());
+    PlayerBlock.FinishShader();
+
+    //TealBlock.SetShader("assets/Shaders/BasicVertex.shader");
+    //TealBlock.SetShader("assets/Shaders/BasicLighting.shader");
+    TealBlock.ImportShaders(Land.ExportShaders());
+    TealBlock.FinishShader();
+
+    Land.ClearShaderCache();
+    PlayerBlock.ClearShaderCache();
+    TealBlock.ClearShaderCache();
     // The light does not get a shadow shader
+    Sun.SetShader("assets/Shaders/BasicVertex.shader");
     Sun.SetShader("assets/Shaders/BasicLightObject.shader");
+    //Sun.ImportShaders(Land.ExportShaders());
+    Sun.FinishShader();
 
 
     
@@ -412,6 +430,7 @@ void TestWorld::OnRender(){
         Land.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
         Land.Paint();
 
+        /*
         TealBlock.BindBufferData();
         //TealBlock.SetColor(0.471f, 0.318f, 0.176f, 1.0f);
         
@@ -440,7 +459,7 @@ void TestWorld::OnRender(){
         PlayerBlock.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
         PlayerBlock.SetMaterial(BasicMetalCube);
         PlayerBlock.Paint();
-
+        */
         if(m_Effect){
             // Post Draw Stuff if needed
 

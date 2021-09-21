@@ -3,7 +3,7 @@
 
 Shader::Shader() : m_RenderID(0){
 
-    
+    m_TempRender = glCreateProgram();
 
 }
 
@@ -16,10 +16,33 @@ Shader::~Shader(){
 void Shader::SetShader(const std::string &filePath){
     m_FilePath = filePath;
     ShaderProgramSource source = ParseShader();
-    m_RenderID = CreateShader(source.vertexSource, source.fragmentSource);
+    //std::cout << "Test" << std::endl;
+    //std::cout << source.shaderSource << std::endl;
+    //std::cout << "End of Test" << std::endl;
+    CreateShader(source.type, source.shaderSource);
 
 }
 
+void Shader::Finish(){
+    // DELTE COMPILED SHADER PROGRAMS
+    for(long unsigned int i = 0; i < CompiledShaders.size(); i++){
+        glAttachShader(m_TempRender, CompiledShaders[i]);
+    }
+
+    glLinkProgram(m_TempRender);
+    glValidateProgram(m_TempRender);
+
+    m_RenderID = m_TempRender;
+}
+
+
+void Shader::ClearCompiledShaders(){
+    for(long unsigned int i = 0; i < CompiledShaders.size(); i++){
+        glDeleteShader(CompiledShaders[i]);
+    }
+
+    CompiledShaders.clear();
+}
 
 void Shader::Bind() const{
 
@@ -48,7 +71,7 @@ void Shader::SetUniform1f(const std::string &name, float value){
 }
 
 void Shader::SetUniform3f(const std::string &name, float v0, float v1, float v2){
-   GLCall(glUniform3f(GetUniformLocation(name), v0, v1, v2));
+    GLCall(glUniform3f(GetUniformLocation(name), v0, v1, v2));
 }
 
 void Shader::SetUniform4f(const std::string &name, float v0, float v1, float v2, float v3){
@@ -81,12 +104,11 @@ int Shader::GetUniformLocation(const std::string &name) const {
 ShaderProgramSource Shader::ParseShader(){
     std::ifstream File(m_FilePath);
     std::string lines;
-    std::stringstream ss[2];
+    std::stringstream ss;
 
-    enum class ShaderType{
-        NONE = -1, VERTEX = 0, FRAGMENT = 1
-    };
-    ShaderType type = ShaderType::NONE;
+    //ss << "\n";
+
+    ShaderType type = NONE;
 
     while(getline(File, lines)){
         if(lines.find("#Shader") != std::string::npos){
@@ -98,30 +120,36 @@ ShaderProgramSource Shader::ParseShader(){
                 //set to fragment
                 type = ShaderType::FRAGMENT;
                 //std::cout << "fragment found" << std::endl;
+            } else if(lines.find("geometry") != std::string::npos){
+                type = ShaderType::GEOMETRY;
             }
         }  else {
-        ss[(int)type] << lines << "\n";
+            ss << lines << "\n";
+        //ss << lines << "\n";
         }
-
     }
-    return {ss[0].str(), ss[1].str()};
+    return {type, ss.str()};
 }
 
-unsigned int Shader::CreateShader(std::string &vertexShader, std::string &fragmentShader){
-    unsigned int program = glCreateProgram();
-    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+void Shader::CreateShader(ShaderType &type, std::string &shaderSource){
+    switch(type){
+        case NONE:
+            break;
+        case VERTEX:
+            std::cout << "Making Vertex Shader" << std::endl;
+            CompiledShaders.push_back(CompileShader(GL_VERTEX_SHADER, shaderSource));
+            break;
+        case FRAGMENT:
+            std::cout << "Making Fragment Shader" << std::endl;
+            CompiledShaders.push_back(CompileShader(GL_FRAGMENT_SHADER, shaderSource));
+            break;
+        case GEOMETRY:
+            CompiledShaders.push_back(CompileShader(GL_GEOMETRY_SHADER, shaderSource));
+            break;
+    }
 
-    glAttachShader(program,vs);
-    glAttachShader(program,fs);
-    glLinkProgram(program);
-    glValidateProgram(program);
-
-    glDeleteShader(vs);
-    glDeleteShader(fs);
-
-
-    return program;
+    //unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+    //unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
 }
 
 unsigned int Shader::CompileShader(unsigned int type, std::string &source){
@@ -140,6 +168,7 @@ unsigned int Shader::CompileShader(unsigned int type, std::string &source){
         char *message = (char *)alloca(length * sizeof(char));
         glGetShaderInfoLog(id, length, &length, message);
         std::cout  << "Error " << message << std::endl;
+        std::cout << source << std::endl;
         glDeleteShader(id);
         return 0;
     }

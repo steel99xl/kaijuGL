@@ -627,10 +627,27 @@ void SimpleObject::ImportShaders(std::vector<unsigned int> Import){
 void SimpleObject::ClearShaderCache(){
         m_Shader->ClearCompiledShaders();
 }
-
+//
 void SimpleObject::SetShadowShader(const std::string &filePath){
         m_ShadowShader->SetShader(filePath);
 }
+
+void SimpleObject::FinishShadowShader(){
+        m_ShadowShader->Finish();
+}
+
+std::vector<unsigned int> SimpleObject::ExportShadowShaders(){
+        return m_ShadowShader->GetCompiledShaders();
+}
+
+void SimpleObject::ImportShadowShaders(std::vector<unsigned int> Import){
+        m_ShadowShader->SetCompiledShaders(Import);
+}
+
+void SimpleObject::ClearShadowShaderCache(){
+        m_ShadowShader->ClearCompiledShaders();
+}
+
 
 
 void SimpleObject::SetDrawPos(glm::mat4 &Projection, glm::mat4 &View){

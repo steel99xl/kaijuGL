@@ -232,7 +232,7 @@ int main(void){
 
         // Make Shadows hopefully
         glViewport(0,0, 1024,1024);
-        //World.GenShadows();
+        World.GenShadows();
         glBindFramebuffer(GL_FRAMEBUFFER,0);
 
         glViewport(0,0, width*OSscaler, height*OSscaler);

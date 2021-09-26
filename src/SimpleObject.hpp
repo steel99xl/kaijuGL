@@ -183,16 +183,19 @@ class SimpleObject{
         std::vector<PhysicsPos> GetVertexNormlPositions();
 
         void SetShader(const std::string &filePath);
-
         void FinishShader();
-
         std::vector<unsigned int> ExportShaders();
         void ImportShaders(std::vector<unsigned int> Import);
-        
         // This removes the indevidual compiled shaders and only keeps the final output for the object
         void ClearShaderCache();
 
         void SetShadowShader(const std::string &filePath);
+        void FinishShadowShader();
+        std::vector<unsigned int> ExportShadowShaders();
+        void ImportShadowShaders(std::vector<unsigned int> Import);
+        // This removes the indevidual compiled shaders and only keeps the final output for the object
+        void ClearShadowShaderCache();
+
 
         void SetDrawPos(glm::mat4 &Projection, glm::mat4 &View);
 

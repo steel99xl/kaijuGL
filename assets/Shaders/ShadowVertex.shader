@@ -13,11 +13,3 @@ uniform mat4 Modle;
 void main(){
     gl_Position = LightSpaceMatrix * Modle * vec4(position, 1.0);
 }
-
-
-#Shader fragment
-#version 330 core
-
-void main(){
-
-}

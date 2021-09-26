@@ -84,12 +84,24 @@ void TestWorld::Setup(){
     PlayerBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,0.6f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
     //PlayerBlock.CreateCube(1.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,2.0f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
-    TealBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    TealBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,45.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     m_FOV = 75.0f;
 
 
-    //Land.SetShadowShader("assets/Shaders/SimpleDepth.shader");
+    Land.SetShadowShader("assets/Shaders/ShadowVertex.shader");
+    Land.SetShadowShader("assets/Shaders/ShadowFragment.shader");
+    Land.FinishShader();
+
+    PlayerBlock.ImportShadowShaders(Land.ExportShadowShaders());
+    PlayerBlock.FinishShadowShader();
+    TealBlock.ImportShadowShaders(Land.ExportShadowShaders());
+    TealBlock.FinishShadowShader();
+    
+    Land.ClearShadowShaderCache();
+    PlayerBlock.ClearShadowShaderCache();
+    TealBlock.ClearShadowShaderCache();
+
     //PlayerBlock.SetShadowShader("assets/Shaders/SimpleDepth.shader");
     //TealBlock.SetShadowShader("assets/Shaders/SimpleDepth.shader");
 
@@ -125,6 +137,23 @@ void TestWorld::Setup(){
     glGenFramebuffers(1, &ShadowMapFBO);
 
     glGenTextures(1, &ShadowMapTexture);
+
+    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float clampColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, clampColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowWidth, ShadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ShadowMapTexture, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+    // THis stuff will be used for point light shadows
+    /*
     glBindTexture(GL_TEXTURE_CUBE_MAP, ShadowMapTexture);
 
     for(unsigned int i = 0; i < 6; i++){
@@ -142,15 +171,13 @@ void TestWorld::Setup(){
 
     //glGenRenderbuffers(1, &ShadowMapRBO);
     //glBindRenderbuffer(GL_RENDERBUFFER, ShadowMapRBO);
-    //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, ShadowRes, ShadowRes);
+    //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, ShadowWidth, ShadowHeight);
     //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, ShadowMapRBO);
-
-
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);  
 
-
+    */
 
 
 
@@ -239,14 +266,14 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         //TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
         //TealBlockColision = BasicPhysics.FullQuadLineColision(BasicPhysics.QuadsToLines(PhysicsTealBlock), TealBlock.GetPhysicsPos(), BasicPhysics.QuadsToLines(Player), PlayerPos, 1.01f);
         //TealBlockColision = BasicPhysics.SATColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
-        TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos, 0.3f);
-        //TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.3f);
-        //if(!TealBlockColision.IsColision){
-        //    TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.9f);
-        //}
+        //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos, 0.3f);
+        TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.3f);
+        if(!TealBlockColision.IsColision){
+            TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.9f);
+        }
 
         if(TealBlockColision.IsColision){
-            ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionB;
+            ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionA;
             //ForceDirection NewTealBlockDirecton = BasicPhysics.MakeForceDirection(PlayerPos, TealBlockFuturePos);
             NewTealBlockDirecton.Y = 0.1f;
             TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton , PlayerMovmentSpeed);
@@ -358,24 +385,18 @@ void TestWorld::MouseInput(double xpos, double ypos){
 
 
 void TestWorld::GenShadows(){
-    //glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
+    // The lights should not be drawn in the "shadow reml"
+
+    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
     //glClear(GL_DEPTH_BUFFER_BIT);
 
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     GLCall(glEnable(GL_DEPTH_TEST));
 
-    float near_plane = 1.0f, far_plane = 75.0f;
-    glm::mat4 ShadowView = glm::perspective(glm::radians(90.0f), (float)ShadowWidth/(float)ShadowHeight, near_plane, far_plane);
+    float near_plane = 0.1f, far_plane = 75.0f;
+    //glm::mat4 ShadowView = glm::perspective(glm::radians(90.0f), (float)ShadowWidth/(float)ShadowHeight, near_plane, far_plane);
+    glm::mat4 ShadowProjection = glm::orthon(-30.0f,30.0f, -30.0f,30.0f, near_plane, far_plane);
     
-    std::vector<glm::mat4> ShadowTransforms;
-    glm::vec3 LightPos = Sun.GetPos();
-
-    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(1.0f,0.0f,0.0f), glm::vec3(0.0f,-1.0f,0.0f)));
-    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(-1.0f,0.0f,0.0f), glm::vec3(0.0f,-1.0f,0.0f)));
-    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(0.0f,1.0f,0.0f), glm::vec3(0.0f,0.0f,1.0f)));
-    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(0.0f,-1.0f,0.0f), glm::vec3(0.0f,0.0f,-1.0f)));
-    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(0.0f,0.0f,1.0f), glm::vec3(0.0f,-1.0f,0.0f)));
-    ShadowTransforms.push_back(ShadowView * glm::lookAt(LightPos, LightPos+ glm::vec3(0.0f,0.0f,-1.0f), glm::vec3(0.0f,-1.0f,0.0f)));
 
     
     //PlayerBlock.SetShadowPos(lightProjection, lightView);
@@ -430,7 +451,7 @@ void TestWorld::OnRender(){
         Land.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
         Land.Paint();
 
-        /*
+        
         TealBlock.BindBufferData();
         //TealBlock.SetColor(0.471f, 0.318f, 0.176f, 1.0f);
         
@@ -459,7 +480,8 @@ void TestWorld::OnRender(){
         PlayerBlock.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
         PlayerBlock.SetMaterial(BasicMetalCube);
         PlayerBlock.Paint();
-        */
+        
+
         if(m_Effect){
             // Post Draw Stuff if needed
 

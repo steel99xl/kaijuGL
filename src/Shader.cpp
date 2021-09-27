@@ -33,6 +33,7 @@ void Shader::Finish(){
     glValidateProgram(m_TempRender);
 
     m_RenderID = m_TempRender;
+    std::cout << m_RenderID << std::endl;
 }
 
 

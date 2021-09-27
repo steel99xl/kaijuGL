@@ -91,10 +91,11 @@ void TestWorld::Setup(){
 
     Land.SetShadowShader("assets/Shaders/ShadowVertex.shader");
     Land.SetShadowShader("assets/Shaders/ShadowFragment.shader");
-    Land.FinishShader();
+    Land.FinishShadowShader();
 
     PlayerBlock.ImportShadowShaders(Land.ExportShadowShaders());
     PlayerBlock.FinishShadowShader();
+
     TealBlock.ImportShadowShaders(Land.ExportShadowShaders());
     TealBlock.FinishShadowShader();
     
@@ -102,24 +103,13 @@ void TestWorld::Setup(){
     PlayerBlock.ClearShadowShaderCache();
     TealBlock.ClearShadowShaderCache();
 
-    //PlayerBlock.SetShadowShader("assets/Shaders/SimpleDepth.shader");
-    //TealBlock.SetShadowShader("assets/Shaders/SimpleDepth.shader");
-
-    //Land.SetShadowShader("assets/Shaders/BasicLighting.shader");
-    //PlayerBlock.SetShadowShader("assets/Shaders/BasicLighting.shader");
-    //TealBlock.SetShadowShader("assets/Shaders/BasicLighting.shader");
-
-    Land.SetShader("assets/Shaders/BasicVertex.shader");
-    Land.SetShader("assets/Shaders/BasicLighting.shader");
+    Land.SetShader("assets/Shaders/BasicVertexWithShadows.shader");
+    Land.SetShader("assets/Shaders/BasicLightingWithShadows.shader");
     Land.FinishShader();
 
-    //PlayerBlock.SetShader("assets/Shaders/BasicVertex.shader");
-    //PlayerBlock.SetShader("assets/Shaders/BasicLighting.shader");
     PlayerBlock.ImportShaders(Land.ExportShaders());
     PlayerBlock.FinishShader();
 
-    //TealBlock.SetShader("assets/Shaders/BasicVertex.shader");
-    //TealBlock.SetShader("assets/Shaders/BasicLighting.shader");
     TealBlock.ImportShaders(Land.ExportShaders());
     TealBlock.FinishShader();
 
@@ -131,6 +121,7 @@ void TestWorld::Setup(){
     Sun.SetShader("assets/Shaders/BasicLightObject.shader");
     //Sun.ImportShaders(Land.ExportShaders());
     Sun.FinishShader();
+    Sun.ClearShaderCache();
 
 
     
@@ -141,10 +132,10 @@ void TestWorld::Setup(){
     glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    float clampColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, clampColor);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    //float clampColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    //glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, clampColor);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowWidth, ShadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
     glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
@@ -152,6 +143,10 @@ void TestWorld::Setup(){
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
+
     // THis stuff will be used for point light shadows
     /*
     glBindTexture(GL_TEXTURE_CUBE_MAP, ShadowMapTexture);
@@ -187,7 +182,7 @@ void TestWorld::Setup(){
 
     Sun.SetLightColor(1.0f, 1.0f, 1.0f);
     Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
-    Sun.SetPosition(15.0f,0.0f,10.0f);
+    Sun.SetPosition(15.0f,10.0f,10.0f);
 
 
     Land.SetColor(0.3373f, 0.4902f, 0.2745f, 1.0f);
@@ -395,8 +390,10 @@ void TestWorld::GenShadows(){
 
     float near_plane = 0.1f, far_plane = 75.0f;
     //glm::mat4 ShadowView = glm::perspective(glm::radians(90.0f), (float)ShadowWidth/(float)ShadowHeight, near_plane, far_plane);
-    glm::mat4 ShadowProjection = glm::orthon(-30.0f,30.0f, -30.0f,30.0f, near_plane, far_plane);
-    
+    glm::mat4 ShadowProjection = glm::ortho(-10.0f,10.0f, -10.0f,10.0f, near_plane, far_plane);
+    glm::mat4 LightView = glm::lookAt(Sun.GetPos(), glm::vec3(6.0f,-5.0f,10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+
 
     
     //PlayerBlock.SetShadowPos(lightProjection, lightView);
@@ -406,6 +403,10 @@ void TestWorld::GenShadows(){
     //PlayerBlock.SetShadowPos(lightSpaceMatrix);
     //Land.SetShadowPos(lightSpaceMatrix);
     //TealBlock.SetShadowPos(lightSpaceMatrix);
+
+    PlayerBlock.SetShadowPos(ShadowProjection, LightView);
+    Land.SetShadowPos(ShadowProjection, LightView);
+    TealBlock.SetShadowPos(ShadowProjection, LightView);
 
 
     Land.PaintShadow();
@@ -421,8 +422,8 @@ void TestWorld::GenShadows(){
     Frame.BindBufferData();
 
     Frame.Paint();
-
     */
+    
 
 }
 

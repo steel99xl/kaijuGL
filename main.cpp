@@ -231,10 +231,9 @@ int main(void){
         World.OnUpdate(deltaTime, width, height, OSscaler);
 
         // Make Shadows hopefully
-        glViewport(0,0, 1024,1024);
+        glViewport(0,0, 2048,2048);
         World.GenShadows();
         glBindFramebuffer(GL_FRAMEBUFFER,0);
-
         glViewport(0,0, width*OSscaler, height*OSscaler);
 
         /* Render here */

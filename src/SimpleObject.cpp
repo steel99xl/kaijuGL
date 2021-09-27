@@ -658,11 +658,16 @@ void SimpleObject::SetDrawPos(glm::mat4 &Projection, glm::mat4 &View){
         m_Shader->SetUniformMat4f("Projection", Projection);
 }
 
-void SimpleObject::SetShadowPos(glm::mat4 &ShadowMatrix){
+void SimpleObject::SetShadowPos(glm::mat4 &ShadowProjection, glm::mat4 &ShadowView){
         glm::mat4 ModlePos = glm::translate(glm::mat4(1.0f), glm::vec3(m_X, m_Y, m_Z));
         m_ShadowShader->Bind();
-        m_ShadowShader->SetUniformMat4f("Modle", ModlePos);
-        m_ShadowShader->SetUniformMat4f("LightSpaceMatrix", ShadowMatrix);
+        m_ShadowShader->SetUniformMat4f("SModle", ModlePos);
+        m_ShadowShader->SetUniformMat4f("SView", ShadowView);
+        m_ShadowShader->SetUniformMat4f("SProjection", ShadowProjection);
+        // This is just to pass the light information to the main rendering shader;
+        m_Shader->Bind();
+        m_Shader->SetUniformMat4f("LightView", ShadowView);
+        m_Shader->SetUniformMat4f("LightProjection", ShadowProjection);
 }
 
 

@@ -199,7 +199,7 @@ class SimpleObject{
 
         void SetDrawPos(glm::mat4 &Projection, glm::mat4 &View);
 
-        void SetShadowPos(glm::mat4 &ShadowMatrix);
+        void SetShadowPos(glm::mat4 &ShadowProjection, glm::mat4 &ShadowView);
 
         //void SetShadowMatrix(glm::mat4 &ShadowMatrix);
 

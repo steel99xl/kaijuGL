@@ -34,6 +34,7 @@ void FrameBufferObject::Setup(int width, int height, int scale){
 void FrameBufferObject::Update(int width, int height, int scale){
         GLCall(glBindFramebuffer(GL_FRAMEBUFFER,  m_FBO));
 
+        // The Texture and render buffer are basicaly remade every frame so the resolution can change
         GLCall(glBindTexture(GL_TEXTURE_2D, m_FrameBufferTexture));
         GLCall(glTexImage2D(GL_TEXTURE_2D, 0 , GL_RGB, width*scale, height*scale, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL));
         GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));

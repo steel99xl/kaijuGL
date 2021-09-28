@@ -34,7 +34,9 @@ class TestWorld{
 
         SimpleObject PlayerBlock = SimpleObject(18, DynamicBuffer);
         SimpleObject TealBlock = SimpleObject(18, DynamicBuffer);
-        SimpleObject Land; //SimpleObject(6 StaticBuffer);
+        // Lol Voxl Land Test set back to about 5k when done
+        SimpleObject Land = SimpleObject(15000, DynamicBuffer);
+        SimpleObject OtherLand = SimpleObject(15000, DynamicBuffer);
         SimpleObject Sun = SimpleObject(6, DynamicBuffer);
 
         std::vector<ForceDirection> m_NewPlayerDirection;

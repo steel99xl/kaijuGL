@@ -941,8 +941,10 @@ ColisionInfo SimplePhysics::PointsToAABBColision(std::vector<QuadPhysicsBody> Ob
     return Output;
 }
 
-ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos){
+ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsPoint &ObjectAPos, std::vector<QuadPhysicsBody> &ObjectB, PhysicsPoint &ObjectBPos){
     ColisionInfo Temp;
+
+    QuadPhysicsBody *TempObject;
 
     bool XColision = false;
     bool YColision = false;

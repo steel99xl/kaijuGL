@@ -41,6 +41,7 @@ void TestWorld::Setup(){
 
     PlayerBlock.Setup();
     Land.Setup();
+    OtherLand.Setup();
     Sun.Setup();
     TealBlock.Setup();
 
@@ -63,21 +64,27 @@ void TestWorld::Setup(){
 
 
 
-    Land.Create2dQuad(0.0f,-3.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-
-    for(int i = 1; i < 21; i++){
-        for(int j = 1; j < 21; j++){
+    //Land.Create2dQuad(0.0f,-3.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    
+    for(int i = 1; i < 51; i++){
+        for(int j = 1; j < 51; j++){
+            //for(int n = 1; n < 51; n++){
+            //    Land.CreateCube((float)i*3,(float)j*3, (float)n*3, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+           //}
+            Land.CreateCube((float)i*3,-5.0f, (float)j*3, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+            OtherLand.CreateCube((float)i*3,-10.0f, (float)j*3, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
             //Land.Create2dQuad((float)i*5,(((float)((i+j)%6) * 0.01) + -5.0f),(float)j*5, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-            Land.Create2dQuad((float)i*5,-5.0f,(float)j*5, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+            //Land.Create2dQuad((float)i*5,-5.0f,(float)j*5, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+            //Land.CreateCube((float)i*5,-5, (float)j*5, 0.0f,0.0f,0.0f, 5.0f,1.0f,5.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
         }
     }
 
 
     //Land.Create2dQuad(8.0f,-2.5f,8.0f, -60.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-    Land.Create2dQuad(15.0f,-4.5f,10.0f, -80.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    //Land.Create2dQuad(15.0f,-4.5f,10.0f, -80.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    Land.CreateCube(10,-3, 10, 0.0f,0.0f,0.0f, 2.0f,2.0f,2.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
-    Land.CreateCube(10,-1, 18, 0.0f,0.0f,0.0f, 4.0f,4.0f,4.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    //Land.CreateCube(10,-3, 10, 0.0f,0.0f,0.0f, 2.0f,2.0f,2.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    //Land.CreateCube(10,-1, 18, 0.0f,0.0f,0.0f, 4.0f,4.0f,4.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.10f,0.10f,0.10f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
@@ -103,9 +110,12 @@ void TestWorld::Setup(){
     PlayerBlock.ClearShadowShaderCache();
     TealBlock.ClearShadowShaderCache();
 
-    Land.SetShader("assets/Shaders/BasicVertexWithShadows.shader");
-    Land.SetShader("assets/Shaders/BasicLightingWithShadows.shader");
+    Land.SetShader("assets/Shaders/BasicVertex.shader");
+    Land.SetShader("assets/Shaders/BasicLighting.shader");
     Land.FinishShader();
+
+    OtherLand.ImportShaders(Land.ExportShaders());
+    OtherLand.FinishShader();
 
     PlayerBlock.ImportShaders(Land.ExportShaders());
     PlayerBlock.FinishShader();
@@ -114,6 +124,7 @@ void TestWorld::Setup(){
     TealBlock.FinishShader();
 
     Land.ClearShaderCache();
+    OtherLand.ClearShaderCache();
     PlayerBlock.ClearShaderCache();
     TealBlock.ClearShaderCache();
     // The light does not get a shadow shader
@@ -140,6 +151,11 @@ void TestWorld::Setup(){
 
     glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ShadowMapTexture, 0);
+
+    //glGenRenderbuffers(1, &ShadowMapRBO);
+    //glBindRenderbuffer(GL_RENDERBUFFER, ShadowMapRBO);
+    //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, ShadowWidth, ShadowHeight);
+    //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, ShadowMapRBO);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);  
@@ -154,7 +170,7 @@ void TestWorld::Setup(){
     for(unsigned int i = 0; i < 6; i++){
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, ShadowWidth, ShadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     }
-
+    dumb test
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -179,6 +195,9 @@ void TestWorld::Setup(){
 
     TealBlock.SetPosition(8.0f,10.0f,8.0f);
     Land.SetPosition(0.0f,0.0f,0.0f);
+    OtherLand.SetPosition(-1.0f,0.0f, 0.0f);
+    OtherLand.SetColor(1.0f,0.0f,0.0f,1.0f);
+    OtherLand.SetMaterial(BasicMetalCube);
 
     Sun.SetLightColor(1.0f, 1.0f, 1.0f);
     Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
@@ -208,7 +227,9 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
         PlayerTOObject.IsColision = false;
 
         std::vector<QuadPhysicsBody> Player, PhysicsLand, PhysicsTealBlock;
-        PhysicsPoint PlayerPos, TealBlockFuturePos;
+        PhysicsPoint PlayerPos, TealBlockFuturePos, LandPhysPos;
+
+        LandPhysPos = Land.GetPhysicsPos();
         //ForceDirection LeftFromOrigion;
 
         //LeftFromOrigion.X = -1.0f;
@@ -224,7 +245,7 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
 
         TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
 
-        TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, Land.GetPhysicsPos());
+        TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, LandPhysPos);
         if(!TealBlockColision.IsColision){
             TealBlockColision = BasicPhysics.PointsToAABBColision(PhysicsTealBlock, TealBlockFuturePos, BasicPhysics.MinMaxFromQuads(PhysicsLand, Land.GetPhysicsPos()));
         }
@@ -383,6 +404,8 @@ void TestWorld::GenShadows(){
     // The lights should not be drawn in the "shadow reml"
 
     glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
+    //GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D ,ShadowMapTexture, 0));
+    //glBindRenderbuffer(GL_RENDERBUFFER, ShadowMapRBO);
     //glClear(GL_DEPTH_BUFFER_BIT);
 
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
@@ -451,6 +474,11 @@ void TestWorld::OnRender(){
         Land.SetDrawPos(m_Projection, m_View);
         Land.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
         Land.Paint();
+
+        OtherLand.BindBufferData();
+        OtherLand.SetDrawPos(m_Projection, m_View);
+        OtherLand.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
+        OtherLand.Paint();
 
         
         TealBlock.BindBufferData();

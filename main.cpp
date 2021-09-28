@@ -14,10 +14,10 @@
 //#include "src/Shader.h"
 
 
-// Test 
+// Worlds
 TestWorld World;
 
-
+// Global Stuff to any thing can read or write it from this main file
 bool CursorLock = false;
 bool VSync = true;
 double lastX = 0;
@@ -180,23 +180,6 @@ int main(void){
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    // This can be set once, it does not depend on shader
-
-    //const char *glsl_version = "#version 330 core";
-
-
-    //ImGui::CreateContext();
-    //ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-    //ImGui::StyleColorsDark();
-    //ImGui::StyleColorsClassic();
-
-    // Setup Platform/Renderer backends
-    //ImGui_ImplGlfw_InitForOpenGL(window, true);
-    //ImGui_ImplOpenGL3_Init(glsl_version);
-
-
-    //glfwSetKeyCallback(window, KeyCallBack);
 
     World.Setup();
     std::thread PhysicsThread(SecondThread,15);
@@ -239,21 +222,10 @@ int main(void){
         /* Render here */
         renderer.Clear();
 
-         // Start the Dear ImGui frame
-        //ImGui_ImplOpenGL3_NewFrame();
-        //ImGui_ImplGlfw_NewFrame();
-        //ImGui::NewFrame();
         World.OnGui();
         // Set Shader, Draw Object
 
         World.OnRender();
-
-
-        // This has to be drawn on the bottom buffer on mac but on linux it has to be the top
-        //ImGui::Render();
-        //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        
-
 
 
         /* Swap front and back buffers */
@@ -262,13 +234,6 @@ int main(void){
         
 
     }
-
-
-
-    //ImGui_ImplOpenGL3_Shutdown();
-    //ImGui_ImplGlfw_Shutdown();
-    //ImGui::DestroyContext();
-
 
     glfwTerminate();
     return 0;

@@ -18,7 +18,7 @@ SimplePhysics::SimplePhysics(float GravityForce, float GravityX, float GravityY,
 
 SimplePhysics::~SimplePhysics(){}
 
-std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsBods(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float>Weights){
+std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsQuads(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float>Weights){
     std::vector<QuadPhysicsBody> Output;
 
     QuadPhysicsBody TempQuad;
@@ -1227,6 +1227,22 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> &ObjectA, 
 
 
     return Temp;
+}
+
+ColisionInfo SimplePhysics::SphearColison(PhysicsPoint ObjectAPos, float ObjectASize, PhysicsPoint ObjectBPos, float ObjectBSize){
+    ColisionInfo Output;
+
+    Output.IsColision = false;
+    
+    float DistAToB = std::sqrt((ObjectAPos.X - ObjectBPos.X)*(ObjectAPos.X - ObjectBPos.X) + (ObjectAPos.Y - ObjectBPos.Y)*(ObjectAPos.Y - ObjectBPos.Y) + (ObjectAPos.Z - ObjectBPos.Z)*(ObjectAPos.Z - ObjectBPos.Z));
+
+    if(DistAToB < ObjectASize || DistAToB < ObjectBSize){
+        Output.IsColision = true;
+        Output.MovmentDirectionA = MakeForceDirection(ObjectAPos, ObjectBPos);
+        Output.MovmentDirectionB = MakeForceDirection(ObjectBPos, ObjectAPos); 
+    }
+
+    return Output;
 }
 
 float SimplePhysics::DotPointToForce(PhysicsPoint Point, ForceDirection Projection, PhysicsPoint ProjectionPos){

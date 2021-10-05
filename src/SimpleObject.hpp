@@ -103,6 +103,7 @@ class SimpleObject{
         std::unique_ptr<Shader> m_ShadowShader;
 
 
+
         glm::vec3 Rotatex(glm::vec3 Start, float Angle);
         glm::vec3 Rotatey(glm::vec3 Start, float Angle);
         glm::vec3 Rotatez(glm::vec3 Start, float Angle);
@@ -210,8 +211,11 @@ class SimpleObject{
         void MakeMaterial(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float Shininess);
 
         void MakeLight(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float LightDirX, float LightDirY, float LightDirZ, float AngleSize, float Linear, float Quadratic);
-    
-        void SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos);
+        
+        // This needs to match the number the shader expects
+        void PreFillLights(int NumberOfLights);
+
+        void SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos, int LightNumber = 0);
 
         // Sets up the object to act as a source of light;
         // void SetLightEmission()

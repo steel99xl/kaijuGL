@@ -61,6 +61,11 @@ struct TriPhysicsBody{
 
 };
 
+struct SphearPhysicsBody{
+    PhysicsPoint Pos;
+    float Size;
+};
+
 
 struct PlaneMinMax{
     ForceDirection Min;
@@ -88,7 +93,7 @@ class SimplePhysics{
 
 
     public:
-        inline void SetUpdateTime(int TimeInMS){m_DeltaTime = (float)TimeInMS*0.001;}
+        inline void SetUpdateTime(float TimePassed){m_DeltaTime = TimePassed;}
         inline float GetUpdateTime(){return m_DeltaTime;}
         inline Force GetGravity(){return m_Gravity;}
 
@@ -120,7 +125,9 @@ class SimplePhysics{
         ColisionInfo PointsToAABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<PlaneMinMax> ObjectB);
         ColisionInfo AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsPoint &ObjectAPos, std::vector<QuadPhysicsBody> &ObjectB, PhysicsPoint &ObjectBPos);
 
-        std::vector<QuadPhysicsBody> MakePhysicsBods(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
+        ColisionInfo SphearColison(PhysicsPoint ObjectAPos, float ObjectASize, PhysicsPoint ObjectBPos, float ObjectBSize);
+
+        std::vector<QuadPhysicsBody> MakePhysicsQuads(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
 
         float DotPointToForce(PhysicsPoint Point, ForceDirection Projection, PhysicsPoint ProjectionPos);
 

@@ -725,17 +725,65 @@ void SimpleObject::MakeLight(float AmbientR, float AmbientG, float AmbientB, flo
 
 }
 
-void SimpleObject::SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos){
+
+void SimpleObject::PreFillLights(int NumberOfLights){
+        glm::vec3 lightPos = glm::vec3(0.0f,0.0f,0.0f);
+
+        SimpleLightInfo lightInfo;
+
+        lightInfo.lightDir.X = 0.0f;
+        lightInfo.lightDir.Y = 0.0f;
+        lightInfo.lightDir.Z = 0.0f;
+
+        lightInfo.ambient.R = 0.0f;
+        lightInfo.ambient.G = 0.0f;
+        lightInfo.ambient.B = 0.0f;
+
+        lightInfo.diffuse.R = 0.0f;
+        lightInfo.diffuse.G = 0.0f;
+        lightInfo.diffuse.B = 0.0f;
+
+        lightInfo.specular.R = 0.0f;
+        lightInfo.specular.G = 0.0f;
+        lightInfo.specular.B = 0.0f;
+
+        lightInfo.Angle = 12.5f;
+
+        lightInfo.Quadratic = 0.0f;
+        lightInfo.Const = 1.0f;
+        lightInfo.Linear = 0.0f;
+
+        std::string Number;
+
         m_Shader->Bind();
-        m_Shader->SetUniform3f("u_Light.position", lightPos.x, lightPos.y, lightPos.z);
-        m_Shader->SetUniform3f("u_Light.lightPoint", lightInfo.lightDir.X, lightInfo.lightDir.Y, lightInfo.lightDir.Z);
-        m_Shader->SetUniform3f("u_Light.ambient", lightInfo.ambient.R, lightInfo.ambient.G, lightInfo.ambient.B);
-        m_Shader->SetUniform3f("u_Light.diffuse", lightInfo.diffuse.R, lightInfo.diffuse.G, lightInfo.diffuse.B);
-        m_Shader->SetUniform3f("u_Light.specular", lightInfo.specular.R, lightInfo.specular.G, lightInfo.specular.B);
-        m_Shader->SetUniform1f("u_Light.Asize", glm::cos(glm::radians(lightInfo.Angle)));
-        m_Shader->SetUniform1f("u_Light.constant", lightInfo.Const);
-        m_Shader->SetUniform1f("u_Light.linear", lightInfo.Linear);
-        m_Shader->SetUniform1f("u_Light.quadratic", lightInfo.Quadratic);
+
+        for(int i = 0; i < NumberOfLights; i++){
+                Number = std::to_string(i);
+
+                m_Shader->SetUniform3f("lights["+Number+"].position", lightPos.x, lightPos.y, lightPos.z);
+                m_Shader->SetUniform3f("lights["+Number+"].lightPoint", lightInfo.lightDir.X, lightInfo.lightDir.Y, lightInfo.lightDir.Z);
+                m_Shader->SetUniform3f("lights["+Number+"].ambient", lightInfo.ambient.R, lightInfo.ambient.G, lightInfo.ambient.B);
+                m_Shader->SetUniform3f("lights["+Number+"].diffuse", lightInfo.diffuse.R, lightInfo.diffuse.G, lightInfo.diffuse.B);
+                m_Shader->SetUniform3f("lights["+Number+"].specular", lightInfo.specular.R, lightInfo.specular.G, lightInfo.specular.B);
+                m_Shader->SetUniform1f("lights["+Number+"].Asize", glm::cos(glm::radians(lightInfo.Angle)));
+                m_Shader->SetUniform1f("lights["+Number+"].constant", lightInfo.Const);
+                m_Shader->SetUniform1f("lights["+Number+"].linear", lightInfo.Linear);
+                m_Shader->SetUniform1f("lights["+Number+"].quadratic", lightInfo.Quadratic);
+        }
+}
+
+void SimpleObject::SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos, int LightNumber){
+        std::string Number = std::to_string(LightNumber);
+        m_Shader->Bind();
+        m_Shader->SetUniform3f("lights["+Number+"].position", lightPos.x, lightPos.y, lightPos.z);
+        m_Shader->SetUniform3f("lights["+Number+"].lightPoint", lightInfo.lightDir.X, lightInfo.lightDir.Y, lightInfo.lightDir.Z);
+        m_Shader->SetUniform3f("lights["+Number+"].ambient", lightInfo.ambient.R, lightInfo.ambient.G, lightInfo.ambient.B);
+        m_Shader->SetUniform3f("lights["+Number+"].diffuse", lightInfo.diffuse.R, lightInfo.diffuse.G, lightInfo.diffuse.B);
+        m_Shader->SetUniform3f("lights["+Number+"].specular", lightInfo.specular.R, lightInfo.specular.G, lightInfo.specular.B);
+        m_Shader->SetUniform1f("lights["+Number+"].Asize", glm::cos(glm::radians(lightInfo.Angle)));
+        m_Shader->SetUniform1f("lights["+Number+"].constant", lightInfo.Const);
+        m_Shader->SetUniform1f("lights["+Number+"].linear", lightInfo.Linear);
+        m_Shader->SetUniform1f("lights["+Number+"].quadratic", lightInfo.Quadratic);
         m_Shader->SetUniform3f("u_camPos", camPos.x, camPos.y, camPos.z);
 
 }

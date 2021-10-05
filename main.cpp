@@ -96,15 +96,18 @@ void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
 
 //This is the Physics thread
 void SecondThread(int UpdateSpeed){
+    float currentPhysicsFrame, lastPhysicsFrame;
+    lastPhysicsFrame = 0.0f;
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     auto WaitTime = std::chrono::milliseconds(UpdateSpeed);
-    while(true){
+    while(World.m_running){
+        currentPhysicsFrame= glfwGetTime();
         auto StartTime = std::chrono::steady_clock::now();
-        World.PhysicsUpdate(UpdateSpeed);
+        World.PhysicsUpdate(currentPhysicsFrame - lastPhysicsFrame);
+        lastPhysicsFrame = currentPhysicsFrame; 
         auto EndTime = std::chrono::steady_clock::now();
 
         auto ElapsedTime = EndTime - StartTime;
-
         auto FinalTime = WaitTime - ElapsedTime;
         if(FinalTime > std::chrono::milliseconds::zero()){
             //std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -185,6 +188,8 @@ int main(void){
     std::thread PhysicsThread(SecondThread,15);
     PhysicsThread.detach();
 
+    World.m_running = true;
+
 
     glfwSetKeyCallback(window, KeyCallBack);
     glfwSetCursorPosCallback(window, MousePosCallBack);
@@ -234,6 +239,8 @@ int main(void){
         
 
     }
+
+    World.m_running = false;
 
     glfwTerminate();
     return 0;

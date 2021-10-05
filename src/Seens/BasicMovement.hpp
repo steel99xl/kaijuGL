@@ -6,7 +6,7 @@
 class TestWorld{
 
     private:
-        float m_DeltaTime, m_PastTime;
+        float m_DeltaTime, m_PastTime, m_PhysicsDeltaTime, m_PhysicsPastTime;
         GLuint Tex1, Tex2, Tex3;
         bool m_Effect;
         glm::vec3 m_pos2D;
@@ -36,7 +36,7 @@ class TestWorld{
         SimpleObject TealBlock = SimpleObject(18, DynamicBuffer);
         // Lol Voxl Land Test set back to about 5k when done
         SimpleObject Land = SimpleObject(15000, DynamicBuffer);
-        SimpleObject OtherLand = SimpleObject(15000, DynamicBuffer);
+        SimpleObject OtherSuns = SimpleObject(15000, DynamicBuffer);
         SimpleObject Sun = SimpleObject(6, DynamicBuffer);
 
         std::vector<ForceDirection> m_NewPlayerDirection;
@@ -48,7 +48,7 @@ class TestWorld{
 
         Camera2D SimpleCam = Camera2D(glm::vec3(0.0f,0.0f,0.0f) , 1.0f, 200.0f, 200.0f, 100.0f );
         //SimpleObject Object;// = SimpleObject(1000);
-        Camera3D AdvancedCam = Camera3D(glm::vec3(0.0, 0.0, 2.0f), glm::vec3(0.0, 0.0, -1.0f), glm::vec3(0.0, 1.0, 0.0f), 0.1f, 1.0f, 75.0f, 10000.0f );
+        Camera3D AdvancedCam = Camera3D(glm::vec3(0.0, 0.0, 0.0f), glm::vec3(1.0, 0.0, 1.0f), glm::vec3(0.0, 1.0, 0.0f), 0.1f, 1.0f, 75.0f, 10000.0f );
 
     public:
 
@@ -62,7 +62,7 @@ class TestWorld{
 
         void Setup();
 
-        void PhysicsUpdate(int MaxUpdateSpeed);
+        void PhysicsUpdate(float MaxUpdateSpeed);
 
         void OnUpdate(float deltaTime, float width, float hight, float scale);
         void KeyInput(int Keys[]);

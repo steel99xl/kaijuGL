@@ -1,9 +1,11 @@
 #include "SimpleObject.hpp"
 
-SimpleObject::SimpleObject(int MaxQuads){
+SimpleObject::SimpleObject(int MaxQuads, BufferType buffertype){
         m_MaxQuadCount = MaxQuads;
         m_VerticiesMax = MaxQuads * 4;
         m_IndicOffset = 0;
+        
+        m_BufferType = buffertype;
 
         //std::cout << "really.. " << std::endl;
 
@@ -18,6 +20,7 @@ void SimpleObject::Setup(){
         m_VAO = std::make_unique<VertexArray>();
         m_VertexBuffer = std::make_unique<VertexBuffer>();
         m_Shader = std::make_unique<Shader>();
+        m_ShadowShader = std::make_unique<Shader>();
         m_IBO = std::make_unique<IndexBuffer>();
         //m_Texture = std::make_unique<Texture>();
 
@@ -25,8 +28,16 @@ void SimpleObject::Setup(){
 
         std::cout << m_MaxQuadCount << std::endl;
 
-        m_IBO->MakeBuffer(NULL, (m_MaxQuadCount*4)*6 );
-        m_VertexBuffer->MakeBuffer(NULL, sizeof(Vertex) * (m_MaxQuadCount*4));
+
+        if(m_BufferType == DynamicBuffer){
+                m_IBO->MakeDynamicBuffer(NULL, (m_MaxQuadCount*4)*6 );
+                m_VertexBuffer->MakeDynamicBuffer(NULL, sizeof(Vertex) * (m_MaxQuadCount*4));
+        } else {
+                // Make static draw functions for these
+                m_IBO->MakeStaticBuffer(NULL, (m_MaxQuadCount*4)*6 );
+                m_VertexBuffer->MakeStaticBuffer(NULL, sizeof(Vertex) * (m_MaxQuadCount*4));
+        }
+        
         //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
         // This is just to set the basic rotation for the object in work space
         m_rX = 0.0f;
@@ -74,16 +85,16 @@ glm::vec3 SimpleObject::Rotatey(glm::vec3 Start, float Angle){
 }
 
 glm::vec3 SimpleObject::Rotatez(glm::vec3 Start, float Angle){
-    float Cosin, Sin;
-    glm::vec3 Buffer;
-    Cosin = cos(glm::radians(Angle));
-    Sin = sin(glm::radians(Angle));
+        float Cosin, Sin;
+        glm::vec3 Buffer;
+        Cosin = cos(glm::radians(Angle));
+        Sin = sin(glm::radians(Angle));
 
-    Buffer.x = (Cosin * Start.x) + (-Sin * Start.y) + (0 * Start.z);
-    Buffer.y = (Sin * Start.x) + (Cosin * Start.y) + (0 * Start.z);
-    Buffer.z = (0 * Start.x) + (0 * Start.y) + (1 * Start.z);
+        Buffer.x = (Cosin * Start.x) + (-Sin * Start.y) + (0 * Start.z);
+        Buffer.y = (Sin * Start.x) + (Cosin * Start.y) + (0 * Start.z);
+        Buffer.z = (0 * Start.x) + (0 * Start.y) + (1 * Start.z);
 
-    return Buffer;
+        return Buffer;
 }
 
 void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float sizeX, float sizeY, float Weight, float tX, float tY, float TX, float TY, float TextureID){
@@ -123,7 +134,7 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
         SqrPt[3] = Rotatez(SqrPt[3],AngleZ);
         TempLightPosVec = Rotatez(TempLightPosVec, AngleZ);
 
-       /* if(TempLightPosVec.x < 0.0f){
+        /* if(TempLightPosVec.x < 0.0f){
             TempLightPosVec.x *= -1.0f;
         }
         if(TempLightPosVec.y < 0.0f){
@@ -133,8 +144,6 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
             TempLightPosVec.z *= -1.0f;
         }
         */
-
-        std::cout << TempLightPosVec.z << std::endl;
 
         for(int i = 0; i < 4; i++){
                 Temp.Pos = {SqrPt[i].x + TempPosVec.x, SqrPt[i].y + TempPosVec.y, SqrPt[i].z + TempPosVec.z};
@@ -550,12 +559,18 @@ void SimpleObject::Paint(){
         renderer.Draw(*m_VAO, *m_IBO, *m_Shader);
 }
 
+void SimpleObject::PaintShadow(){
+        Renderer renderer;
+
+        renderer.Draw(*m_VAO, *m_IBO, *m_ShadowShader);
+}
+
 // Oh boy the physics engien is creeping in to the object
 
 std::vector<PhysicsPos> SimpleObject::GetVertexPositions(){
     std::vector<PhysicsPos> Output;
     PhysicsPos Temp;
-    for(int i = 0; i < m_Verticies.size(); i++){
+    for(long unsigned int i = 0; i < m_Verticies.size(); i++){
         Temp.X = m_Verticies[i].Pos.X;
         Temp.Y = m_Verticies[i].Pos.Y;
         Temp.Z = m_Verticies[i].Pos.Z;
@@ -569,7 +584,7 @@ std::vector<PhysicsPos> SimpleObject::GetVertexPositions(){
 std::vector<PhysicsPos> SimpleObject::GetVertexNormlPositions(){
     std::vector<PhysicsPos> Output;
     PhysicsPos Temp;
-    for(int i = 0; i < m_Verticies.size(); i++){
+    for(long unsigned int i = 0; i < m_Verticies.size(); i++){
         Temp.X = m_Verticies[i].NormalPos.X;
         Temp.Y = m_Verticies[i].NormalPos.Y;
         Temp.Z = m_Verticies[i].NormalPos.Z;
@@ -585,17 +600,54 @@ void SimpleObject::SetShader(const std::string &filePath){
 
         // this is just for testing
         //int samplers[] = {0, 1, 2};
-        int samplers[] = {0};
+        //int samplers[] = {0};
         //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
         //m_Shader->SetUniform1iv("u_Textures", 3, samplers);
         //m_Shader->SetUniform1i("u_Texture", 0);
-        m_Shader->SetUniform1i("u_Texture0", 1);
+        //m_Shader->SetUniform1i("u_Texture0", 1);
         //                      u_Texture0
         //m_Shader->SetUniform1i("u_Texture1", 2);
         //m_Shader->SetUniform1i("u_Texture2", 3);
 
 
 }
+
+void SimpleObject::FinishShader(){
+        m_Shader->Finish();
+}
+
+std::vector<unsigned int> SimpleObject::ExportShaders(){
+        return m_Shader->GetCompiledShaders();
+}
+
+void SimpleObject::ImportShaders(std::vector<unsigned int> Import){
+        m_Shader->SetCompiledShaders(Import);
+}
+
+void SimpleObject::ClearShaderCache(){
+        m_Shader->ClearCompiledShaders();
+}
+//
+void SimpleObject::SetShadowShader(const std::string &filePath){
+        m_ShadowShader->SetShader(filePath);
+}
+
+void SimpleObject::FinishShadowShader(){
+        m_ShadowShader->Finish();
+}
+
+std::vector<unsigned int> SimpleObject::ExportShadowShaders(){
+        return m_ShadowShader->GetCompiledShaders();
+}
+
+void SimpleObject::ImportShadowShaders(std::vector<unsigned int> Import){
+        m_ShadowShader->SetCompiledShaders(Import);
+}
+
+void SimpleObject::ClearShadowShaderCache(){
+        m_ShadowShader->ClearCompiledShaders();
+}
+
 
 
 void SimpleObject::SetDrawPos(glm::mat4 &Projection, glm::mat4 &View){
@@ -605,6 +657,19 @@ void SimpleObject::SetDrawPos(glm::mat4 &Projection, glm::mat4 &View){
         m_Shader->SetUniformMat4f("View", View);
         m_Shader->SetUniformMat4f("Projection", Projection);
 }
+
+void SimpleObject::SetShadowPos(glm::mat4 &ShadowProjection, glm::mat4 &ShadowView){
+        glm::mat4 ModlePos = glm::translate(glm::mat4(1.0f), glm::vec3(m_X, m_Y, m_Z));
+        m_ShadowShader->Bind();
+        m_ShadowShader->SetUniformMat4f("SModle", ModlePos);
+        m_ShadowShader->SetUniformMat4f("SView", ShadowView);
+        m_ShadowShader->SetUniformMat4f("SProjection", ShadowProjection);
+        // This is just to pass the light information to the main rendering shader;
+        m_Shader->Bind();
+        m_Shader->SetUniformMat4f("LightView", ShadowView);
+        m_Shader->SetUniformMat4f("LightProjection", ShadowProjection);
+}
+
 
 void SimpleObject::SetColor(float r, float g, float b, float a){
         m_R = r;
@@ -660,17 +725,65 @@ void SimpleObject::MakeLight(float AmbientR, float AmbientG, float AmbientB, flo
 
 }
 
-void SimpleObject::SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos){
+
+void SimpleObject::PreFillLights(int NumberOfLights){
+        glm::vec3 lightPos = glm::vec3(0.0f,0.0f,0.0f);
+
+        SimpleLightInfo lightInfo;
+
+        lightInfo.lightDir.X = 0.0f;
+        lightInfo.lightDir.Y = 0.0f;
+        lightInfo.lightDir.Z = 0.0f;
+
+        lightInfo.ambient.R = 0.0f;
+        lightInfo.ambient.G = 0.0f;
+        lightInfo.ambient.B = 0.0f;
+
+        lightInfo.diffuse.R = 0.0f;
+        lightInfo.diffuse.G = 0.0f;
+        lightInfo.diffuse.B = 0.0f;
+
+        lightInfo.specular.R = 0.0f;
+        lightInfo.specular.G = 0.0f;
+        lightInfo.specular.B = 0.0f;
+
+        lightInfo.Angle = 12.5f;
+
+        lightInfo.Quadratic = 0.0f;
+        lightInfo.Const = 1.0f;
+        lightInfo.Linear = 0.0f;
+
+        std::string Number;
+
         m_Shader->Bind();
-        m_Shader->SetUniform3f("u_Light.position", lightPos.x, lightPos.y, lightPos.z);
-        m_Shader->SetUniform3f("u_Light.lightPoint", lightInfo.lightDir.X, lightInfo.lightDir.Y, lightInfo.lightDir.Z);
-        m_Shader->SetUniform3f("u_Light.ambient", lightInfo.ambient.R, lightInfo.ambient.G, lightInfo.ambient.B);
-        m_Shader->SetUniform3f("u_Light.diffuse", lightInfo.diffuse.R, lightInfo.diffuse.G, lightInfo.diffuse.B);
-        m_Shader->SetUniform3f("u_Light.specular", lightInfo.specular.R, lightInfo.specular.G, lightInfo.specular.B);
-        m_Shader->SetUniform1f("u_Light.Asize", glm::cos(glm::radians(lightInfo.Angle)));
-        m_Shader->SetUniform1f("u_Light.constant", lightInfo.Const);
-        m_Shader->SetUniform1f("u_Light.linear", lightInfo.Linear);
-        m_Shader->SetUniform1f("u_Light.quadratic", lightInfo.Quadratic);
+
+        for(int i = 0; i < NumberOfLights; i++){
+                Number = std::to_string(i);
+
+                m_Shader->SetUniform3f("lights["+Number+"].position", lightPos.x, lightPos.y, lightPos.z);
+                m_Shader->SetUniform3f("lights["+Number+"].lightPoint", lightInfo.lightDir.X, lightInfo.lightDir.Y, lightInfo.lightDir.Z);
+                m_Shader->SetUniform3f("lights["+Number+"].ambient", lightInfo.ambient.R, lightInfo.ambient.G, lightInfo.ambient.B);
+                m_Shader->SetUniform3f("lights["+Number+"].diffuse", lightInfo.diffuse.R, lightInfo.diffuse.G, lightInfo.diffuse.B);
+                m_Shader->SetUniform3f("lights["+Number+"].specular", lightInfo.specular.R, lightInfo.specular.G, lightInfo.specular.B);
+                m_Shader->SetUniform1f("lights["+Number+"].Asize", glm::cos(glm::radians(lightInfo.Angle)));
+                m_Shader->SetUniform1f("lights["+Number+"].constant", lightInfo.Const);
+                m_Shader->SetUniform1f("lights["+Number+"].linear", lightInfo.Linear);
+                m_Shader->SetUniform1f("lights["+Number+"].quadratic", lightInfo.Quadratic);
+        }
+}
+
+void SimpleObject::SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos, int LightNumber){
+        std::string Number = std::to_string(LightNumber);
+        m_Shader->Bind();
+        m_Shader->SetUniform3f("lights["+Number+"].position", lightPos.x, lightPos.y, lightPos.z);
+        m_Shader->SetUniform3f("lights["+Number+"].lightPoint", lightInfo.lightDir.X, lightInfo.lightDir.Y, lightInfo.lightDir.Z);
+        m_Shader->SetUniform3f("lights["+Number+"].ambient", lightInfo.ambient.R, lightInfo.ambient.G, lightInfo.ambient.B);
+        m_Shader->SetUniform3f("lights["+Number+"].diffuse", lightInfo.diffuse.R, lightInfo.diffuse.G, lightInfo.diffuse.B);
+        m_Shader->SetUniform3f("lights["+Number+"].specular", lightInfo.specular.R, lightInfo.specular.G, lightInfo.specular.B);
+        m_Shader->SetUniform1f("lights["+Number+"].Asize", glm::cos(glm::radians(lightInfo.Angle)));
+        m_Shader->SetUniform1f("lights["+Number+"].constant", lightInfo.Const);
+        m_Shader->SetUniform1f("lights["+Number+"].linear", lightInfo.Linear);
+        m_Shader->SetUniform1f("lights["+Number+"].quadratic", lightInfo.Quadratic);
         m_Shader->SetUniform3f("u_camPos", camPos.x, camPos.y, camPos.z);
 
 }

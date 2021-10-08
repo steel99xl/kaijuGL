@@ -13,7 +13,8 @@ public:
     IndexBuffer();
     ~IndexBuffer();
 
-    void MakeBuffer(const unsigned int *data, unsigned int count);
+    void MakeDynamicBuffer(const unsigned int *data, unsigned int count);
+    void MakeStaticBuffer(const unsigned int *data, unsigned int count);
 
     void Bind() const;
     void UnBind() const;

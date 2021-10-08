@@ -12,7 +12,8 @@ public:
     VertexBuffer();
     ~VertexBuffer();
 
-    void MakeBuffer(const void *data, unsigned int size);
+    void MakeDynamicBuffer(const void *data, unsigned int size);
+    void MakeStaticBuffer(const void *data, unsigned int size);
 
     void Bind() const;
     void UnBind() const;

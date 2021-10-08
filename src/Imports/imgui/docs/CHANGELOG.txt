@@ -1071,7 +1071,7 @@ Other Changes:
 - Columns: Made GetColumnOffset() and GetColumnWidth() behave when there's no column set, consistently with
   other column functions. (#2683)
 - InputTextMultiline: Fixed vertical scrolling tracking glitch.
-- Word-wrapping: Fixed overzealous word-wrapping when glyph edge lands exactly on the limit. Because
+- Word-wrapping: Fixed overzealous word-wrapping when glyph edge PhysicsLand exactly on the limit. Because
   of this, auto-fitting exactly unwrapped text would make it wrap. (fixes initial 1.15 commit, 78645a7d).
 - Style: Attenuated default opacity of ImGuiCol_Separator in Classic and Light styles.
 - Style: Added style.ColorButtonPosition (left/right, defaults to ImGuiDir_Right) to move the color button

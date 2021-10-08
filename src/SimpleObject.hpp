@@ -53,6 +53,7 @@ struct SimpleMaterialInfo{
 
 
 enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
+enum BufferType{StaticBuffer, DynamicBuffer};
 
 
 class SimpleObject{
@@ -87,6 +88,7 @@ class SimpleObject{
 
         bool SimpleColision;
 
+        BufferType m_BufferType;
 
 
         std::unique_ptr<VertexArray> m_VAO;
@@ -97,6 +99,9 @@ class SimpleObject{
         std::unique_ptr<VertexBuffer> m_VertexBuffer;
         std::unique_ptr<Shader> m_Shader;
         std::unique_ptr<IndexBuffer> m_IBO;
+
+        std::unique_ptr<Shader> m_ShadowShader;
+
 
 
         glm::vec3 Rotatex(glm::vec3 Start, float Angle);
@@ -112,7 +117,7 @@ class SimpleObject{
 
     public:
 
-        SimpleObject(int MaxQuads = 10000);
+        SimpleObject(int MaxQuads = 10000, BufferType buffertype = DynamicBuffer);
         ~SimpleObject();
 
         void Setup();
@@ -142,23 +147,21 @@ class SimpleObject{
             // Remove Quad from object
             // This would have to go back and remove stuff from the index buffer
         
-        // Set Shader for object
-        void SetShader();
-
 
         // Draw object
         // It is called paint for right now cause Renderer has a .Draw function
         // if all things drawn only read data, then the drawing could me moved to a seperate thread
         void Paint();
+        void PaintShadow();
 
 
 
 
         inline std::vector<Vertex> GetVerticies(){ return m_Verticies;}
         
-        inline int GetVerticiesCount() {return m_UsedQuads*4;} const
+        inline int GetVerticiesCount() {return m_UsedQuads*4;}
         inline std::vector<unsigned int> GetIndices(){return m_Indices;}
-        inline int GetIndicCount() {return (m_UsedQuads*4)*6;}; const
+        inline int GetIndicCount() {return (m_UsedQuads*4)*6;}
         inline int GetMaxQuadCound() {return m_MaxQuadCount;}
         inline int GetUsedQuads() {return m_UsedQuads;}
         inline std::vector<float> GetWeights(){return m_Weights;}
@@ -181,8 +184,25 @@ class SimpleObject{
         std::vector<PhysicsPos> GetVertexNormlPositions();
 
         void SetShader(const std::string &filePath);
+        void FinishShader();
+        std::vector<unsigned int> ExportShaders();
+        void ImportShaders(std::vector<unsigned int> Import);
+        // This removes the indevidual compiled shaders and only keeps the final output for the object
+        void ClearShaderCache();
+
+        void SetShadowShader(const std::string &filePath);
+        void FinishShadowShader();
+        std::vector<unsigned int> ExportShadowShaders();
+        void ImportShadowShaders(std::vector<unsigned int> Import);
+        // This removes the indevidual compiled shaders and only keeps the final output for the object
+        void ClearShadowShaderCache();
+
 
         void SetDrawPos(glm::mat4 &Projection, glm::mat4 &View);
+
+        void SetShadowPos(glm::mat4 &ShadowProjection, glm::mat4 &ShadowView);
+
+        //void SetShadowMatrix(glm::mat4 &ShadowMatrix);
 
         void SetColor(float r, float g, float b, float a);
 
@@ -191,8 +211,11 @@ class SimpleObject{
         void MakeMaterial(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float Shininess);
 
         void MakeLight(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float LightDirX, float LightDirY, float LightDirZ, float AngleSize, float Linear, float Quadratic);
-    
-        void SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos);
+        
+        // This needs to match the number the shader expects
+        void PreFillLights(int NumberOfLights);
+
+        void SetLight(SimpleLightInfo lightInfo, glm::vec3 lightPos, glm::vec3 camPos, int LightNumber = 0);
 
         // Sets up the object to act as a source of light;
         // void SetLightEmission()

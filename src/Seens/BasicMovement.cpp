@@ -4,7 +4,7 @@
 
 
 
-TestWorld::TestWorld() : m_running(false), m_Effect(false), m_Width(800), m_Height(680){
+TestWorld::TestWorld() :  m_Effect(false), m_Width(800.0f), m_Height(680.0f), m_Scale(1.0f),  m_running(false){
 // This is just to set some basic vars
 
 
@@ -25,33 +25,33 @@ void TestWorld::Setup(){
     std::cout << "W A S D Moves the camera" << std::endl;
 
 
-
-    m_VAO = std::make_unique<VertexArray>();
-    m_Shader = std::make_unique<Shader>();
-    m_IBO = std::make_unique<IndexBuffer>();
-    m_Texture = std::make_unique<Texture>();
-    m_VertexBuffer = std::make_unique<VertexBuffer>();
-
-
-    //FrameBufferTexture = m_Texture->MakeTexture("NULL", 800,600);
-    TestTexture = m_Texture->MakeTexture("assets/Textures/OtherBox.png");
-
     AdvancedCam.SetHorizontalSensitivity(0.1f);
     AdvancedCam.SetVerticalSensitivity(0.08f);
     AdvancedCam.InvertVertical();
 
-    Object.Setup();
+    m_FBO.Setup((int)m_Width, (int)m_Height,(int)m_Scale);
+    Frame.Setup();
+    Frame.SetShader("assets/Shaders/FrameVertex.shader");
+    Frame.SetShader("assets/Shaders/FrameBuffer.shader");
+    Frame.FinishShader();
+    Frame.Create2dQuad(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f, 1.0f, 0.0f,0.0f,1.0f,1.0f, 5.0f);
+    Frame.SetTexture(0, "u_Texture");
+    Frame.SetFloatUniform("u_Size.height", m_Height);
+    Frame.SetFloatUniform("u_Size.width", m_Width);
+
+    PlayerBlock.Setup();
     Land.Setup();
+    OtherSuns.Setup();
     Sun.Setup();
-    SlowMovingBlock.Setup();
+    TealBlock.Setup();
 
     BasicMetalCube.ambient.R = 0.3;
     BasicMetalCube.ambient.G = 0.3;
     BasicMetalCube.ambient.B = 0.3;
 
-    BasicMetalCube.diffuse.R = 0.6f;
-    BasicMetalCube.diffuse.G = 0.6f;
-    BasicMetalCube.diffuse.B = 0.6f;
+    BasicMetalCube.diffuse.R = 0.7f;
+    BasicMetalCube.diffuse.G = 0.7f;
+    BasicMetalCube.diffuse.B = 0.7f;
 
     BasicMetalCube.specular.R = 1.0f;
     BasicMetalCube.specular.G = 1.0f;
@@ -59,96 +59,172 @@ void TestWorld::Setup(){
 
     BasicMetalCube.shininess = 32.0f;
 
-    Sun.MakeLight(1.0f,1.0f,1.0f, 0.5f,0.5f,0.5f, 0.9f,0.9f,0.9f, 0.0f,0.0f,0.0f, 12.5f, 0.014f, 0.07f);
+    Sun.MakeLight(0.2f,0.2f,0.2f, 0.7f,0.7f,0.7f, 1.0f,1.0f,1.0f, 0.0f,0.0f,0.0f, 12.5f, 0.027f, 0.0028f);
+
+    OtherSuns.MakeLight(0.2f,0.2f,0.2f, 0.7f,0.7f,0.7f, 1.0f,1.0f,1.0f, 0.0f,0.0f,0.0f, 12.5f, 0.027f, 0.0028f);
 
 
 
 
-    // This add 1 quad to the land object
-    //Land.CreateCube(0.0f,0.0f,0.0f, 45.0f,0.0f,45.0f, 1.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-   // Land.Create2dQuad(0.0f,0.0f,0.0f, F_NONE, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
-    //Land.Create2dQuad(0.0f,10.0f,-10.0f, F_NORTH, 20.0f,20.0f, 0.0f,0.0f, 0.0f, 0.0f, 0.0f);
-
-    Land.Create2dQuad(0.0f,-3.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-    Land.Create2dQuad(8.0f,1.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-    Land.Create2dQuad(0.0f,4.0f,0.0f, 90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f,0.0f,0.0f, 1.0f,1.0f, 0.0f);
-
-    Land.Create2dQuad(0.0f,-1.0f,-2.5f, 0.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-    Land.Create2dQuad(0.0f,-1.0f,-2.5f, 0.0f,180.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-    Land.Create2dQuad(0.0f,-1.0f,2.5f, 0.0f,0.0f,45.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-
-    //Land.Create2dQuad(-2.5f,-1.0f,0.0f, 0.0f,-90.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-
+    //Land.Create2dQuad(0.0f,-3.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    
+    for(int i = 1; i < 41; i++){
+        for(int j = 1; j < 41; j++){
+            //for(int n = 1; n < 51; n++){
+            //    Land.CreateCube((float)i*3,(float)j*3, (float)n*3, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+           //}
+            Land.CreateCube((float)i*3,-5.0f, (float)j*3, 0.0f,0.0f,0.0f, 3.0f,1.0f,3.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+            //Land.Create2dQuad((float)i*5,(((float)((i+j)%6) * 0.01) + -5.0f),(float)j*5, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+            //Land.Create2dQuad((float)i*5,-5.0f,(float)j*5, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+            //Land.CreateCube((float)i*5,-5, (float)j*5, 0.0f,0.0f,0.0f, 5.0f,1.0f,5.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+        }
+    }
 
 
+    //Land.Create2dQuad(8.0f,-2.5f,8.0f, -60.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+    //Land.Create2dQuad(15.0f,-4.5f,10.0f, -80.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
+
+    //Land.CreateCube(10,-3, 10, 0.0f,0.0f,0.0f, 2.0f,2.0f,2.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    //Land.CreateCube(10,-1, 18, 0.0f,0.0f,0.0f, 4.0f,4.0f,4.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.10f,0.10f,0.10f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    Object.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 1.0f,2.0f,1.0f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    OtherSuns.CreateCube(0.0f,5.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f,2.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
-    SlowMovingBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f,2.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    PlayerBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,0.6f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    //PlayerBlock.CreateCube(1.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,2.0f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
+    TealBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,45.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
-    // Yes the FaceDir matters based on where you want it to be visible
-    //Object.Create2dQuad(0.0f,0.0f,0.5f, F_UP ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-    //Object.Create2dQuad(0.0f,0.0f,-0.5f, F_DOWN ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-
-    //Object.Create2dQuad(0.0f,0.0f,0.5f, F_NORTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
-    //Object.Create2dQuad(0.0f,0.0f,-0.5f, F_SOUTH ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 2.0f);
-
-    //Object.Create2dQuad(0.0f,0.0f,0.5f, F_EAST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
-    //Object.Create2dQuad(0.0f,0.0f,-0.5f, F_WEST ,1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 0.0f);
-    // If i want to be able to rotate the squares it the cube face would have to be like this
-    //North Face(positive X from origin) Object.Create2dQuad(0.5f, 0.5f, 0.0f, )
-
-    //Object.Create2dQuad(2.0f,2.0f,2.0f, F_NONE, 1.0f,1.0f, 0.0f,0.0f,1.0f,1.0f, 1.0f);
-
-
-    //Object.Create2dQuad(0.0f,0.0f,-5.0f, F_UP, 3.0f,3.0f, 0.0f,0.0f, 1.0f,1.0f, 2.0f);
-
-
-   // Object.Create2dQuad(1.0f,3.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-   // Object.Create2dQuad(1.0f,1.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-
-    //Object.Create2dQuad(3.0f,1.0f,0.1f, 1.0f,1.0f, 0.0f,0.0f, 1.0f, 1.0f, 1.0f);
-
-
-
-        //Take info and put it in a vertex
-
-
-
-    //m_IBO->MakeBuffer(Object.GetIndices().data(), Object.GetIndicCount() );
-    //m_IBO->MakeBuffer(NULL, (Object.GetMaxQuadCound() * 4) * 6);
-   // std::cout << "Index information " << std::endl;
-    //m_IBO->Bind();
-    //std::cout << "set index buffer" << std::endl;
-    //FBOrec.SetShader("assets/Shaders/FrameBuffer.shader");
-    Land.SetShader("assets/Shaders/BlinnPhong.shader");
-    Object.SetShader("assets/Shaders/BlinnPhong.shader");
-    SlowMovingBlock.SetShader("assets/Shaders/BlinnPhong.shader");
-    //TestObject.SetShader("assets/Shaders/MultiImg.shader");
-
-    Sun.SetShader("assets/Shaders/BasicLight.shader");
-
-    //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
-    //m_Shader->Bind();
-
-    std::cout << "Shader set" << std::endl;
-
-    //int samplers[3] = {0 ,1,2};
-   
     m_FOV = 75.0f;
 
-    SlowMovingBlock.SetPosition(1.0f,1.0f,-1.0f);
-    Land.SetPosition(0.0f,0.0f,-6.0f);
-  //  std::cout << "Total Squares = " << Object.GetVerticiesCount()/4 << std::endl;
-   // std::cout << "Total Verticies Drawn = " << (Object.GetVerticiesCount()/4)*6 << std::endl;
+
+    Land.SetShadowShader("assets/Shaders/ShadowVertex.shader");
+    Land.SetShadowShader("assets/Shaders/ShadowFragment.shader");
+    Land.FinishShadowShader();
+
+    PlayerBlock.ImportShadowShaders(Land.ExportShadowShaders());
+    PlayerBlock.FinishShadowShader();
+
+    TealBlock.ImportShadowShaders(Land.ExportShadowShaders());
+    TealBlock.FinishShadowShader();
+    
+    Land.ClearShadowShaderCache();
+    PlayerBlock.ClearShadowShaderCache();
+    TealBlock.ClearShadowShaderCache();
+
+    Land.SetShader("assets/Shaders/BasicVertex.shader");
+    Land.SetShader("assets/Shaders/BasicLighting.shader");
+    Land.FinishShader();
+
+   
+
+    PlayerBlock.ImportShaders(Land.ExportShaders());
+    PlayerBlock.FinishShader();
+
+    TealBlock.ImportShaders(Land.ExportShaders());
+    TealBlock.FinishShader();
+
+    Land.ClearShaderCache();
+    //OtherSuns.ClearShaderCache();
+    PlayerBlock.ClearShaderCache();
+    TealBlock.ClearShaderCache();
+    // The light does not get a shadow shader
+    Sun.SetShader("assets/Shaders/BasicVertex.shader");
+    Sun.SetShader("assets/Shaders/BasicLightObject.shader");
+
+    OtherSuns.ImportShaders(Sun.ExportShaders());
+    OtherSuns.FinishShader();
+    OtherSuns.ClearShaderCache();
+    //Sun.ImportShaders(Land.ExportShaders());
+    Sun.FinishShader();
+    Sun.ClearShaderCache();
 
 
+    
+    glGenFramebuffers(1, &ShadowMapFBO);
+
+    glGenTextures(1, &ShadowMapTexture);
+
+    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    //float clampColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    //glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, clampColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, ShadowWidth, ShadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ShadowMapTexture, 0);
+
+    //glGenRenderbuffers(1, &ShadowMapRBO);
+    //glBindRenderbuffer(GL_RENDERBUFFER, ShadowMapRBO);
+    //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, ShadowWidth, ShadowHeight);
+    //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, ShadowMapRBO);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
+
+    // THis stuff will be used for point light shadows
+    /*
+    glBindTexture(GL_TEXTURE_CUBE_MAP, ShadowMapTexture);
+
+    for(unsigned int i = 0; i < 6; i++){
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, ShadowWidth, ShadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    }
+    dumb test
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X ,ShadowMapTexture, 0);
+
+    //glGenRenderbuffers(1, &ShadowMapRBO);
+    //glBindRenderbuffer(GL_RENDERBUFFER, ShadowMapRBO);
+    //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, ShadowWidth, ShadowHeight);
+    //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, ShadowMapRBO);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+
+    */
+
+
+    
+
+    Sun.SetLightColor(1.0f, 1.0f, 1.0f);
+    Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
+    Sun.SetPosition(15.0f,10.0f,10.0f);
+
+    Land.SetPosition(0.0f,0.0f,0.0f);
+    Land.SetColor(0.3373f, 0.4902f, 0.2745f, 1.0f);
+    Land.SetMaterial(BasicMetalCube);
+    Land.PreFillLights(4);
+
+    OtherSuns.SetPosition(20.0f,5.0f,20.0f);
+    OtherSuns.SetColor(1.0f,0.0f,0.0f,1.0f);
+    OtherSuns.SetLightColor(1.0f,1.0f,1.0f);
+    //OtherSuns.SetMaterial(BasicMetalCube);
+    //OtherSuns.PreFillLights(4);
+
+    TealBlock.SetPosition(8.0f,10.0f,8.0f);
+    TealBlock.SetColor(0.5f, 0.75f, 0.75f, 1.0f);
+    TealBlock.SetMaterial(BasicMetalCube);
+    TealBlock.PreFillLights(4);
+
+
+    PlayerBlock.SetMaterial(BasicMetalCube);
+    PlayerBlock.PreFillLights(4);
 }
 
-void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
+void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         //glfwPostEmptyEvent();
         // camera stuff 
         BasicPhysics.SetUpdateTime(MaxUpdateSpeed);
@@ -160,83 +236,116 @@ void TestWorld::PhysicsUpdate(int MaxUpdateSpeed){
 
         //bool Test = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);
         // This is just to seperate the old colision system from the new one
-        ColisionInfo PlayerTOObject, SlowMovingBlockColision;
+        ColisionInfo PlayerTOObject, TealBlockColision;
+        PlayerTOObject.IsColision = false;
 
-        std::vector<QuadPhysicsBody> Player, Lands, SlowBlock;
-        PhysicsPoint PlayerPos, SlowBlockFuturePos;
-        ForceDirection LeftFromOrigion;
+        std::vector<QuadPhysicsBody> Player, PhysicsLand, OtherPhysicsLand, PhysicsTealBlock;
+        PhysicsPoint PlayerPos, TealBlockFuturePos, TealBlockCurrentPos, LandPhysPos, OtherSunsPhysPos;
 
-        LeftFromOrigion.X = -1.0f;
-        LeftFromOrigion.Y = 0.0f;
-        LeftFromOrigion.Z = 0.0f;
+        LandPhysPos = Land.GetPhysicsPos();
+        OtherSunsPhysPos = OtherSuns.GetPhysicsPos();
+        TealBlockCurrentPos = TealBlock.GetPhysicsPos();
+        //ForceDirection LeftFromOrigion;
 
-        //PreviousePlayerPos = Object.GetPhysicsPos();
+        //LeftFromOrigion.X = -1.0f;
+        //LeftFromOrigion.Y = 0.0f;
+        //LeftFromOrigion.Z = 0.0f;
 
-        SlowBlockFuturePos = BasicPhysics.MovePhysicsObject(SlowMovingBlock.GetPhysicsPos(), LeftFromOrigion, 0.5f);
+        Player = BasicPhysics.MakePhysicsQuads(PlayerBlock.GetVertexPositions(), PlayerBlock.GetVertexNormlPositions(), PlayerBlock.GetWeights());
+        PhysicsLand = BasicPhysics.MakePhysicsQuads(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), Land.GetWeights());
+        OtherPhysicsLand = BasicPhysics.MakePhysicsQuads(OtherSuns.GetVertexPositions(), OtherSuns.GetVertexNormlPositions(), OtherSuns.GetWeights());
+        PhysicsTealBlock = BasicPhysics.MakePhysicsQuads(TealBlock.GetVertexPositions(), TealBlock.GetVertexNormlPositions(), TealBlock.GetWeights());
 
-        //std::cout << m_NewPlayerDirection.X << " | " << m_NewPlayerDirection.Y << " | " << m_NewPlayerDirection.Z << std::endl;
-        PlayerPos = BasicPhysics.MovePhysicsObject(Object.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed);
-       //m_NewPlayerDirection.X = 0.0f;
-       //m_NewPlayerDirection.Y = 0.0f;
-       //m_NewPlayerDirection.Z = 0.0f;
-        m_NewPlayerDirection.clear();
 
-        Player = BasicPhysics.MakePhysicsBods(Object.GetVertexPositions(), Object.GetVertexNormlPositions(), Object.GetWeights());
-        Lands = BasicPhysics.MakePhysicsBods(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), Land.GetWeights());
-        SlowBlock = BasicPhysics.MakePhysicsBods(SlowMovingBlock.GetVertexPositions(), SlowMovingBlock.GetVertexNormlPositions(), SlowMovingBlock.GetWeights());
+        TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockCurrentPos, PhysicsLand, LandPhysPos);
+        if(!TealBlockColision.IsColision){
+            TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
 
-        //PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, Lands, Land.GetPhysicsPos());
+        TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, LandPhysPos);
+        //if(!TealBlockColision.IsColision){
+        //    TealBlockColision = BasicPhysics.PointsToAABBColision(PhysicsTealBlock, TealBlockFuturePos, BasicPhysics.MinMaxFromQuads(PhysicsLand, Land.GetPhysicsPos()));
+        //}
+        //if(!TealBlockColision.IsColision){
+        //    TealBlockColision = BasicPhysics.PointsToAABBColision(PhysicsLand, Land.GetPhysicsPos(), BasicPhysics.MinMaxFromQuads(PhysicsTealBlock, TealBlockFuturePos));
+        //}
+        //if(!TealBlockColision.IsColision){
+        //    TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, OtherPhysicsLand, OtherSunsPhysPos);
+        //}
+
+        //TealBlockColision = BasicPhysics.SATColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, Land.GetPhysicsPos());
+        //TealBlockColision = BasicPhysics.FullQuadLineColision(BasicPhysics.QuadsToLines(PhysicsTealBlock), TealBlock.GetPhysicsPos(), BasicPhysics.QuadsToLines(PhysicsLand), Land.GetPhysicsPos(), 1.01);
         
-        std::vector<PhysicsLine> TempLandLines =  BasicPhysics.QuadsToLines(Lands);
-
-        PlayerTOObject = BasicPhysics.FullQuadColision(BasicPhysics.QuadsToLines(Player), PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f);
-
-        SlowMovingBlockColision = BasicPhysics.AABBColision(SlowBlock, SlowBlockFuturePos, Player, PlayerPos);
-
-        if(!SlowMovingBlockColision.IsColision){
-            SlowMovingBlock.SetPosition(SlowBlockFuturePos.X, SlowBlockFuturePos.Y, SlowBlockFuturePos.Z);
-        } else {
-            SlowMovingBlock.SetPosition(SlowMovingBlock.GetPhysicsPos().X, SlowMovingBlock.GetPhysicsPos().Y, SlowMovingBlock.GetPhysicsPos().Z);
+        //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, Land.GetPhysicsPos());
+        //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsLand, Land.GetPhysicsPos(), PhysicsTealBlock, TealBlockFuturePos);
+        if(TealBlockColision.IsColision){
+            TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlockFuturePos, TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Power);
+        }
+        TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
         }
         
 
 
-        if(PlayerTOObject.IsColision){
-            std::cout << "Object Colision" << std::endl;
-            std::cout << PlayerTOObject.MovmentDirectionA.X << " | " << PlayerTOObject.MovmentDirectionA.Y << " | " << PlayerTOObject.MovmentDirectionA.Z << std::endl;
-            std::cout << PlayerTOObject.MovmentDirectionB.X << " | " << PlayerTOObject.MovmentDirectionB.Y << " | " << PlayerTOObject.MovmentDirectionB.Z << std::endl;
 
-            //m_3dCamPosPrevious = m_3dCamPosPrevious;
-            //Object.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
-            //AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
-            //Object.SetPosition(PreviousePlayerPos.X, PreviousePlayerPos.Y, PreviousePlayerPos.Z);
-            //AdvancedCam.SetPos(PreviousePlayerPos.X, PreviousePlayerPos.Y+0.9f, PreviousePlayerPos.Z);
-            //AdvancedCam.SetPos(LastPos.x, LastPos.y + 1.0f, LastPos.z);
+        // Move Player based on player input
+        PlayerPos = BasicPhysics.MovePhysicsObject(PlayerBlock.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed);
 
-            PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, PlayerMovmentSpeed);
-            
-        }
-
-        Object.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
+        //PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, PhysicsLand, Land.GetPhysicsPos());
+        //PlayerTOObject = BasicPhysics.SATColision(Player, PlayerPos, PhysicsLand, Land.GetPhysicsPos());
+        //if(PlayerTOObject.IsColision){
+            //PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, PlayerMovmentSpeed);
+        //    std::cout << PlayerTOObject.MovmentDirectionB.X << " | " << PlayerTOObject.MovmentDirectionB.Y << " | " << PlayerTOObject.MovmentDirectionB.Z << std::endl;
+        //}
+        PlayerBlock.SetPosition(PlayerPos.X, PlayerPos.Y, PlayerPos.Z);
         AdvancedCam.SetPos(PlayerPos.X, PlayerPos.Y+0.9f, PlayerPos.Z);
-            //AdvancedCam.SetPos(PreviousePlayerPos.X, PreviousePlayerPos.Y+0.9f, PreviousePlayerPos.Z);
 
-        
+        //BasicPhysics.FullQuadLineColisionVoid(TempPlayerLines, PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f, &PlayerTOObject);
 
-        
+        //TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
+        //TealBlockColision = BasicPhysics.FullQuadLineColision(BasicPhysics.QuadsToLines(PhysicsTealBlock), TealBlock.GetPhysicsPos(), BasicPhysics.QuadsToLines(Player), PlayerPos, 1.01f);
+        //TealBlockColision = BasicPhysics.SATColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos);
+        //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos, 0.3f);
+        ///TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.3f);
+        //if(!TealBlockColision.IsColision){
+        //    TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.9f);
+        //}
 
-        Object.SetColision(PlayerTOObject.IsColision);
+        // The player can push the block and the block should not beable to clip throught the land from the interaction
 
-        //Object.SetPosition(m_3dCamPos.x, m_3dCamPos.y-1.0f, m_3dCamPos.z);
+        TealBlockColision = BasicPhysics.SphearColison(TealBlockFuturePos, 2.0f, PlayerPos, 3.0f);
+
+        if(TealBlockColision.IsColision){
+            TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos, 0.3f);
+            ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionB;
+            //TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.3f);
+            if(!TealBlockColision.IsColision){
+                TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.9f);
+                NewTealBlockDirecton =  TealBlockColision.MovmentDirectionA;
+            }
+            if(TealBlockColision.IsColision){
+                //ForceDirection 
+                //ForceDirection NewTealBlockDirecton = BasicPhysics.MakeForceDirection(PlayerPos, TealBlockFuturePos);
+                TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton , PlayerMovmentSpeed);
+                TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, LandPhysPos);
+                if(TealBlockColision.IsColision){
+                TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlockFuturePos, TealBlockColision.MovmentDirectionB, PlayerMovmentSpeed);
+                }
+            }
+            //TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
+        }
+        TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
+
+        // Just sets a bool for now 
+        PlayerBlock.SetColision(PlayerTOObject.IsColision);
 
 }
 
-void TestWorld::OnUpdate(float deltaTime, float width, float height){
+void TestWorld::OnUpdate(float deltaTime, float width, float height, float scale){
         glfwPollEvents();
         m_DeltaTime = deltaTime;
 
         m_Width = width;
         m_Height = height;
+        m_Scale = scale;
 
         
 
@@ -249,6 +358,7 @@ void TestWorld::OnUpdate(float deltaTime, float width, float height){
     }
 
 void TestWorld::KeyInput(int Keys[]){
+        m_NewPlayerDirection.clear();    
         PlayerMovmentSpeed = 4.317f;
         // Keys[] will be replaced with a vector or array of keyinput structs
         // Eventualy the movment will be forcebased
@@ -259,37 +369,37 @@ void TestWorld::KeyInput(int Keys[]){
         }
 
         if(Keys[0] == GLFW_PRESS){
-           m_pos2D[2] -= 5 + PlayerMovmentSpeed;
+            m_pos2D[2] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(FORWARD, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(FORWARD));
         }
 
         if(Keys[1] == GLFW_PRESS){
-           m_pos2D[2] += 5 + PlayerMovmentSpeed;
+            m_pos2D[2] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(BACK, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(BACK));
         }
 
         if(Keys[2] == GLFW_PRESS){
-           m_pos2D[0] -= 5 + PlayerMovmentSpeed;
+            m_pos2D[0] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(LEFT, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(LEFT));
         }
 
         if(Keys[3] == GLFW_PRESS){
-           m_pos2D[0] += 5 + PlayerMovmentSpeed;
+            m_pos2D[0] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(RIGHT, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(RIGHT));
         }
 
         if(Keys[5] == GLFW_PRESS){
-           m_pos2D[1] += 5 + PlayerMovmentSpeed;
+            m_pos2D[1] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(UP, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(UP));
         }
 
         if(Keys[4] == GLFW_PRESS){
-           m_pos2D[1] -= 5 + PlayerMovmentSpeed;
+            m_pos2D[1] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(DOWN, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(DOWN));
         }
@@ -309,11 +419,11 @@ void TestWorld::KeyInput(int Keys[]){
         }
 
         if(Keys[20] == GLFW_PRESS){
-           AdvancedCam.InvertVertical();
+            AdvancedCam.InvertVertical();
         }
 
         if(Keys[21] == GLFW_PRESS){
-           AdvancedCam.UnInvertVertical();
+            AdvancedCam.UnInvertVertical();
         }
 
 
@@ -327,26 +437,69 @@ void TestWorld::MouseInput(double xpos, double ypos){
 }
 
 
+void TestWorld::GenShadows(){
+    // The lights should not be drawn in the "shadow reml"
+
+    glBindFramebuffer(GL_FRAMEBUFFER, ShadowMapFBO);
+    //GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D ,ShadowMapTexture, 0));
+    //glBindRenderbuffer(GL_RENDERBUFFER, ShadowMapRBO);
+    //glClear(GL_DEPTH_BUFFER_BIT);
+
+    GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    GLCall(glEnable(GL_DEPTH_TEST));
+
+    float near_plane = 0.1f, far_plane = 75.0f;
+    //glm::mat4 ShadowView = glm::perspective(glm::radians(90.0f), (float)ShadowWidth/(float)ShadowHeight, near_plane, far_plane);
+    glm::mat4 ShadowProjection = glm::ortho(-10.0f,10.0f, -10.0f,10.0f, near_plane, far_plane);
+    glm::mat4 LightView = glm::lookAt(Sun.GetPos(), glm::vec3(6.0f,-5.0f,10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+
+
+    
+    //PlayerBlock.SetShadowPos(lightProjection, lightView);
+    //Land.SetShadowPos(lightProjection, lightView);
+    //TealBlock.SetShadowPos(lightProjection, lightView);
+
+    //PlayerBlock.SetShadowPos(lightSpaceMatrix);
+    //Land.SetShadowPos(lightSpaceMatrix);
+    //TealBlock.SetShadowPos(lightSpaceMatrix);
+
+    PlayerBlock.SetShadowPos(ShadowProjection, LightView);
+    Land.SetShadowPos(ShadowProjection, LightView);
+    TealBlock.SetShadowPos(ShadowProjection, LightView);
+
+
+    Land.PaintShadow();
+    PlayerBlock.PaintShadow();
+    TealBlock.PaintShadow();
+
+    /*
+    glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
+    glBindTexture(GL_TEXTURE_2D, ShadowMapTexture);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    GLCall(glDisable(GL_DEPTH_TEST)); 
+    Frame.BindBufferData();
+
+    Frame.Paint();
+    */
+    
+
+}
+
 void TestWorld::OnRender(){
         if(m_Effect){
             // Pre darw stuff if needed
 
         }
+        m_FBO.Update((int)m_Width,(int)m_Height,(int)m_Scale);
 
         GLCall(glClearColor(0.60f, 0.60f, 0.75f, 0.0f));
 
 
-
-        
-        //std::cout << AdvancedCam.GetCurrentLook().x << " | " << AdvancedCam.GetCurrentLook().y << " | " << AdvancedCam.GetCurrentLook().z << std::endl;
-
-
-
         Sun.BindBufferData();
         //Sun.SetColor(1.0f,0.9059f,0.0f, 1.0f);
-        Sun.SetLightColor(1.0f, 1.0f, 1.0f);
-        Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
-        Sun.SetPosition(0.0f,3.0f,-1.0f);
+        
         Sun.SetDrawPos(m_Projection, m_View);
         //Sun.SetLight(Sun.GetLightColor(), Sun.GetPos());
         Sun.Paint();
@@ -354,58 +507,64 @@ void TestWorld::OnRender(){
 
 
         Land.BindBufferData();
-        Land.SetColor(0.3373f, 0.4902f, 0.2745f, 1.0f);
-        Land.SetMaterial(BasicMetalCube);
+        
         Land.SetDrawPos(m_Projection, m_View);
         Land.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
+        Land.SetLight(OtherSuns.GetLightInfo(), OtherSuns.GetPos(), m_3dCamPos, 1);
         Land.Paint();
 
-        SlowMovingBlock.BindBufferData();
-        SlowMovingBlock.SetColor(0.471f, 0.318f, 0.176f, 1.0f);
-        SlowMovingBlock.SetMaterial(BasicMetalCube);
-        SlowMovingBlock.SetDrawPos(m_Projection,m_View);
-        SlowMovingBlock.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
-        SlowMovingBlock.Paint();
+        OtherSuns.BindBufferData();
+        OtherSuns.SetDrawPos(m_Projection, m_View);
+        //OtherSuns.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
+        OtherSuns.Paint();
+
+        
+        TealBlock.BindBufferData();
+        //TealBlock.SetColor(0.471f, 0.318f, 0.176f, 1.0f);
+        
+        TealBlock.SetDrawPos(m_Projection,m_View);
+        TealBlock.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
+        TealBlock.Paint();
 
 
-        Object.BindBufferData();
-
+        PlayerBlock.BindBufferData();
         //Using this cube as as temp player for colision detection
         // This is only going to check colision with the single Land Object (IE the ground);
         // The position is only being set first so i can just call the cube object
-        Object.SetDrawPos(m_Projection, m_View);
-        if(Object.GetColision()){
-            Object.SetColor(1.0f,0.0f,0.0f, 1.0f);
+        PlayerBlock.SetDrawPos(m_Projection, m_View);
+        if(PlayerBlock.GetColision()){
+            PlayerBlock.SetColor(1.0f,0.0f,0.0f, 1.0f);
         } else {
-            Object.SetColor(m_Color.x, m_Color.y, m_Color.z, m_Color.w);
+            PlayerBlock.SetColor(m_Color.x, m_Color.y, m_Color.z, m_Color.w);
         }
-
-
         // FragPos will be used for object push back
         // for now it will be a simple bool
 
 
-        Object.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
-        Object.SetMaterial(BasicMetalCube);
-        Object.Paint();
+        PlayerBlock.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
+        
+        PlayerBlock.Paint();
+        
 
         if(m_Effect){
             // Post Draw Stuff if needed
 
         }
 
+        glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
+        glBindTexture(GL_TEXTURE_2D, m_FBO.GetTexture());
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        GLCall(glDisable(GL_DEPTH_TEST)); 
+        Frame.BindBufferData();
+
+        Frame.Paint();
+
 
 }
 
+// This will be replaces with an internal GUI system;
+void TestWorld::OnGui(){
 
-void TestWorld::OnImGui(){
-    {
-    ImGui::Begin("Box Colors");   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-    ImGui::DragFloat("FOV", &m_FOV, 1.0f, 10.0f, 150.0f, "%.03f Camera FOV");
-    ImGui::ColorEdit4("Color", (float *)&m_Color);
-    ImGui::ColorEdit4("Color 2", (float *)&m_Color2);
-    ImGui::ColorEdit4("Color 3", (float *)&m_Color3);
-    ImGui::End();
-    }
 
 }

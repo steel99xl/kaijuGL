@@ -1,30 +1,4 @@
-#Shader vertex
-#version 330 core
-
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 normalizedpos;
-layout(location = 2) in vec2 texCord;
-layout(location = 3) in float texIndex;
-
-out vec3 v_Normalized;
-out vec3 v_FragPos;
-out vec2 v_TexCord;
-out float v_TexIndex;
-
-uniform mat4 Modle;
-uniform mat4 View;
-uniform mat4 Projection;
-
-void main(){
-gl_Position = Projection * View * Modle * vec4(position, 1.0);
-v_FragPos = vec3(Modle * vec4(position, 1.0));
-v_Normalized = normalizedpos;
-v_TexCord  = texCord;
-v_TexIndex = texIndex;
-}
-
-
-
+// Uses BasicVertexWithShadows.shader
 #Shader fragment
 #version 330 core
 struct Light{
@@ -55,6 +29,7 @@ in vec3 v_Normalized;
 in vec3 v_FragPos;
 in vec2 v_TexCord;
 in float v_TexIndex;
+in vec4 v_FragLightPos;
 
 uniform Material u_Material;
 uniform Light u_Light;
@@ -64,14 +39,16 @@ uniform vec3 u_lightColor;
 
 uniform vec3 u_camPos;
 
+uniform sampler2D ShadowTex;
+
 uniform sampler2D u_Texture0;
 uniform sampler2D u_Texture1;
 uniform sampler2D u_Texture2;
 
 void main(){
-    vec4 texColor;
-    vec4 ObjectColor;
-    int index  = int(v_TexIndex);
+    //vec4 texColor;
+    //vec4 ObjectColor;
+    //int index  = int(v_TexIndex);
 
     float distance = length(u_Light.position - v_FragPos);
     float attenuation = 1.0 / (u_Light.constant + u_Light.linear * distance + 
@@ -91,41 +68,30 @@ void main(){
 
     vec3 ambient = u_Material.ambient * u_Light.ambient;
 
-    float diff = max(dot(norm, u_Light.position), 0.0);
+    float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = (diff * u_Material.diffuse) * u_Light.diffuse;
 
     float spec = pow(max(dot(norm, hlafwayDir), 0.0), u_Material.shininess);
     vec3 specular = (spec) * u_Light.specular;
 
-    if(index == 1){
-        texColor = texture(u_Texture0, v_TexCord); 
-    } else if(index == 2){
-        texColor = texture(u_Texture1, v_TexCord); 
-    } else if(index == 3){
-            texColor = texture(u_Texture2, v_TexCord); 
-    } else {
-        texColor = u_Color;
-    }
-    if(texColor == u_Color){
-        ObjectColor = texColor;
-    } else{
-        ObjectColor = texColor + u_Color;
-    }
 
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
 
-        
-    //if(theta > u_Light.Asize) {          
-  // do lighting calculations
-   //    Finalcolor = vec4((ambient+ diffuse+ specular), 1.0) * ObjectColor; 
- //   }else{
+    float Shadow = 0.0;
+    vec3 lightCords = v_FragLightPos.xyz/ v_FragLightPos.w;
+    if(lightCords.z <= 1.0){
+        lightCords = (lightCords + 1.0) / 2.0;
 
-//        Finalcolor = vec4(ambient,1.0f) * ObjectColor;
+        float CloseDepth = texture(ShadowTex, lightCords.xz).r;
+        float CurrentDepth = lightCords.z;
 
-//    }  // else, use ambient light so scene isn't completely
+        if(CurrentDepth > CloseDepth){
+            Shadow = 1.0;
+        }
+    }
 
-   Finalcolor = vec4((ambient+ diffuse+ specular), 1.0) * ObjectColor; 
+   Finalcolor = vec4((ambient + (diffuse + specular) * (1.0 - Shadow)), 1.0) * u_Color; 
     
 }

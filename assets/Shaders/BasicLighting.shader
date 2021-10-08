@@ -1,32 +1,7 @@
-#Shader vertex
-#version 330 core
-
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 normalizedpos;
-layout(location = 2) in vec2 texCord;
-layout(location = 3) in float texIndex;
-
-out vec3 v_Normalized;
-out vec3 v_FragPos;
-out vec2 v_TexCord;
-out float v_TexIndex;
-
-uniform mat4 Modle;
-uniform mat4 View;
-uniform mat4 Projection;
-
-void main(){
-gl_Position = Projection * View * Modle * vec4(position, 1.0);
-v_FragPos = vec3(Modle * vec4(position, 1.0));
-v_Normalized = normalizedpos;
-v_TexCord  = texCord;
-v_TexIndex = texIndex;
-}
-
-
-
+// Uses BasicVertes.shader
 #Shader fragment
 #version 330 core
+#define MAX_POINT_LIGHT 4 //you probaly wont need more than that per object, lol
 struct Light{
     vec3 position;
     vec3 lightPoint;
@@ -57,7 +32,7 @@ in vec2 v_TexCord;
 in float v_TexIndex;
 
 uniform Material u_Material;
-uniform Light u_Light;
+uniform Light lights[MAX_POINT_LIGHT];
 
 uniform vec4 u_Color;
 uniform vec3 u_lightColor;
@@ -68,18 +43,16 @@ uniform sampler2D u_Texture0;
 uniform sampler2D u_Texture1;
 uniform sampler2D u_Texture2;
 
-void main(){
-    //vec4 texColor;
-    //vec4 ObjectColor;
-    //int index  = int(v_TexIndex);
+vec3 PointLight(Light light){
+    vec3 Output;
 
-    float distance = length(u_Light.position - v_FragPos);
-    float attenuation = 1.0 / (u_Light.constant + u_Light.linear * distance + 
-    		    u_Light.quadratic * (distance * distance));    
+    float distance = length(light.position - v_FragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + 
+    		    light.quadratic * (distance * distance));    
 
 
     vec3 norm = normalize(v_Normalized);
-    vec3 lightDir = normalize(u_Light.position - v_FragPos);
+    vec3 lightDir = normalize(light.position - v_FragPos);
 
     //float theta = dot(lightDir, normalize(-u_Light.lightPoint));
 
@@ -89,18 +62,41 @@ void main(){
     vec3 hlafwayDir = normalize(lightDir + viewDir);
 
 
-    vec3 ambient = u_Material.ambient * u_Light.ambient;
+    vec3 ambient = u_Material.ambient * light.ambient;
 
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = (diff * u_Material.diffuse) * u_Light.diffuse;
+    vec3 diffuse = (diff * u_Material.diffuse) * light.diffuse;
 
     float spec = pow(max(dot(norm, hlafwayDir), 0.0), u_Material.shininess);
-    vec3 specular = (spec) * u_Light.specular;
+    vec3 specular = (spec) * light.specular;
 
 
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
+
+    Output = (ambient + diffuse + specular);
+
+    return Output;
+}
+
+
+void main(){
+    //vec4 texColor;
+    //vec4 ObjectColor;
+    //int index  = int(v_TexIndex);
+
+    vec3 LightOutput = vec3(0.0);
+    vec3 TempLight = vec3(0.0);
+
+    for(int i = 0; i < MAX_POINT_LIGHT; i++){
+        TempLight = PointLight(lights[i]);
+
+        LightOutput = LightOutput + TempLight;
+    }
+
+    Finalcolor = vec4(LightOutput, 1.0) * u_Color;
+    
 
         
     //if(theta > u_Light.Asize) {          
@@ -112,6 +108,6 @@ void main(){
 
 //    }  // else, use ambient light so scene isn't completely
 
-   Finalcolor = vec4((ambient+ diffuse+ specular), 1.0) * u_Color; 
+   //Finalcolor = vec4((ambient+ diffuse+ specular), 1.0) * u_Color; 
     
 }

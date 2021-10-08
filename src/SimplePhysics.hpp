@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <vector>
+#include <thread>
 // THis is just for debuging
 #include <iostream>
 // This file should not really care about anything else in the engine, outside the data directly sent to it
@@ -60,10 +61,16 @@ struct TriPhysicsBody{
 
 };
 
+struct SphearPhysicsBody{
+    PhysicsPoint Pos;
+    float Size;
+};
+
 
 struct PlaneMinMax{
     ForceDirection Min;
     ForceDirection Max;
+    ForceDirection Normal;
 };
 
 
@@ -82,21 +89,53 @@ class SimplePhysics{
 
         Force m_Gravity;
 
+        
+
 
     public:
-        inline void SetUpdateTime(int TimeInMS){m_DeltaTime = (float)TimeInMS*0.001;}
+        inline void SetUpdateTime(float TimePassed){m_DeltaTime = TimePassed;}
         inline float GetUpdateTime(){return m_DeltaTime;}
         inline Force GetGravity(){return m_Gravity;}
 
         PhysicsPoint MovePhysicsObject(PhysicsPoint Object, ForceDirection NormalDir, float Speed);
 
+        void QuadsToLinesVoid(std::vector<QuadPhysicsBody> Object ,std::vector<PhysicsLine> *Output);
         std::vector<PhysicsLine> QuadsToLines(std::vector<QuadPhysicsBody> Object);
 
-        ColisionInfo FullQuadColision(std::vector<PhysicsLine> ObjectALines,PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPoint ObjectBPos, float Offset);
+        void FullQuadLineColisionVoid(std::vector<PhysicsLine> ObjectALines, PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPoint ObjectBPos, float Offset, ColisionInfo *Output);
+        ColisionInfo FullQuadLineColision(std::vector<PhysicsLine> ObjectALines,PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPoint ObjectBPos, float Offset);
 
-        ColisionInfo AABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos);
+        ColisionInfo QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos, float OffSet = 0.0f);
+        // Helper functions to make QuadBodyColisoin faster if possible, lol
 
-        std::vector<QuadPhysicsBody> MakePhysicsBods(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
+        // Used for making a vector of PhysicsPoints translated to world space;
+        void QuadPosToPoints(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos, std::vector<PhysicsPoint> *Output);
+        void PointsToPoints(std::vector<PhysicsPoint> ObjectA, std::vector<PhysicsPoint> ObjectB, std::vector<PhysicsPoint> *Output);
+        // With Normal
+        void QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos, std::vector<PhysicsLine> *Output);
+        void PointsToPointsNormal(std::vector<PhysicsLine> ObjectA, std::vector<PhysicsLine> ObjectB, std::vector<PhysicsLine> *Output);
+
+        //Currently breaks on the Z axis (it only works in 2d some how...)
+        ColisionInfo SATColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos);
+
+        // The returned minmax is based on world cordinates
+        std::vector<PlaneMinMax> MinMaxFromQuads(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos);
+
+        // This Function only does the comparison 1 way : PointsA to BoxB
+        ColisionInfo PointsToAABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<PlaneMinMax> ObjectB);
+        ColisionInfo AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsPoint &ObjectAPos, std::vector<QuadPhysicsBody> &ObjectB, PhysicsPoint &ObjectBPos);
+
+        ColisionInfo SphearColison(PhysicsPoint ObjectAPos, float ObjectASize, PhysicsPoint ObjectBPos, float ObjectBSize);
+
+        std::vector<QuadPhysicsBody> MakePhysicsQuads(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
+
+        float DotPointToForce(PhysicsPoint Point, ForceDirection Projection, PhysicsPoint ProjectionPos);
+
+        PhysicsPoint Center2Point(PhysicsPoint PointA, PhysicsPoint PointB);
+        PhysicsPoint Center4Point(PhysicsPoint *PointA, PhysicsPoint *PointB, PhysicsPoint *PointC, PhysicsPoint *PointD);
+
+        // Returns froce to move ObjectA to ObjectB
+        ForceDirection MakeForceDirection(PhysicsPoint ObjectA, PhysicsPoint ObjectB);
 
         ForceDirection NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces);
 

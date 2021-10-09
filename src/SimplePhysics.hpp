@@ -21,7 +21,6 @@ struct PhysicsPos{
 };
 
 
-
 struct Force{
     float Power;
     ForceDirection Direction;
@@ -80,6 +79,14 @@ struct ColisionInfo{
     ForceDirection MovmentDirectionA; //This can be calculated by comparing the dirs of the 2 coliding object
     ForceDirection MovmentDirectionB;
     float Force; // the Force that should applied to the colistion objectA
+
+	operator bool(){return IsColision;}
+};
+
+
+struct MultiThreadPhysUpdate{
+	
+
 };
 
 
@@ -141,6 +148,9 @@ class SimplePhysics{
 
         SimplePhysics(float GravityForce, float GravityX, float GravityY, float GravityZ);
         ~SimplePhysics();
+
+
+        void SimpleThreadTest();
     
 
 };

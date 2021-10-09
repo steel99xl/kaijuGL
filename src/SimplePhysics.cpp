@@ -1319,3 +1319,7 @@ ForceDirection SimplePhysics::NormalizeVectorOfForceDirection(std::vector<ForceD
 
     return Output;
 }
+
+void SimplePhysics::SimpleThreadTest(){
+    std::cout << "Ya the Simple Thread Teast Worked" << std::endl;
+}

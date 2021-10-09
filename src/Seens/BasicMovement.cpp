@@ -208,7 +208,7 @@ void TestWorld::Setup(){
     Land.SetMaterial(BasicMetalCube);
     Land.PreFillLights(4);
 
-    OtherSuns.SetPosition(20.0f,5.0f,20.0f);
+    OtherSuns.SetPosition(30.0f,5.0f,30.0f);
     OtherSuns.SetColor(1.0f,0.0f,0.0f,1.0f);
     OtherSuns.SetLightColor(1.0f,1.0f,1.0f);
     //OtherSuns.SetMaterial(BasicMetalCube);
@@ -225,10 +225,30 @@ void TestWorld::Setup(){
 }
 
 void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
+		// Physics rewite. So each object will be moved in an order
+		// probaly as the use just adds or sets them, lol
+		// but during the movment it will do sphear collision and if their is one
+		// it will add it to the list of collisions to process.
+		// Each of theast list items will be a thead. from thear each thead will
+		// spin up and join. after that any editianl movments that are needed
+		// hapen. Each thread goes through this hole process
+        // Example of how i want this to function in the world  layout
+        // PhysicsEngine.SetupdateTime(UpdateSpeed) // this will relativly the same as the current
+        // PhysicsEngine.GeneralMovment() // This would move things that are effected by gravity, player input (Other movment optinos avalible out side thise function)
+        // PhysicsEngine.Other movments ya its not a function plus a comment cause some time specialized movment is needed
+        // PhysicsEngine.PhysicsResolve() // This will start resolving conflicst caused by the movment of object, and move them acordingly ish
+        // Setting the physics for and what the object can colide with.
+        // IE you can set Rigid or Dynamic
+        // The finer detaild colision can be set along with the seize of the sphear colider
+        // I also want the ability to limit all physics processing (including movment in the GeneralMovment) for objects outside some range of the player
+
+
+
+
         //glfwPostEmptyEvent();
         // camera stuff 
         BasicPhysics.SetUpdateTime(MaxUpdateSpeed);
-        AdvancedCam.Update(((float)MaxUpdateSpeed)/1000.0f, (float)m_Width/m_Height, m_FOV);
+        AdvancedCam.Update(MaxUpdateSpeed, (float)m_Width/m_Height, m_FOV);
         m_Projection = AdvancedCam.GetProj();
         m_View = AdvancedCam.GetView();
         m_3dCamPos = AdvancedCam.GetCurrentPos();
@@ -277,7 +297,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         
         //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, Land.GetPhysicsPos());
         //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsLand, Land.GetPhysicsPos(), PhysicsTealBlock, TealBlockFuturePos);
-        if(TealBlockColision.IsColision){
+        if(TealBlockColision){
             TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlockFuturePos, TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Power);
         }
         TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
@@ -313,15 +333,15 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
 
         TealBlockColision = BasicPhysics.SphearColison(TealBlockFuturePos, 2.0f, PlayerPos, 3.0f);
 
-        if(TealBlockColision.IsColision){
+        if(TealBlockColision){
             TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos, 0.3f);
             ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionB;
             //TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.3f);
-            if(!TealBlockColision.IsColision){
+            if(!TealBlockColision){
                 TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.9f);
                 NewTealBlockDirecton =  TealBlockColision.MovmentDirectionA;
             }
-            if(TealBlockColision.IsColision){
+            if(TealBlockColision){
                 //ForceDirection 
                 //ForceDirection NewTealBlockDirecton = BasicPhysics.MakeForceDirection(PlayerPos, TealBlockFuturePos);
                 TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton , PlayerMovmentSpeed);

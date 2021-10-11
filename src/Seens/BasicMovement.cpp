@@ -544,6 +544,7 @@ void TestWorld::OnRender(){
         
         TealBlock.SetDrawPos(m_Projection,m_View);
         TealBlock.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
+        TealBlock.SetLight(OtherSuns.GetLightInfo(), OtherSuns.GetPos(), m_3dCamPos, 1);
         TealBlock.Paint();
 
 
@@ -562,6 +563,8 @@ void TestWorld::OnRender(){
 
 
         PlayerBlock.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
+        PlayerBlock.SetLight(OtherSuns.GetLightInfo(), OtherSuns.GetPos(), m_3dCamPos, 1);
+
         
         PlayerBlock.Paint();
         
@@ -571,15 +574,22 @@ void TestWorld::OnRender(){
 
         }
 
-        glActiveTexture(GL_TEXTURE0);
+        //glViewport(0,0 ,(int)(m_Width*m_Scale), (int)(m_Height*m_Scale));
+
+        
+
+
+}
+
+
+void TestWorld::PaintFrame(){
+    glActiveTexture(GL_TEXTURE0);
         //glBindTexture(GL_TEXTURE_2D, FrameBuffTexture);
-        glBindTexture(GL_TEXTURE_2D, m_FBO.GetTexture());
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        GLCall(glDisable(GL_DEPTH_TEST)); 
-        Frame.BindBufferData();
-
-        Frame.Paint();
-
+    glBindTexture(GL_TEXTURE_2D, m_FBO.GetTexture());
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    GLCall(glDisable(GL_DEPTH_TEST)); 
+    Frame.BindBufferData();
+    Frame.Paint();
 
 }
 

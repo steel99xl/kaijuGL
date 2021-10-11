@@ -7,6 +7,9 @@ class FrameBufferObject{
         unsigned int m_FrameBufferTexture;
         unsigned int m_RBO;
 
+        int m_Width, m_Height;
+        float m_TextureScale;
+
 
 
     public:

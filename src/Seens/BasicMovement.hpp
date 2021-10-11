@@ -70,6 +70,7 @@ class TestWorld{
         // Yes this needs to be called every frame if you have moving objects;
         void GenShadows();
         void OnRender();
+        void PaintFrame();
         void OnGui();
 
 

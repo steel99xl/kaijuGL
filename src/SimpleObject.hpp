@@ -50,7 +50,12 @@ struct SimpleMaterialInfo{
     float shininess;
 };
 
+struct ObjectQuadID{
 
+    float DrawPoints[4];
+    // In an effort to keep the physics self isolated this property will be provided by the physics engine
+    float PhysicsPoints[4];
+};
 
 enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
 enum BufferType{StaticBuffer, DynamicBuffer};

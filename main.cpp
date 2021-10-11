@@ -23,6 +23,8 @@ bool VSync = true;
 double lastX = 0;
 double lastY = 0;
 
+float ResolutionScale = 1.0f;
+
 // This is the Main keycall back function to pass keys to the world
 void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mods){
     //std::cout << key << std::endl;
@@ -67,6 +69,20 @@ void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mod
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             glfwSetCursorPos(window,lastX,lastY);
         }
+    }
+
+    if(key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS){
+          ResolutionScale -= 0.02;  
+          if(ResolutionScale < 0.01){
+              ResolutionScale = 0.01;
+          }
+    }
+
+    if(key == GLFW_KEY_RIGHT_BRACKET && action == GLFW_PRESS){
+          ResolutionScale += 0.02;  
+          if(ResolutionScale > 1.00){
+              ResolutionScale = 1.00;
+          }
     }
 
     if(key == GLFW_KEY_V && action == GLFW_PRESS){
@@ -216,13 +232,15 @@ int main(void){
         glfwSetWindowTitle(window, NewTile.c_str());
         glfwPollEvents();
         glfwGetWindowSize(window, &width, &height);
-        World.OnUpdate(deltaTime, width, height, OSscaler);
+        //glViewport(0,0, width*OSscaler, height*OSscaler);
 
+
+        World.OnUpdate(deltaTime, width * ResolutionScale, height * ResolutionScale, OSscaler);
         // Make Shadows hopefully
         //glViewport(0,0, 2048,2048);
         //World.GenShadows();
-        glBindFramebuffer(GL_FRAMEBUFFER,0);
-        glViewport(0,0, width*OSscaler, height*OSscaler);
+        //glBindFramebuffer(GL_FRAMEBUFFER,0);
+        //glViewport(0,0, width*OSscaler, height*OSscaler);
 
         /* Render here */
         renderer.Clear();
@@ -230,7 +248,11 @@ int main(void){
         World.OnGui();
         // Set Shader, Draw Object
 
+        glViewport(0,0, (width*OSscaler) * ResolutionScale, (height*OSscaler) * ResolutionScale);
         World.OnRender();
+
+        glViewport(0,0, (width*OSscaler), (height*OSscaler));
+        World.PaintFrame();
 
 
         /* Swap front and back buffers */

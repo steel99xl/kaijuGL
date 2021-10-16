@@ -144,6 +144,7 @@ int main(void){
     std::string Title = "DUMB OPENGL WINDOW";
     int width = 720;
     int height = 480;
+    float MaxFPS = 70;
     int OSscaler = 1; // This is mainly for macOS
 
 
@@ -226,6 +227,22 @@ int main(void){
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame; 
+
+        if(!VSync){
+            float TempTime = (1000.0f/MaxFPS)/1000.0f;
+            //std::cout << deltaTime << std::endl;
+            if(deltaTime < TempTime){
+                ResolutionScale += TempTime - deltaTime;
+                if(ResolutionScale > 1.10f){
+                    ResolutionScale = 1.10f;
+                }
+            } else if(deltaTime > TempTime){
+                ResolutionScale -= deltaTime - TempTime;
+                if(ResolutionScale < 0.10f){
+                    ResolutionScale =  0.10f;
+                }
+            }
+        }
 
         FPS = 1.0f/deltaTime;
         std::string NewTile = Title + " " + "( " + std::to_string(FPS) + "FPS)";

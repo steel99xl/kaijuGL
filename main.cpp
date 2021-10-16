@@ -144,7 +144,7 @@ int main(void){
     std::string Title = "DUMB OPENGL WINDOW";
     int width = 720;
     int height = 480;
-    int OSscaler = 2; // This is mainly for macOS
+    int OSscaler = 1; // This is mainly for macOS
 
 
     GLFWwindow* window;

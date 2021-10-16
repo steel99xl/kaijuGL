@@ -237,7 +237,7 @@ int main(void){
                     ResolutionScale = 1.10f;
                 }
             } else if(deltaTime > TempTime){
-                ResolutionScale -= deltaTime - TempTime;
+                ResolutionScale -= (TempTime - deltaTime) * -1;
                 if(ResolutionScale < 0.10f){
                     ResolutionScale =  0.10f;
                 }

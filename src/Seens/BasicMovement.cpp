@@ -74,7 +74,7 @@ void TestWorld::Setup(){
             //    Land.CreateCube((float)i*3,(float)j*3, (float)n*3, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
            //}
             float TempY = (i+j)%6 /10.0f + -5.0f;
-            Land.CreateCube((float)i*3, TempY, (float)j*3, 10.0f,0.0f,0.0f, 3.0f,1.0f,3.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+            Land.CreateCube((float)i*3, TempY, (float)j*3, 0.0f,45.0f,0.0f, 3.0f,1.0f,3.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
             //Land.Create2dQuad((float)i*5,(((float)((i+j)%6) * 0.01) + -5.0f),(float)j*5, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
             //Land.Create2dQuad((float)i*5,-5.0f,(float)j*5, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
             //Land.CreateCube((float)i*5,-5, (float)j*5, 0.0f,0.0f,0.0f, 5.0f,1.0f,5.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
@@ -90,7 +90,7 @@ void TestWorld::Setup(){
 
     Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.10f,0.10f,0.10f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    OtherSuns.CreateCube(0.0f,5.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f,2.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    OtherSuns.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f,2.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     PlayerBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,0.6f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
     //PlayerBlock.CreateCube(1.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,2.0f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
@@ -342,7 +342,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         TealBlockColision = BasicPhysics.SphearColison(TealBlockFuturePos, 2.0f, PlayerPos, 3.0f);
 
         if(TealBlockColision){
-            TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos, 0.3f);
+            TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, Player, PlayerPos, 0.9f);
             ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionB;
             //TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.3f);
             if(!TealBlockColision){

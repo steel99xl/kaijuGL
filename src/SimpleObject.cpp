@@ -29,7 +29,7 @@ void SimpleObject::Setup(){
         std::cout << m_MaxQuadCount << std::endl;
 
 
-        m_IBO->MakeDynamicBuffer(NULL, (m_MaxQuadCount*3)*6 );
+        m_IBO->MakeDynamicBuffer(NULL, (m_MaxQuadCount*4)*6 );
         m_VertexBuffer->MakeDynamicBuffer(NULL, sizeof(Vertex) * (m_MaxQuadCount*4));
         
         //m_Shader->SetShader("assets/Shaders/MultiImg.shader");

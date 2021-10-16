@@ -14,6 +14,10 @@ void GLLogCall(const char *function, const char *file, int line){
     }
 }
 
+Renderer::Renderer(){};
+
+Renderer::~Renderer(){};
+
 void Renderer::Clear() const {
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 }

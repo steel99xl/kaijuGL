@@ -38,7 +38,7 @@ void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mod
     Keys[5] = glfwGetKey(window, GLFW_KEY_SPACE);
     Keys[6] = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL);
 
-    Keys[10] = glfwGetKey(window, GLFW_KEY_W);
+    Keys[10] = glfwGetKey(window, GLFW_KEY_F);
     Keys[11] = glfwGetKey(window, GLFW_KEY_S);
     Keys[12] = glfwGetKey(window, GLFW_KEY_A);
     Keys[13] = glfwGetKey(window, GLFW_KEY_D);
@@ -144,7 +144,7 @@ int main(void){
     std::string Title = "DUMB OPENGL WINDOW";
     int width = 720;
     int height = 480;
-    int OSscaler = 1; // This is mainly for macOS
+    int OSscaler = 2; // This is mainly for macOS
 
 
     GLFWwindow* window;

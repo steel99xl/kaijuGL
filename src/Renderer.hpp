@@ -46,6 +46,9 @@ private:
 
 public:
 
+    Renderer();
+    ~Renderer();
+
     void Clear() const;
 
     void Draw(class VertexArray &va, class IndexBuffer &ib, class Shader &shader);

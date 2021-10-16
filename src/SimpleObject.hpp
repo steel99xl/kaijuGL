@@ -50,11 +50,25 @@ struct SimpleMaterialInfo{
     float shininess;
 };
 
-struct ObjectQuadID{
+enum ObjectOriginType{SimpleQuad, SimpleCube};
 
-    float DrawPoints[4];
+struct ObjectQuadID{
+    ObjectOriginType Type;
+    unsigned int ID = 0; // yes its unsigned even tho it can easily go negative when calculating
+    int GroupID;
+
+    std::array<int, 24> DrawElementPoint;
     // In an effort to keep the physics self isolated this property will be provided by the physics engine
-    float PhysicsPoints[4];
+    std::array<int, 8> PhysicsElementPoint;
+    std::array<int, 36> IndexBufferElement; // this is just used when deleting;
+
+    ObjectQuadID(){
+        for(int i = 0; i < IndexBufferElement.size(); i++){
+            IndexBufferElement[i] = -1;
+            DrawElementPoint[i%DrawElementPoint.size()] = -1;
+            PhysicsElementPoint[i%PhysicsElementPoint.size()] = -1;
+        }
+    }
 };
 
 enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
@@ -106,6 +120,12 @@ class SimpleObject{
         std::unique_ptr<IndexBuffer> m_IBO;
 
         std::unique_ptr<Shader> m_ShadowShader;
+
+
+
+        std::vector<ObjectQuadID> m_SubObjectIDList;
+
+
 
 
 
@@ -184,6 +204,8 @@ class SimpleObject{
 
         inline void SetColision(bool basic){ SimpleColision = basic;}
         inline bool GetColision(){return SimpleColision;}
+
+        inline std::vector<ObjectQuadID> *GetObjectQuadID(){return &m_SubObjectIDList;}
 
         std::vector<PhysicsPos> GetVertexPositions();
         std::vector<PhysicsPos> GetVertexNormlPositions();

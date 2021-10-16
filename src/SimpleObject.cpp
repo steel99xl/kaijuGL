@@ -29,7 +29,7 @@ void SimpleObject::Setup(){
         std::cout << m_MaxQuadCount << std::endl;
 
 
-        m_IBO->MakeDynamicBuffer(NULL, (m_MaxQuadCount*4)*6 );
+        m_IBO->MakeDynamicBuffer(NULL, (m_MaxQuadCount*3)*6 );
         m_VertexBuffer->MakeDynamicBuffer(NULL, sizeof(Vertex) * (m_MaxQuadCount*4));
         
         //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
@@ -95,6 +95,8 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
 
         Vertex Temp;
 
+        ObjectQuadID TempQuadID;
+
 
 
 
@@ -158,8 +160,12 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
                 }
         //        Temp.TexCord = {tX, tY};
                 Temp.TexID = TextureID;
-
+                // This is done for odering reasons 
+                TempQuadID.DrawElementPoint[i] = m_Verticies.size();
                 m_Verticies.push_back(Temp);
+
+                
+                
 
                 if(Weight == 0){
                         m_Weights.push_back(0);
@@ -173,19 +179,40 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
 
 
 
-
+        TempQuadID.IndexBufferElement[0] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
+
+        TempQuadID.IndexBufferElement[1] = m_Indices.size();
         m_Indices.push_back(1 + m_IndicOffset);
+        
+        TempQuadID.IndexBufferElement[3] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
+        
 
 
         //indices[i + 3] =  2 + offset;
         //indices[i + 4] =  3 + offset;
         //indices[i + 5] =  0 + offset;
 
+        TempQuadID.IndexBufferElement[4] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
+        
+        TempQuadID.IndexBufferElement[5] = m_Indices.size();
         m_Indices.push_back(3 + m_IndicOffset);
+        
+        TempQuadID.IndexBufferElement[6] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
+
+
+        for(int i = 0; i < TempQuadID.IndexBufferElement.size(); i ++){
+                TempQuadID.ID += TempQuadID.IndexBufferElement[i];
+                TempQuadID.ID += TempQuadID.DrawElementPoint[i%TempQuadID.DrawElementPoint.size()];
+        }
+
+
+
+        m_SubObjectIDList.push_back(TempQuadID);
+
 
         m_IndicOffset += 4;
 
@@ -196,6 +223,7 @@ void SimpleObject::Create2dQuad(float X, float Y, float Z, float AngleX, float A
 }
 
 void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float SizeX, float SizeY, float SizeZ, float Weight, float tX, float tY, float TX, float TY, float TextureID){
+        ObjectQuadID TempQuadID;
         // This hole function needs to be re-writen but for now im just adding this
         for(int i = 0; i < 24; i++){
                 m_Weights.push_back(Weight/24);
@@ -293,6 +321,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[0] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -301,6 +330,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[1] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
         Temp.Pos = {CubePt[2].x + TempPosVec.x, CubePt[2].y + TempPosVec.y, CubePt[2].z + TempPosVec.z};
@@ -308,6 +338,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[2] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -316,14 +347,21 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[3] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
+        TempQuadID.IndexBufferElement[0] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[1] = m_Indices.size();
         m_Indices.push_back(1 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[2] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
 
+        TempQuadID.IndexBufferElement[3] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[4] = m_Indices.size();
         m_Indices.push_back(3 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[5] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
 
         m_IndicOffset += 4;
@@ -336,6 +374,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[4] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -344,6 +383,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[5] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
         Temp.Pos = {CubePt[6].x + TempPosVec.x, CubePt[6].y + TempPosVec.y, CubePt[6].z + TempPosVec.z};
@@ -351,6 +391,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[6] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -359,14 +400,21 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[7] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
+        TempQuadID.IndexBufferElement[6] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[7] = m_Indices.size();
         m_Indices.push_back(1 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[8] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
 
+        TempQuadID.IndexBufferElement[9] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[10] = m_Indices.size();
         m_Indices.push_back(3 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[11] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
 
         m_IndicOffset += 4;
@@ -379,6 +427,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[8] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -387,6 +436,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[9] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
         Temp.Pos = {CubePt[7].x + TempPosVec.x, CubePt[7].y + TempPosVec.y, CubePt[7].z + TempPosVec.z};
@@ -394,6 +444,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[10] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -402,14 +453,21 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[11] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
+        TempQuadID.IndexBufferElement[12] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[13] = m_Indices.size();
         m_Indices.push_back(1 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[14] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
 
+        TempQuadID.IndexBufferElement[15] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[16] = m_Indices.size();
         m_Indices.push_back(3 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[17] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
 
         m_IndicOffset += 4;
@@ -422,6 +480,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[12] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -430,6 +489,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[13] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
         Temp.Pos = {CubePt[3].x + TempPosVec.x, CubePt[3].y + TempPosVec.y, CubePt[3].z + TempPosVec.z};
@@ -437,6 +497,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[14] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -445,14 +506,21 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[15] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
+        TempQuadID.IndexBufferElement[18] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[19] = m_Indices.size();
         m_Indices.push_back(1 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[20] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
 
+        TempQuadID.IndexBufferElement[21] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[22] = m_Indices.size();
         m_Indices.push_back(3 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[23] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
 
         m_IndicOffset += 4;
@@ -465,6 +533,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[16] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -473,6 +542,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[17] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
         Temp.Pos = {CubePt[7].x + TempPosVec.x, CubePt[7].y + TempPosVec.y, CubePt[7].z + TempPosVec.z};
@@ -480,6 +550,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[18] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -488,14 +559,21 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[19] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
+        TempQuadID.IndexBufferElement[24] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[25] = m_Indices.size();
         m_Indices.push_back(1 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[26] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
 
+        TempQuadID.IndexBufferElement[27] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[28] = m_Indices.size();
         m_Indices.push_back(3 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[29] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
 
         m_IndicOffset += 4;
@@ -509,6 +587,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[20] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -517,6 +596,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, tY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[21] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
         Temp.Pos = {CubePt[1].x + TempPosVec.x, CubePt[1].y + TempPosVec.y, CubePt[1].z + TempPosVec.z};
@@ -524,6 +604,7 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {TX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[22] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
 
@@ -532,15 +613,32 @@ void SimpleObject::CreateCube(float X, float Y, float Z, float AngleX, float Ang
         Temp.TexCord = {tX, TY};
         Temp.TexID = TextureID;
 
+        TempQuadID.DrawElementPoint[23] = m_Verticies.size();
         m_Verticies.push_back(Temp);
 
+        TempQuadID.IndexBufferElement[30] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[31] = m_Indices.size();
         m_Indices.push_back(1 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[32] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
 
+        TempQuadID.IndexBufferElement[33] = m_Indices.size();
         m_Indices.push_back(2 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[34] = m_Indices.size();
         m_Indices.push_back(3 + m_IndicOffset);
+        TempQuadID.IndexBufferElement[35] = m_Indices.size();
         m_Indices.push_back(0 + m_IndicOffset);
+
+
+        for(int i = 0; i < TempQuadID.IndexBufferElement.size(); i ++){
+                TempQuadID.ID += TempQuadID.IndexBufferElement[i];
+                TempQuadID.ID += TempQuadID.DrawElementPoint[i%TempQuadID.DrawElementPoint.size()];
+        }
+
+
+
+        m_SubObjectIDList.push_back(TempQuadID);
 
         m_IndicOffset += 4;
 

@@ -73,7 +73,8 @@ void TestWorld::Setup(){
             //for(int n = 1; n < 51; n++){
             //    Land.CreateCube((float)i*3,(float)j*3, (float)n*3, 0.0f,0.0f,0.0f, 1.0f,1.0f,1.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
            //}
-            Land.CreateCube((float)i*3,-5.0f, (float)j*3, 0.0f,0.0f,0.0f, 3.0f,1.0f,3.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+            float TempY = (i+j)%6 /10.0f + -5.0f;
+            Land.CreateCube((float)i*3, TempY, (float)j*3, 0.0f,0.0f,0.0f, 3.0f,1.0f,3.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
             //Land.Create2dQuad((float)i*5,(((float)((i+j)%6) * 0.01) + -5.0f),(float)j*5, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
             //Land.Create2dQuad((float)i*5,-5.0f,(float)j*5, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
             //Land.CreateCube((float)i*5,-5, (float)j*5, 0.0f,0.0f,0.0f, 5.0f,1.0f,5.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
@@ -203,7 +204,7 @@ void TestWorld::Setup(){
     Sun.SetColor(1.0f,0.9059f,0.0f, 0.86f);
     Sun.SetPosition(15.0f,10.0f,10.0f);
 
-    Land.SetPosition(0.0f,0.0f,0.0f);
+    Land.SetPosition(-20.0f,0.0f,-20.0f);
     Land.SetColor(0.3373f, 0.4902f, 0.2745f, 1.0f);
     Land.SetMaterial(BasicMetalCube);
     Land.PreFillLights(4);
@@ -222,6 +223,13 @@ void TestWorld::Setup(){
 
     PlayerBlock.SetMaterial(BasicMetalCube);
     PlayerBlock.PreFillLights(4);
+
+    std::cout << PlayerBlock.GetVerticies()[1].Pos.X << " | " << PlayerBlock.GetVerticies()[0].Pos.Y << " | " << PlayerBlock.GetVerticies()[0].Pos.Z << std::endl;
+
+    int NewTestInt;
+    NewTestInt = PlayerBlock.GetObjectQuadID()->size();
+
+    std::cout << NewTestInt << std::endl;
 }
 
 void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
@@ -281,7 +289,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         if(!TealBlockColision.IsColision){
             TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
 
-        TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, LandPhysPos);
+            TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, LandPhysPos);
         //if(!TealBlockColision.IsColision){
         //    TealBlockColision = BasicPhysics.PointsToAABBColision(PhysicsTealBlock, TealBlockFuturePos, BasicPhysics.MinMaxFromQuads(PhysicsLand, Land.GetPhysicsPos()));
         //}
@@ -300,7 +308,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         if(TealBlockColision){
             TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlockFuturePos, TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Power);
         }
-        TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
+            TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
         }
         
 
@@ -347,7 +355,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
                 TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton , PlayerMovmentSpeed);
                 TealBlockColision = BasicPhysics.AABBColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, LandPhysPos);
                 if(TealBlockColision.IsColision){
-                TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlockFuturePos, TealBlockColision.MovmentDirectionB, PlayerMovmentSpeed);
+                TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlockFuturePos, TealBlockColision.MovmentDirectionB, PlayerMovmentSpeed + BasicPhysics.GetGravity().Power);
                 }
             }
             //TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
@@ -382,6 +390,12 @@ void TestWorld::KeyInput(int Keys[]){
         PlayerMovmentSpeed = 4.317f;
         // Keys[] will be replaced with a vector or array of keyinput structs
         // Eventualy the movment will be forcebased
+
+        if(Keys[10] == GLFW_PRESS){
+            PhysicsPoint Temp = PlayerBlock.GetPhysicsPos();
+            Temp.Y += 10.0f;
+            TealBlock.SetPosition(Temp.X, Temp.Y, Temp.Z);
+        }
 
         if(Keys[6] == GLFW_PRESS){
             //SpeedStep = 12.51f *m_DeltaTime;

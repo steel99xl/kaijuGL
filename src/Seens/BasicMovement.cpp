@@ -283,17 +283,17 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         PhysicsPoint PlayerPos, TealBlockFuturePos, TealBlockCurrentPos, LandPhysPos, OtherSunsPhysPos;
 
         if(Land.ObjectPositionID == -1){
-            Land.ObjectPositionID = m_ObjectWordlPositions.size();
-            m_ObjectWordlPositions.push_back(Land.GetPhysicsPos());
+            Land.ObjectPositionID = m_ObjectWorldPositions.size();
+            m_ObjectWorldPositions.push_back(Land.GetPhysicsPos());
         } else {
-            m_ObjectWordlPositions[Land.ObjectPositionID] = Land.GetPhysicsPos();
+            m_ObjectWorldPositions[Land.ObjectPositionID] = Land.GetPhysicsPos();
         }
 
         if(TealBlock.ObjectPositionID == -1){
-            TealBlock.ObjectPositionID =  m_ObjectWordlPositions.size();
-            m_ObjectWordlPositions.push_back(TealBlock.GetPhysicsPos());
+            TealBlock.ObjectPositionID =  m_ObjectWorldPositions.size();
+            m_ObjectWorldPositions.push_back(TealBlock.GetPhysicsPos());
         } else {
-            m_ObjectWordlPositions[TealBlock.ObjectPositionID] = TealBlock.GetPhysicsPos();
+            m_ObjectWorldPositions[TealBlock.ObjectPositionID] = TealBlock.GetPhysicsPos();
         }
         
         //TealBlockCurrentPos = TealBlock.GetPhysicsPos();
@@ -308,17 +308,17 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         TealBlockPhysics = BasicPhysics.MakePhysicsQuads(TealBlock.GetVertexPositions(), TealBlock.GetVertexNormlPositions(), TealBlock.GetWeights());
 
 
-        TealBlockColision = BasicPhysics.AABBColision(TealBlockPhysics, m_ObjectWordlPositions[TealBlock.ObjectPositionID], LandPhysics, m_ObjectWordlPositions[Land.ObjectPositionID]);
+        TealBlockColision = BasicPhysics.AABBColision(TealBlockPhysics, m_ObjectWorldPositions[TealBlock.ObjectPositionID], LandPhysics, m_ObjectWorldPositions[Land.ObjectPositionID]);
         if(!TealBlockColision.IsColision){
             if(TealBlock.ObjectPositionFutureID == -1){
-                TealBlock.ObjectPositionFutureID = m_ObjectWordlPositions.size();
-                m_ObjectWordlPositions.push_back(BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power));
+                TealBlock.ObjectPositionFutureID = m_ObjectWorldPositions.size();
+                m_ObjectWorldPositions.push_back(BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power));
             } else {
-                m_ObjectWordlPositions[TealBlock.ObjectPositionFutureID] = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
+                m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
             }
             //TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
 
-            TealBlockColision = BasicPhysics.AABBColision(TealBlockPhysics, m_ObjectWordlPositions[TealBlock.ObjectPositionFutureID], LandPhysics, LandPhysPos);
+            TealBlockColision = BasicPhysics.AABBColision(TealBlockPhysics, m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], LandPhysics, LandPhysPos);
         //if(!TealBlockColision.IsColision){
         //    TealBlockColision = BasicPhysics.PointsToAABBColision(PhysicsTealBlock, TealBlockFuturePos, BasicPhysics.MinMaxFromQuads(PhysicsLand, Land.GetPhysicsPos()));
         //}
@@ -335,10 +335,10 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, Land.GetPhysicsPos());
         //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsLand, Land.GetPhysicsPos(), PhysicsTealBlock, TealBlockFuturePos);
         if(TealBlockColision){
-            m_ObjectWordlPositions[TealBlock.ObjectPositionFutureID] = BasicPhysics.MovePhysicsObject(m_ObjectWordlPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Power)BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
-            //TealBlockFuturePos = BasicPhysics.MovePhysicsObject(m_ObjectWordlPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Power);
+            m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = BasicPhysics.MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Power);
+            //TealBlockFuturePos = BasicPhysics.MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Power);
         }
-            TealBlock.SetPosition(m_ObjectWordlPositions[TealBlock.ObjectPositionFutureID].X, m_ObjectWordlPositions[TealBlock.ObjectPositionFutureID].Y, m_ObjectWordlPositions[TealBlock.ObjectPositionFutureID].Z);
+            TealBlock.SetPosition(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID].X, m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID].Y, m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID].Z);
         }
         
 
@@ -346,10 +346,10 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
 
         // Move Player based on player input
         if(PlayerBlock.ObjectPositionID == -1){
-            PlayerBlock.ObjectPositionID = m_ObjectWordlPositions.size();
-            m_ObjectWordlPositions.push_back(BasicPhysics.MovePhysicsObject(PlayerBlock.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed));
+            PlayerBlock.ObjectPositionID = m_ObjectWorldPositions.size();
+            m_ObjectWorldPositions.push_back(BasicPhysics.MovePhysicsObject(PlayerBlock.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed));
         } else {
-            m_ObjectWordlPositions[PlayerBlock.ObjectPositionID] = BasicPhysics.MovePhysicsObject(PlayerBlock.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed)
+            m_ObjectWorldPositions[PlayerBlock.ObjectPositionID] = BasicPhysics.MovePhysicsObject(PlayerBlock.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed);
         }
         //PlayerPos = BasicPhysics.MovePhysicsObject(PlayerBlock.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed);
 
@@ -359,8 +359,8 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
             //PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, PlayerMovmentSpeed);
         //    std::cout << PlayerTOObject.MovmentDirectionB.X << " | " << PlayerTOObject.MovmentDirectionB.Y << " | " << PlayerTOObject.MovmentDirectionB.Z << std::endl;
         //}
-        PlayerBlock.SetPosition(m_ObjectWordlPositions[PlayerBlock.ObjectPositionID].X, m_ObjectWordlPositions[PlayerBlock.ObjectPositionID].Y, m_ObjectWordlPositions[PlayerBlock.ObjectPositionID].Z);
-        AdvancedCam.SetPos(m_ObjectWordlPositions[PlayerBlock.ObjectPositionID].X, m_ObjectWordlPositions[PlayerBlock.ObjectPositionID].Y+0.9f, m_ObjectWordlPositions[PlayerBlock.ObjectPositionID].Z);
+        PlayerBlock.SetPosition(m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].X, m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].Y, m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].Z);
+        AdvancedCam.SetPos(m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].X, m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].Y+0.9f, m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].Z);
 
         //BasicPhysics.FullQuadLineColisionVoid(TempPlayerLines, PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f, &PlayerTOObject);
 
@@ -382,21 +382,21 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
             ForceDirection NewTealBlockDirecton =  TealBlockColision.MovmentDirectionB;
             //TealBlockColision = BasicPhysics.QuadBodyColision(Player, PlayerPos, PhysicsTealBlock, TealBlockFuturePos, 0.3f);
             if(!TealBlockColision){
-                TealBlockColision = BasicPhysics.QuadBodyColision(PlayerPhysics, PlayerbBlock.GetPhysicsPos(), TealBlock.GetPhysicsPos(), TealBlockFuturePos, 0.9f);
-                NewTealBlockDirecton =  TealBlockColision.MovmentDirectionA;
+                TealBlockColision = BasicPhysics.QuadBodyColision(TealBlockPhysics, TealBlock.GetPhysicsPos(), PlayerPhysics, PlayerBlock.GetPhysicsPos(), 0.9f);
+                //NewTealBlockDirecton =  TealBlockColision.MovmentDirectionA;
             }
             if(TealBlockColision){
                 //ForceDirection 
                 //ForceDirection NewTealBlockDirecton = BasicPhysics.MakeForceDirection(PlayerPos, TealBlockFuturePos);
-                m_ObjectWordlPositions[TealBlock.ObjectPositionFutureID] = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton , PlayerMovmentSpeed);
-                TealBlockColision = BasicPhysics.AABBColision(TealBlockPhysics, TealBlockFuturePos, LandPhysics, LandPhysPos);
+                m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), NewTealBlockDirecton , PlayerMovmentSpeed);
+                TealBlockColision = BasicPhysics.AABBColision(TealBlockPhysics, TealBlockFuturePos, LandPhysics, m_ObjectWorldPositions[Land.ObjectPositionID]);
                 if(TealBlockColision.IsColision){
-                TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlockFuturePos, TealBlockColision.MovmentDirectionB, PlayerMovmentSpeed + BasicPhysics.GetGravity().Power);
+                m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = BasicPhysics.MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionB, PlayerMovmentSpeed + BasicPhysics.GetGravity().Power);
                 }
             }
             //TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
         }
-        TealBlock.SetPosition(TealBlockFuturePos.X, TealBlockFuturePos.Y, TealBlockFuturePos.Z);
+        TealBlock.SetPosition(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID].X, m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID].Y, m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID].Z);
 
         // Just sets a bool for now 
         PlayerBlock.SetColision(PlayerTOObject.IsColision);

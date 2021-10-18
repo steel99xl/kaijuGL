@@ -142,7 +142,7 @@ class SimpleObject{
 
     public:
 
-        int ColisionID ObjectPositionPastID, ObjectPositionID, ObjectPositionFutureID;
+        int ColisionID, ObjectPositionPastID, ObjectPositionID, ObjectPositionFutureID;
 
         SimpleObject(int MaxQuads = 10000, BufferType buffertype = DynamicBuffer);
         ~SimpleObject();

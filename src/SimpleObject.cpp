@@ -16,6 +16,10 @@ SimpleObject::~SimpleObject(){
 }
 
 void SimpleObject::Setup(){
+        ColisionID = -1;
+        ObjectPositionPastID = -1;
+        ObjectPositionID = -1;
+        ObjectPositionFutureID = -1;
         //
         m_VAO = std::make_unique<VertexArray>();
         m_VertexBuffer = std::make_unique<VertexBuffer>();

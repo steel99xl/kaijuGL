@@ -26,10 +26,12 @@ class TestWorld{
         FrameBufferObject m_FBO;
         SimpleObject Frame =  SimpleObject(2);
 
+
+        // This is currently hnit being used
         unsigned int ShadowMapFBO, ShadowMapRBO,ShadowMapTexture;
         unsigned int ShadowWidth = 2048;
         unsigned int ShadowHeight = 2048;
-
+        //
 
 
         SimpleObject PlayerBlock = SimpleObject(18, DynamicBuffer);
@@ -39,7 +41,17 @@ class TestWorld{
         SimpleObject OtherSuns = SimpleObject(32, DynamicBuffer);
         SimpleObject Sun = SimpleObject(6, DynamicBuffer);
 
+
+        //Elements for Physics Engine
         std::vector<ForceDirection> m_NewPlayerDirection;
+        std::vector<ColisionInfo> m_ObjectColissions;
+        std::vector<QuadPhysicsBody> PlayerPhysics, LandPhysics, TealBlockPhysics;
+
+        // Temp PlaceHolder for Object Posisons;
+        std::vector<PhysicsPoint> m_ObjectWorldPositions;
+
+
+
         float PlayerMovmentSpeed;
 
         SimpleMaterialInfo BasicMetalCube;

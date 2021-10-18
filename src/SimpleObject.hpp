@@ -59,7 +59,7 @@ struct ObjectQuadID{
 
     std::array<int, 24> DrawElementPoint;
     // In an effort to keep the physics self isolated this property will be provided by the physics engine
-    std::array<int, 8> PhysicsElementPoint;
+    std::array<int, 6> PhysicsElementPoint;
     std::array<int, 36> IndexBufferElement; // this is just used when deleting;
 
     ObjectQuadID(){
@@ -141,6 +141,8 @@ class SimpleObject{
 
 
     public:
+
+        int ColisionID ObjectPositionPastID, ObjectPositionID, ObjectPositionFutureID;
 
         SimpleObject(int MaxQuads = 10000, BufferType buffertype = DynamicBuffer);
         ~SimpleObject();

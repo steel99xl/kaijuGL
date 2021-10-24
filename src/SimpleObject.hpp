@@ -50,7 +50,26 @@ struct SimpleMaterialInfo{
     float shininess;
 };
 
+enum ObjectOriginType{SimpleQuad, SimpleCube};
 
+struct ObjectQuadID{
+    ObjectOriginType Type;
+    unsigned int ID = 0; // yes its unsigned even tho it can easily go negative when calculating
+    int GroupID;
+
+    std::array<int, 24> DrawElementPoint;
+    // In an effort to keep the physics self isolated this property will be provided by the physics engine
+    std::array<int, 6> PhysicsElementPoint;
+    std::array<int, 36> IndexBufferElement; // this is just used when deleting;
+
+    ObjectQuadID(){
+        for(int i = 0; i < IndexBufferElement.size(); i++){
+            IndexBufferElement[i] = -1;
+            DrawElementPoint[i%DrawElementPoint.size()] = -1;
+            PhysicsElementPoint[i%PhysicsElementPoint.size()] = -1;
+        }
+    }
+};
 
 enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
 enum BufferType{StaticBuffer, DynamicBuffer};
@@ -104,6 +123,12 @@ class SimpleObject{
 
 
 
+        std::vector<ObjectQuadID> m_SubObjectIDList;
+
+
+
+
+
         glm::vec3 Rotatex(glm::vec3 Start, float Angle);
         glm::vec3 Rotatey(glm::vec3 Start, float Angle);
         glm::vec3 Rotatez(glm::vec3 Start, float Angle);
@@ -116,6 +141,8 @@ class SimpleObject{
 
 
     public:
+
+        int ColisionID, ObjectPositionPastID, ObjectPositionID, ObjectPositionFutureID;
 
         SimpleObject(int MaxQuads = 10000, BufferType buffertype = DynamicBuffer);
         ~SimpleObject();
@@ -179,6 +206,8 @@ class SimpleObject{
 
         inline void SetColision(bool basic){ SimpleColision = basic;}
         inline bool GetColision(){return SimpleColision;}
+
+        inline std::vector<ObjectQuadID> *GetObjectQuadID(){return &m_SubObjectIDList;}
 
         std::vector<PhysicsPos> GetVertexPositions();
         std::vector<PhysicsPos> GetVertexNormlPositions();

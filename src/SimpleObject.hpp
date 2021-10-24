@@ -104,6 +104,7 @@ class SimpleObject{
         float m_LR, m_LG, m_LB;
         // The weight of the object vertexs in KG
         std::vector<float> m_Weights;
+        float m_TotalWeight;
 
         bool SimpleColision;
 
@@ -208,6 +209,10 @@ class SimpleObject{
         inline bool GetColision(){return SimpleColision;}
 
         inline std::vector<ObjectQuadID> *GetObjectQuadID(){return &m_SubObjectIDList;}
+
+        inline float GetTotlalWeight(){return m_TotalWeight;}
+
+        void SumAllWeights();
 
         std::vector<PhysicsPos> GetVertexPositions();
         std::vector<PhysicsPos> GetVertexNormlPositions();

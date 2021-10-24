@@ -661,6 +661,14 @@ void SimpleObject::PaintShadow(){
         renderer.Draw(*m_VAO, *m_IBO, *m_ShadowShader);
 }
 
+
+void SimpleObject::SumAllWeights(){
+        m_TotalWeight = 0.0f;
+        for(int i = 0; i < m_Weights.size(); i++){
+                m_TotalWeight += m_Weights[i];
+        }
+}
+
 // Oh boy the physics engien is creeping in to the object
 
 std::vector<PhysicsPos> SimpleObject::GetVertexPositions(){

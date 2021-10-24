@@ -76,7 +76,7 @@ class TestWorld{
 
         void PhysicsUpdate(float MaxUpdateSpeed);
 
-        void OnUpdate(float deltaTime, float width, float hight, float scale);
+        void OnUpdate(float deltaTime, float width, float hight, float scale = 1.0f);
         void KeyInput(int Keys[]);
         void MouseInput(double xpos, double ypos);
         // Yes this needs to be called every frame if you have moving objects;

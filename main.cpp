@@ -95,10 +95,8 @@ void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mod
         VSync = !VSync;
         if(VSync){
             std::cout << "VSync : ON" << std::endl;
-            glfwSwapInterval(1);
         } else {
             std::cout << "VSync : OFF" << std::endl;
-            glfwSwapInterval(0);
         }
     }
     
@@ -235,8 +233,21 @@ int main(void){
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame; 
+        int ChronoFPS =  1000/MaxFPS;
+        auto WaitTime = std::chrono::milliseconds(ChronoFPS);
+        if(VSync){
+            auto StartTime = std::chrono::steady_clock::now();
+            auto EndTime = std::chrono::steady_clock::now();
 
-        if(!VSync){
+            auto ElapsedTime = EndTime - StartTime;
+            auto FinalTime = WaitTime - ElapsedTime;
+            if(ElapsedTime > WaitTime){
+                std::this_thread::sleep_for(ElapsedTime);
+            } else {
+                std::this_thread::sleep_for(WaitTime);
+            }
+            
+        } else {
             float TempTime = (1000.0f/MaxFPS)/1000.0f;
             //std::cout << deltaTime << std::endl;
             if(deltaTime < TempTime){

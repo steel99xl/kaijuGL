@@ -9,6 +9,16 @@ struct VertexPos{
     float X;
     float Y;
     float Z;
+    
+    VertexPos(){}
+    ~VertexPos(){}
+    void Input(float x, float y, float z){
+        X = x;
+        Y = y;
+        Z = z;
+    }
+    
+
 };
 
 struct VertexTexCord{
@@ -105,6 +115,9 @@ class SimpleObject{
         // The weight of the object vertexs in KG
         std::vector<float> m_Weights;
         float m_TotalWeight;
+
+        float m_CurrentMovmentSpeed;
+        VertexPos m_CurrentMovementDir;
 
         bool SimpleColision;
 
@@ -210,7 +223,7 @@ class SimpleObject{
 
         inline std::vector<ObjectQuadID> *GetObjectQuadID(){return &m_SubObjectIDList;}
 
-        inline float GetTotlalWeight(){return m_TotalWeight;}
+        inline float GetTotalWeight(){return m_TotalWeight;}
 
         void SumAllWeights();
 

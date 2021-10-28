@@ -11,6 +11,17 @@ struct ForceDirection{
     float X;
     float Y;
     float Z;
+    float Speed;
+
+        ForceDirection(){}
+        ~ForceDirection(){}
+        void Input(float x, float y, float z, float speed){
+            X = x;
+            Y = y;
+            Z = z;
+            Speed = speed;
+        }
+        
 };
 
 // Yes this is basicaly the same as the ForceDirection But with a diffrent name
@@ -18,12 +29,15 @@ struct PhysicsPos{
     float X;
     float Y;
     float Z;
-};
 
+    PhysicsPos(){}
+    ~PhysicsPos(){}
 
-struct Force{
-    float Power;
-    ForceDirection Direction;
+    void Input(float x, float y, float z){
+            X = x;
+            Y = y;
+            Z = z;
+    }
 };
 
 struct PhysicsPoint{
@@ -31,7 +45,7 @@ struct PhysicsPoint{
     float Y;
     float Z;
     float Weight;
-    Force Energy;
+    ForceDirection Movment;
 };
 
 struct PhysicsLine{
@@ -94,7 +108,7 @@ class SimplePhysics{
     private:
         float m_DeltaTime;
 
-        Force m_Gravity;
+        ForceDirection m_Gravity;
 
         
 
@@ -102,7 +116,7 @@ class SimplePhysics{
     public:
         inline void SetUpdateTime(float TimePassed){m_DeltaTime = TimePassed;}
         inline float GetUpdateTime(){return m_DeltaTime;}
-        inline Force GetGravity(){return m_Gravity;}
+        inline ForceDirection GetGravity(){return m_Gravity;}
 
         PhysicsPoint MovePhysicsObject(PhysicsPoint Object, ForceDirection NormalDir, float Speed);
 

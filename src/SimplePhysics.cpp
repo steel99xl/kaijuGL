@@ -9,11 +9,11 @@ SimplePhysics::SimplePhysics(float GravityForce, float GravityX, float GravityY,
         GravityZ /= Length;
     }
 
-    m_Gravity.Direction.X = GravityX;
-    m_Gravity.Direction.Y = GravityY;
-    m_Gravity.Direction.Z = GravityZ;
+    m_Gravity.X = GravityX;
+    m_Gravity.Y = GravityY;
+    m_Gravity.Z = GravityZ;
 
-    m_Gravity.Power = GravityForce;
+    m_Gravity.Speed = GravityForce;
 }
 
 SimplePhysics::~SimplePhysics(){}
@@ -32,39 +32,39 @@ std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsQuads(std::vector<Physics
         PointA.Y = Pos[i].Y;
         PointA.Z = Pos[i].Z;
         PointA.Weight = Weights[i];
-        PointA.Energy.Direction.X = 0;
-        PointA.Energy.Direction.Y = 0;
-        PointA.Energy.Direction.Z = 0;
-        PointA.Energy.Power = 0.0f;
+        PointA.Movment.X = 0;
+        PointA.Movment.Y = 0;
+        PointA.Movment.Z = 0;
+        PointA.Movment.Speed = 0.0f;
 
         PointB.X = Pos[i+1].X;
         PointB.Y = Pos[i+1].Y;
         PointB.Z = Pos[i+1].Z;
         PointB.Weight = Weights[i+1];
-        PointB.Energy.Direction.X = 0;
-        PointB.Energy.Direction.Y = 0;
-        PointB.Energy.Direction.Z = 0;
-        PointB.Energy.Power = 0.0f;
+        PointB.Movment.X = 0;
+        PointB.Movment.Y = 0;
+        PointB.Movment.Z = 0;
+        PointB.Movment.Speed = 0.0f;
 
 
         PointC.X = Pos[i+2].X;
         PointC.Y = Pos[i+2].Y;
         PointC.Z = Pos[i+2].Z;
         PointC.Weight = Weights[i+2];
-        PointC.Energy.Direction.X = 0;
-        PointC.Energy.Direction.Y = 0;
-        PointC.Energy.Direction.Z = 0;
-        PointC.Energy.Power = 0.0f;
+        PointC.Movment.X = 0;
+        PointC.Movment.Y = 0;
+        PointC.Movment.Z = 0;
+        PointC.Movment.Speed = 0.0f;
 
 
         PointD.X = Pos[i+3].X;
         PointD.Y = Pos[i+3].Y;
         PointD.Z = Pos[i+3].Z;
         PointD.Weight = Weights[i+3];
-        PointD.Energy.Direction.X = 0;
-        PointD.Energy.Direction.Y = 0;
-        PointD.Energy.Direction.Z = 0;
-        PointD.Energy.Power = 0.0f;
+        PointD.Movment.X = 0;
+        PointD.Movment.Y = 0;
+        PointD.Movment.Z = 0;
+        PointD.Movment.Speed = 0.0f;
 
         TempQuad.PosA = PointA;
         TempQuad.PosB = PointB;
@@ -497,7 +497,7 @@ void SimplePhysics::QuadPosToPoints(std::vector<QuadPhysicsBody> Object, Physics
         Temp.Y = Object[i].PosA.Y + ObjectPos.Y;
         Temp.Z = Object[i].PosA.Z + ObjectPos.Z;
         Temp.Weight = Object[i].PosA.Weight;
-        Temp.Energy = Object[i].PosA.Energy;
+        Temp.Movment = Object[i].PosA.Movment;
 
         Output->push_back(Temp);
 
@@ -506,7 +506,7 @@ void SimplePhysics::QuadPosToPoints(std::vector<QuadPhysicsBody> Object, Physics
         Temp.Y = Object[i].PosB.Y + ObjectPos.Y;
         Temp.Z = Object[i].PosB.Z + ObjectPos.Z;
         Temp.Weight = Object[i].PosB.Weight;
-        Temp.Energy = Object[i].PosB.Energy;
+        Temp.Movment = Object[i].PosB.Movment;
 
         Output->push_back(Temp);
 
@@ -515,7 +515,7 @@ void SimplePhysics::QuadPosToPoints(std::vector<QuadPhysicsBody> Object, Physics
         Temp.Y = Object[i].PosC.Y + ObjectPos.Y;
         Temp.Z = Object[i].PosC.Z + ObjectPos.Z;
         Temp.Weight = Object[i].PosC.Weight;
-        Temp.Energy = Object[i].PosC.Energy;
+        Temp.Movment = Object[i].PosC.Movment;
 
         Output->push_back(Temp);
 
@@ -524,7 +524,7 @@ void SimplePhysics::QuadPosToPoints(std::vector<QuadPhysicsBody> Object, Physics
         Temp.Y = Object[i].PosD.Y + ObjectPos.Y;
         Temp.Z = Object[i].PosD.Z + ObjectPos.Z;
         Temp.Weight = Object[i].PosD.Weight;
-        Temp.Energy = Object[i].PosD.Energy;
+        Temp.Movment = Object[i].PosD.Movment;
 
         Output->push_back(Temp);
 
@@ -540,7 +540,7 @@ void SimplePhysics::PointsToPoints(std::vector<PhysicsPoint> ObjectA, std::vecto
             Temp.Y = ObjectB[j].Y - ObjectA[i].Y;
             Temp.Z = ObjectB[j].Z - ObjectA[i].Z;
             Temp.Weight = ObjectB[j].Weight;
-            Temp.Energy = ObjectB[j].Energy;
+            Temp.Movment = ObjectB[j].Movment;
 
             Output->push_back(Temp);
         }
@@ -561,7 +561,7 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
         Temp.PosB.Z = Object[i].PlaneNorm.Z;
         //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosA.Weight;
-        Temp.PosA.Energy = Object[i].PosA.Energy;
+        Temp.PosA.Movment = Object[i].PosA.Movment;
 
         Output->push_back(Temp);
 
@@ -574,7 +574,7 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
         Temp.PosB.Z = Object[i].PlaneNorm.Z;
         //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosB.Weight;
-        Temp.PosA.Energy = Object[i].PosB.Energy;
+        Temp.PosA.Movment = Object[i].PosB.Movment;
 
         Output->push_back(Temp);
 
@@ -587,7 +587,7 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
         Temp.PosB.Z = Object[i].PlaneNorm.Z;
         //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosC.Weight;
-        Temp.PosA.Energy = Object[i].PosC.Energy;
+        Temp.PosA.Movment = Object[i].PosC.Movment;
 
         Output->push_back(Temp);
 
@@ -600,7 +600,7 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
         Temp.PosB.Z = Object[i].PlaneNorm.Z;
         //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosD.Weight;
-        Temp.PosA.Energy = Object[i].PosD.Energy;
+        Temp.PosA.Movment = Object[i].PosD.Movment;
 
         Output->push_back(Temp);
 
@@ -617,7 +617,7 @@ void SimplePhysics::PointsToPointsNormal(std::vector<PhysicsLine> ObjectA, std::
             Temp.PosA.Z = ObjectB[j].PosA.Z - ObjectA[i].PosA.Z;
             Temp.PosB = ObjectB[j].PosB;
             Temp.PosA.Weight = ObjectB[j].PosA.Weight;
-            Temp.PosA.Energy = ObjectB[j].PosA.Energy;
+            Temp.PosA.Movment = ObjectB[j].PosA.Movment;
 
             Output->push_back(Temp);
         }

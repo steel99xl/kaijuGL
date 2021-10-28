@@ -94,8 +94,10 @@ void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mod
     if(key == GLFW_KEY_V && action == GLFW_PRESS){
         VSync = !VSync;
         if(VSync){
+            std::cout << "VSync : ON" << std::endl;
             glfwSwapInterval(1);
         } else {
+            std::cout << "VSync : OFF" << std::endl;
             glfwSwapInterval(0);
         }
     }

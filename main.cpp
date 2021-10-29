@@ -180,7 +180,7 @@ int main(void){
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
     // Enables V sync
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     /* setup GLEW */
     if(glewInit() != GLEW_OK){

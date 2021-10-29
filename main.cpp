@@ -151,7 +151,7 @@ int main(void){
     int width = 720;
     int height = 480;
     float MaxFPS = 70;
-    int OSscaler = 2; // This is mainly for macOS
+    int OSscaler = 1; // This is mainly for macOS
 
 
     GLFWwindow* window;

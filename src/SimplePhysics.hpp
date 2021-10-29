@@ -41,9 +41,7 @@ struct PhysicsPos{
 };
 
 struct PhysicsPoint{
-    float X;
-    float Y;
-    float Z;
+    PhysicsPos Pos;
     float Weight;
     ForceDirection Movment;
 };
@@ -118,45 +116,51 @@ class SimplePhysics{
         inline float GetUpdateTime(){return m_DeltaTime;}
         inline ForceDirection GetGravity(){return m_Gravity;}
 
-        PhysicsPoint MovePhysicsObject(PhysicsPoint Object, ForceDirection NormalDir, float Speed);
+        PhysicsPos MovePhysicsObject(PhysicsPos Object, ForceDirection NormalDir, float Speed);
+        // Returns froce to move ObjectA to ObjectB
+        ForceDirection MakeForceDirection(PhysicsPos ObjectA, PhysicsPos ObjectB);
 
         void QuadsToLinesVoid(std::vector<QuadPhysicsBody> Object ,std::vector<PhysicsLine> *Output);
         std::vector<PhysicsLine> QuadsToLines(std::vector<QuadPhysicsBody> Object);
 
-        void FullQuadLineColisionVoid(std::vector<PhysicsLine> ObjectALines, PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPoint ObjectBPos, float Offset, ColisionInfo *Output);
-        ColisionInfo FullQuadLineColision(std::vector<PhysicsLine> ObjectALines,PhysicsPoint ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPoint ObjectBPos, float Offset);
+        void FullQuadLineColisionVoid(std::vector<PhysicsLine> ObjectALines, PhysicsPos ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPos ObjectBPos, float Offset, ColisionInfo *Output);
+        ColisionInfo FullQuadLineColision(std::vector<PhysicsLine> ObjectALines,PhysicsPos ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPos ObjectBPos, float Offset);
 
-        ColisionInfo QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos, float OffSet = 0.0f);
+        ColisionInfo QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPos ObjectBPos, float OffSet = 0.0f);
         // Helper functions to make QuadBodyColisoin faster if possible, lol
 
         // Used for making a vector of PhysicsPoints translated to world space;
-        void QuadPosToPoints(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos, std::vector<PhysicsPoint> *Output);
-        void PointsToPoints(std::vector<PhysicsPoint> ObjectA, std::vector<PhysicsPoint> ObjectB, std::vector<PhysicsPoint> *Output);
+        void QuadPosToPoints(std::vector<QuadPhysicsBody> Object, PhysicsPos ObjectPos, std::vector<PhysicsPoint> *Output);
+        
         // With Normal
-        void QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos, std::vector<PhysicsLine> *Output);
-        void PointsToPointsNormal(std::vector<PhysicsLine> ObjectA, std::vector<PhysicsLine> ObjectB, std::vector<PhysicsLine> *Output);
+        void QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, PhysicsPos ObjectPos, std::vector<PhysicsLine> *Output);
+        // Normalizes returns normal for ObjectBs points pointing twords ObjectAs points
+        void PointsToPointsNormal(std::vector<PhysicsPos> ObjectA, std::vector<PhysicsPos> ObjectB, std::vector<PhysicsPos> *Output);
+        // Effectivly the samthing as the Normal one but for indevidual Positions
+        void PointToPoint(PhysicsPos *ObjectA, PhysicsPos *ObjectB, PhysicsPos *Output);
+
+        void LinesToLines(std::vector<PhysicsLine> *ObjectA, std::vector<PhysicsLine> *ObjectB, std::vector<PhysicsLine> *Output);
 
         //Currently breaks on the Z axis (it only works in 2d some how...)
-        ColisionInfo SATColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPoint ObjectBPos);
+        ColisionInfo SATColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPos ObjectBPos);
 
         // The returned minmax is based on world cordinates
-        std::vector<PlaneMinMax> MinMaxFromQuads(std::vector<QuadPhysicsBody> Object, PhysicsPoint ObjectPos);
+        std::vector<PlaneMinMax> MinMaxFromQuads(std::vector<QuadPhysicsBody> Object, PhysicsPos ObjectPos);
 
         // This Function only does the comparison 1 way : PointsA to BoxB
-        ColisionInfo PointsToAABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPoint ObjectAPos, std::vector<PlaneMinMax> ObjectB);
-        ColisionInfo AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsPoint &ObjectAPos, std::vector<QuadPhysicsBody> &ObjectB, PhysicsPoint &ObjectBPos);
+        ColisionInfo PointsToAABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<PlaneMinMax> ObjectB);
+        ColisionInfo AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsPos &ObjectAPos, std::vector<QuadPhysicsBody> &ObjectB, PhysicsPos &ObjectBPos);
 
-        ColisionInfo SphearColison(PhysicsPoint ObjectAPos, float ObjectASize, PhysicsPoint ObjectBPos, float ObjectBSize);
+        ColisionInfo SphearColison(PhysicsPos ObjectAPos, float ObjectASize, PhysicsPos ObjectBPos, float ObjectBSize);
 
         std::vector<QuadPhysicsBody> MakePhysicsQuads(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
 
-        float DotPointToForce(PhysicsPoint Point, ForceDirection Projection, PhysicsPoint ProjectionPos);
+        float DotPointToForce(PhysicsPos Point, ForceDirection Projection, PhysicsPos ProjectionPos);
 
-        PhysicsPoint Center2Point(PhysicsPoint PointA, PhysicsPoint PointB);
-        PhysicsPoint Center4Point(PhysicsPoint *PointA, PhysicsPoint *PointB, PhysicsPoint *PointC, PhysicsPoint *PointD);
+        PhysicsPos Center2Point(PhysicsPos PointA, PhysicsPos PointB);
+        PhysicsPos Center4Point(PhysicsPos *PointA, PhysicsPos *PointB, PhysicsPos *PointC, PhysicsPos *PointD);
 
-        // Returns froce to move ObjectA to ObjectB
-        ForceDirection MakeForceDirection(PhysicsPoint ObjectA, PhysicsPoint ObjectB);
+        
 
         ForceDirection NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces);
 

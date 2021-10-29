@@ -447,7 +447,7 @@ void TestWorld::KeyInput(int Keys[]){
         // Eventualy the movment will be forcebased
 
         if(Keys[10] == GLFW_PRESS){
-            PhysicsPoint Temp = PlayerBlock->GetPhysicsPos();
+            PhysicsPos Temp = PlayerBlock->GetPhysicsPos();
             Temp.Y += 10.0f;
             TealBlock->SetPosition(Temp.X, Temp.Y, Temp.Z);
         }

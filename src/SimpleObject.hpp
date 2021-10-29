@@ -214,9 +214,9 @@ class SimpleObject{
         inline glm::vec3 GetLightColor() { return glm::vec3(m_LR, m_LG, m_LB);}
         inline void SetPosition(float X, float Y, float Z){m_OldX = m_X, m_OldY = m_Y, m_OldZ = m_Z, m_X = X; m_Y = Y; m_Z = Z;}
         inline glm::vec3 GetPos() {return glm::vec3(m_X,m_Y,m_Z);}
-        inline PhysicsPoint GetPhysicsPos() {PhysicsPoint Output; Output.X = m_X; Output.Y = m_Y; Output.Z = m_Z; return Output;}
+        inline PhysicsPos GetPhysicsPos() {PhysicsPos Output; Output.Input(m_X, m_Y, m_Z); return Output;}
         inline glm::vec3 GetPreviouPos(){return glm::vec3(m_OldX, m_OldY, m_OldZ);}
-        inline PhysicsPoint GetPreviouPhysicsPos() {PhysicsPoint Output; Output.X = m_OldX; Output.Y = m_OldY; Output.Z = m_OldZ; return Output;}
+        inline PhysicsPos GetPreviouPhysicsPos() {PhysicsPos Output; Output.Input(m_OldX, m_OldY, m_OldZ); return Output;}
 
         inline void SetColision(bool basic){ SimpleColision = basic;}
         inline bool GetColision(){return SimpleColision;}

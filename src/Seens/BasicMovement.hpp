@@ -48,7 +48,7 @@ class TestWorld{
         std::vector<QuadPhysicsBody> PlayerPhysics, LandPhysics, TealBlockPhysics;
 
         // Temp PlaceHolder for Object Posisons;
-        std::vector<PhysicsPoint> m_ObjectWorldPositions;
+        std::vector<PhysicsPos> m_ObjectWorldPositions;
 
 
 

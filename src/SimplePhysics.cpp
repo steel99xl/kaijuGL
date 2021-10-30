@@ -355,9 +355,8 @@ ColisionInfo SimplePhysics::FullQuadLineColision(std::vector<PhysicsLine> Object
     return Output;
 }
 
-ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPos ObjectBPos, float OffSet){
-    ColisionInfo Output;
-    Output.IsColision = false;
+void SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPos ObjectBPos, ColisionInfo *Output, float OffSet){
+    Output->IsColision = false;
     
     // Each point after being translated to its world Pos
     std::vector<PhysicsLine> TranslatedA, TranslatedB;
@@ -476,10 +475,12 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
 
         //TODO : Make Proper peroint colission output;
         if((BaseXPosNeg != XPosNeg) && (BaseYPosNeg != YPosNeg) && (BaseZPosNeg != ZPosNeg)){
-            Output.IsColision = true;
+            Output->IsColision = true;
         // This just some place holder information
-            Output.MovmentDirectionA = MakeForceDirection(Compare[i].PosA.Pos, BasePoint.Pos);
-            Output.MovmentDirectionB = MakeForceDirection(BasePoint.Pos, Compare[i].PosA.Pos);
+            Output->PastMovmentDirectionA = Output->MovmentDirectionA;
+            Output->PastMovmentDirectionB = Output->MovmentDirectionB;
+            Output->MovmentDirectionA = MakeForceDirection(Compare[i].PosA.Pos, BasePoint.Pos);
+            Output->MovmentDirectionB = MakeForceDirection(BasePoint.Pos, Compare[i].PosA.Pos);
             //Output.MovmentDirectionA.X = Compare[i].PosB.X;
             //Output.MovmentDirectionA.Y = Compare[i].PosB.Y;
             //Output.MovmentDirectionA.Z = Compare[i].PosB.Z;
@@ -487,7 +488,7 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
             //Output.MovmentDirectionB.X = -1.0f*Compare[i].PosB.X;
             //Output.MovmentDirectionB.Y = -1.0f*Compare[i].PosB.Y;
             //Output.MovmentDirectionB.Z = -1.0f*Compare[i].PosB.Z;
-            return Output;
+            return;
         }
 
     }
@@ -497,7 +498,7 @@ ColisionInfo SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> Object
     
     
 
-    return Output;
+    return;
 }
 
 void SimplePhysics::QuadPosToPoints(std::vector<QuadPhysicsBody> Object, PhysicsPos ObjectPos, std::vector<PhysicsPoint> *Output){
@@ -901,8 +902,9 @@ ColisionInfo SimplePhysics::PointsToAABBColision(std::vector<QuadPhysicsBody> Ob
     return Output;
 }
 
-ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsPos &ObjectAPos, std::vector<QuadPhysicsBody> &ObjectB, PhysicsPos &ObjectBPos){
-    ColisionInfo Temp;
+void SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsPos &ObjectAPos, std::vector<QuadPhysicsBody> &ObjectB, PhysicsPos &ObjectBPos, ColisionInfo *Output){
+    //ColisionInfo Temp;
+    Output->IsColision = false;
 
     QuadPhysicsBody *TempObject;
 
@@ -1163,21 +1165,23 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> &ObjectA, 
                 break;
     }*/
 
-    Temp.IsColision = isColision;
+    Output->IsColision = isColision;
+    Output->PastMovmentDirectionA = Output->MovmentDirectionA;
+    Output->PastMovmentDirectionB = Output->MovmentDirectionB;
     if(isColision){
-        Temp.MovmentDirectionA = ObjectA[IndexIntersectA].PlaneNorm;
-        Temp.MovmentDirectionB = ObjectB[IntexIntersectB].PlaneNorm;
+        Output->MovmentDirectionA = ObjectA[IndexIntersectA].PlaneNorm;
+        Output->MovmentDirectionB = ObjectB[IntexIntersectB].PlaneNorm;
     } else {
-        Temp.MovmentDirectionA.X = 0.0f;
-        Temp.MovmentDirectionA.Y = 0.0f;
-        Temp.MovmentDirectionA.Z = 0.0f;
+        Output->MovmentDirectionA.X = 0.0f;
+        Output->MovmentDirectionA.Y = 0.0f;
+        Output->MovmentDirectionA.Z = 0.0f;
 
-        Temp.MovmentDirectionB.X = 0.0f;
-        Temp.MovmentDirectionB.Y = 0.0f;
-        Temp.MovmentDirectionB.Z = 0.0f;
+        Output->MovmentDirectionB.X = 0.0f;
+        Output->MovmentDirectionB.Y = 0.0f;
+        Output->MovmentDirectionB.Z = 0.0f;
     }
 
-    Temp.Force = 0.0f; // This should be a dynamicly calculated thing maybe 1 for each object
+    Output->Force = 0.0f; // This should be a dynamicly calculated thing maybe 1 for each object
 
     //std::cout << IndexIntersectA << " | " << IntexIntersectB << std::endl;
     //std::cout << MinMaxA[IndexIntersectA].Min.X << " | " << MinMaxA[IndexIntersectA].Max.X << std::endl;
@@ -1186,23 +1190,23 @@ ColisionInfo SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> &ObjectA, 
     //std::cout << ObjectA[IndexIntersectA].PosA.X + ObjectAPos.X << std::endl;
 
 
-    return Temp;
+    return;
 }
 
-ColisionInfo SimplePhysics::SphearColison(PhysicsPos ObjectAPos, float ObjectASize, PhysicsPos ObjectBPos, float ObjectBSize){
-    ColisionInfo Output;
+void SimplePhysics::SphearColison(PhysicsPos ObjectAPos, float ObjectASize, PhysicsPos ObjectBPos, float ObjectBSize, ColisionInfo *Output){
+    //ColisionInfo Output;
 
-    Output.IsColision = false;
+    Output->IsColision = false;
     
     float DistAToB = std::sqrt((ObjectAPos.X - ObjectBPos.X)*(ObjectAPos.X - ObjectBPos.X) + (ObjectAPos.Y - ObjectBPos.Y)*(ObjectAPos.Y - ObjectBPos.Y) + (ObjectAPos.Z - ObjectBPos.Z)*(ObjectAPos.Z - ObjectBPos.Z));
 
     if(DistAToB < ObjectASize || DistAToB < ObjectBSize){
-        Output.IsColision = true;
-        Output.MovmentDirectionA = MakeForceDirection(ObjectAPos, ObjectBPos);
-        Output.MovmentDirectionB = MakeForceDirection(ObjectBPos, ObjectAPos); 
+        Output->IsColision = true;
+        Output->MovmentDirectionA = MakeForceDirection(ObjectAPos, ObjectBPos);
+        Output->MovmentDirectionB = MakeForceDirection(ObjectBPos, ObjectAPos); 
     }
 
-    return Output;
+    return;
 }
 
 float SimplePhysics::DotPointToForce(PhysicsPos Point, ForceDirection Projection, PhysicsPos ProjectionPos){
@@ -1258,6 +1262,51 @@ ForceDirection SimplePhysics::NormalizeVectorOfForceDirection(std::vector<ForceD
             Output.Z /= Temp;
         }
 
+    }
+
+
+    return Output;
+}
+
+ForceDirection NormalizeForeDirection(ForceDirection ForceA, ForceDirection ForceB){
+    ForceDirection TempA, TempB, Output;
+    float Temp;
+    // For TempA
+    Temp = std::sqrt(ForceA.X * ForceA.X + ForceA.Y * ForceA.Y + ForceA.Z * ForceA.Z);
+    if(Temp != 0.){
+        TempA.X = ForceA.X / Temp;
+        TempA.Y = ForceA.Y / Temp;
+        TempA.Z = ForceA.Z / Temp;
+
+        // This is to give a weighted normal for averaging the forces;
+        TempA.X = ForceA.X * ForceA.Speed;
+        TempA.Y = ForceA.Y * ForceA.Speed;
+        TempA.Z = ForceA.Z * ForceA.Speed;
+    }
+
+    // For TempB
+    Temp = std::sqrt(ForceB.X * ForceB.X + ForceB.Y * ForceB.Y + ForceB.Z * ForceB.Z);
+    if(Temp != 0.){
+        TempB.X = ForceB.X / Temp;
+        TempB.Y = ForceB.Y / Temp;
+        TempB.Z = ForceB.Z / Temp;
+
+        // This is to give a weighted normal for averaging the forces;
+        TempB.X = ForceB.X * ForceB.Speed;
+        TempB.Y = ForceB.Y * ForceB.Speed;
+        TempB.Z = ForceB.Z * ForceB.Speed;
+    }
+
+    // For Output
+    Output.X = (TempA.X + TempB.X);
+    Output.Y = (TempA.Y + TempB.Y);
+    Output.Z = (TempA.Z + TempB.Z);
+    Temp = std::sqrt(Output.X * Output.X + Output.Y * Output.Y + Output.Z * Output.Z);
+    if(Temp != 0.){
+        Output.X /= Temp;
+        Output.Y /= Temp;
+        Output.Z /= Temp;
+        Output.Speed = Temp;
     }
 
 

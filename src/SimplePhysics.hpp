@@ -90,6 +90,11 @@ struct ColisionInfo{
     bool IsColision; // Simple "yes" "no" colision
     ForceDirection MovmentDirectionA; //This can be calculated by comparing the dirs of the 2 coliding object
     ForceDirection MovmentDirectionB;
+    ForceDirection PastMovmentDirectionA;
+    ForceDirection PastMovmentDirectionB;
+
+    ForceDirection CurrentMovmentDirencitonA;
+    ForceDirection CurrentMovmentDirencitonB;
     float Force; // the Force that should applied to the colistion objectA
 
 	operator bool(){return IsColision;}
@@ -126,7 +131,7 @@ class SimplePhysics{
         void FullQuadLineColisionVoid(std::vector<PhysicsLine> ObjectALines, PhysicsPos ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPos ObjectBPos, float Offset, ColisionInfo *Output);
         ColisionInfo FullQuadLineColision(std::vector<PhysicsLine> ObjectALines,PhysicsPos ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPos ObjectBPos, float Offset);
 
-        ColisionInfo QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPos ObjectBPos, float OffSet = 0.0f);
+        void QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPos ObjectBPos, ColisionInfo *Output, float OffSet = 0.0f);
         // Helper functions to make QuadBodyColisoin faster if possible, lol
 
         // Used for making a vector of PhysicsPoints translated to world space;
@@ -149,9 +154,9 @@ class SimplePhysics{
 
         // This Function only does the comparison 1 way : PointsA to BoxB
         ColisionInfo PointsToAABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<PlaneMinMax> ObjectB);
-        ColisionInfo AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsPos &ObjectAPos, std::vector<QuadPhysicsBody> &ObjectB, PhysicsPos &ObjectBPos);
+        void AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsPos &ObjectAPos, std::vector<QuadPhysicsBody> &ObjectB, PhysicsPos &ObjectBPos, ColisionInfo *Output);
 
-        ColisionInfo SphearColison(PhysicsPos ObjectAPos, float ObjectASize, PhysicsPos ObjectBPos, float ObjectBSize);
+        void SphearColison(PhysicsPos ObjectAPos, float ObjectASize, PhysicsPos ObjectBPos, float ObjectBSize, ColisionInfo *Output);
 
         std::vector<QuadPhysicsBody> MakePhysicsQuads(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
 
@@ -163,6 +168,7 @@ class SimplePhysics{
         
 
         ForceDirection NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces);
+        ForceDirection NormalizeForceDirection(ForceDirection ForeceA, ForceDirection ForceB);
 
         SimplePhysics(float GravityForce, float GravityX, float GravityY, float GravityZ);
         ~SimplePhysics();

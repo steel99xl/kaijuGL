@@ -24,7 +24,7 @@ class TestWorld{
         float m_Width, m_Height, m_Scale;
 
         FrameBufferObject m_FBO;
-        SimpleObject *Frame =  new SimpleObject(2);
+        SimpleObject Frame;
 
 
         // This is currently hnit being used
@@ -34,12 +34,12 @@ class TestWorld{
         //
 
 
-        SimpleObject *PlayerBlock = new SimpleObject(18, DynamicBuffer);
-        SimpleObject *TealBlock = new SimpleObject(18, DynamicBuffer);
+        SimpleObject PlayerBlock;
+        SimpleObject TealBlock;
         // Lol Voxl Land Test set back to about 5k when done
-        SimpleObject *Land = new SimpleObject(15000, DynamicBuffer);
-        SimpleObject *OtherSuns = new SimpleObject(32, DynamicBuffer);
-        SimpleObject *Sun = new SimpleObject(6, DynamicBuffer);
+        SimpleObject Land;
+        SimpleObject OtherSuns;
+        SimpleObject Sun;
 
 
         //Elements for Physics Engine

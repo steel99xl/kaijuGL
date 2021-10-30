@@ -1,11 +1,7 @@
 #include "SimpleObject.hpp"
 
-SimpleObject::SimpleObject(int MaxQuads, BufferType buffertype){
-        m_MaxQuadCount = MaxQuads;
-        m_VerticiesMax = MaxQuads * 4;
-        m_IndicOffset = 0;
+SimpleObject::SimpleObject(){
         
-        m_BufferType = buffertype;
 
         //std::cout << "really.. " << std::endl;
 
@@ -15,7 +11,13 @@ SimpleObject::~SimpleObject(){
 
 }
 
-void SimpleObject::Setup(){
+void SimpleObject::Setup(int MaxQuads, BufferType buffertype){
+        m_MaxQuadCount = MaxQuads;
+        m_VerticiesMax = MaxQuads * 4;
+        m_IndicOffset = 0;
+        
+        m_BufferType = buffertype;
+
         ColisionID = -1;
         ObjectPositionPastID = -1;
         ObjectPositionID = -1;

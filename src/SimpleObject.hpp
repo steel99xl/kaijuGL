@@ -158,10 +158,10 @@ class SimpleObject{
 
         int ColisionID, ObjectPositionPastID, ObjectPositionID, ObjectPositionFutureID;
 
-        SimpleObject(int MaxQuads = 10000, BufferType buffertype = DynamicBuffer);
+        SimpleObject();
         ~SimpleObject();
 
-        void Setup();
+        void Setup(int MaxQuads = 10000, BufferType buffertype = DynamicBuffer);
 
         // This will be used my the shader to place the "object" in the world
 

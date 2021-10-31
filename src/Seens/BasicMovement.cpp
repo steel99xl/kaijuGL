@@ -409,10 +409,10 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
                 m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), TealBlockColision.MovmentDirectionA , PlayerMovmentSpeed);
                 BasicPhysics.AABBColision(TealBlockPhysics, m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], LandPhysics, m_ObjectWorldPositions[Land.ObjectPositionID], &TealBlockColision);
                 if(TealBlockColision.IsColision){
-                TealBlockColision.PastMovmentDirectionA.Speed = PlayerMovmentSpeed;
-                TealBlockColision.MovmentDirectionA.Speed = BasicPhysics.GetGravity().Speed + PlayerMovmentSpeed*2.0f;
-                BasicPhysics.NormalizeForceDirection(TealBlockColision.PastMovmentDirectionA, TealBlockColision.MovmentDirectionA, &TealBlockColision.CurentMovmentDirectionA);
-                m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = BasicPhysics.MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.CurentMovmentDirectionA, TealBlockColision.CurentMovmentDirectionA.Speed);
+                    TealBlockColision.PastMovmentDirectionA.Speed = PlayerMovmentSpeed;
+                    TealBlockColision.MovmentDirectionA.Speed = BasicPhysics.GetGravity().Speed + PlayerMovmentSpeed;
+                    BasicPhysics.NormalizeForceDirection(TealBlockColision.PastMovmentDirectionA, TealBlockColision.MovmentDirectionA, &TealBlockColision.CurentMovmentDirectionA);
+                    m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = BasicPhysics.MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.CurentMovmentDirectionA, TealBlockColision.CurentMovmentDirectionA.Speed);
 
                 BasicPhysics.AABBColision(TealBlockPhysics, m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], LandPhysics, m_ObjectWorldPositions[Land.ObjectPositionID], &TealBlockColision);
                     if(TealBlockColision.IsColision){

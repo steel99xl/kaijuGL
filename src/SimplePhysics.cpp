@@ -1268,8 +1268,8 @@ ForceDirection SimplePhysics::NormalizeVectorOfForceDirection(std::vector<ForceD
     return Output;
 }
 
-ForceDirection NormalizeForeDirection(ForceDirection ForceA, ForceDirection ForceB){
-    ForceDirection TempA, TempB, Output;
+void SimplePhysics::NormalizeForceDirection(ForceDirection ForceA, ForceDirection ForceB, ForceDirection *Output){
+    ForceDirection TempA, TempB;
     float Temp;
     // For TempA
     Temp = std::sqrt(ForceA.X * ForceA.X + ForceA.Y * ForceA.Y + ForceA.Z * ForceA.Z);
@@ -1298,19 +1298,19 @@ ForceDirection NormalizeForeDirection(ForceDirection ForceA, ForceDirection Forc
     }
 
     // For Output
-    Output.X = (TempA.X + TempB.X);
-    Output.Y = (TempA.Y + TempB.Y);
-    Output.Z = (TempA.Z + TempB.Z);
-    Temp = std::sqrt(Output.X * Output.X + Output.Y * Output.Y + Output.Z * Output.Z);
+    Output->X = (TempA.X + TempB.X);
+    Output->Y = (TempA.Y + TempB.Y);
+    Output->Z = (TempA.Z + TempB.Z);
+    Temp = std::sqrt(Output->X * Output->X + Output->Y * Output->Y + Output->Z * Output->Z);
     if(Temp != 0.){
-        Output.X /= Temp;
-        Output.Y /= Temp;
-        Output.Z /= Temp;
-        Output.Speed = Temp;
+        Output->X /= Temp;
+        Output->Y /= Temp;
+        Output->Z /= Temp;
+        Output->Speed = Temp;
     }
 
 
-    return Output;
+    return;
 }
 
 void SimplePhysics::SimpleThreadTest(){

@@ -93,8 +93,8 @@ struct ColisionInfo{
     ForceDirection PastMovmentDirectionA;
     ForceDirection PastMovmentDirectionB;
 
-    ForceDirection CurrentMovmentDirencitonA;
-    ForceDirection CurrentMovmentDirencitonB;
+    ForceDirection CurentMovmentDirectionA;
+    ForceDirection CurentMovmentDirectionB;
     float Force; // the Force that should applied to the colistion objectA
 
 	operator bool(){return IsColision;}
@@ -168,7 +168,7 @@ class SimplePhysics{
         
 
         ForceDirection NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces);
-        ForceDirection NormalizeForceDirection(ForceDirection ForeceA, ForceDirection ForceB);
+        void NormalizeForceDirection(ForceDirection ForceA, ForceDirection ForceB, ForceDirection *Output);
 
         SimplePhysics(float GravityForce, float GravityX, float GravityY, float GravityZ);
         ~SimplePhysics();

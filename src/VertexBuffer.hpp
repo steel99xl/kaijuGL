@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include "Engine.hpp"
+#include "kijuwGL.hpp"
 
 class VertexBuffer{
 private:

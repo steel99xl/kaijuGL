@@ -13,7 +13,6 @@ TestWorld::TestWorld() :  m_Effect(false), m_Width(800.0f), m_Height(680.0f), m_
 TestWorld::~TestWorld(){
 
 
-    //m_TestVAO = std::make_unique<VertexArray>();
 
 }
 

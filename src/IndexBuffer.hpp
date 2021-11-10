@@ -2,7 +2,7 @@
 // Created by steel99xl on 6/14/21.
 //
 #pragma once
-#include "Engine.hpp"
+#include "kijuwGL.hpp"
 
 class IndexBuffer{
 private:

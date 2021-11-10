@@ -4,7 +4,7 @@
 #include <cstring>
 #include <sstream>
 #include <unordered_map>
-#include "Engine.hpp"
+#include "kijuwGL.hpp"
 
 enum ShaderType{
     NONE = -1, VERTEX = 0, FRAGMENT = 1, GEOMETRY = 2

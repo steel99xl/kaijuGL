@@ -7,7 +7,7 @@
 #include <GLFW/glfw3.h>
 
 //#include "src/Renderer.h"
-#include "src/Engine.hpp"
+#include "src/kijuwGL.hpp"
 #include "src/Seens/BasicMovement.hpp"
 //#include "src/IndexBuffer.h"
 //#include "src/VertexArray.h"
@@ -72,23 +72,27 @@ void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mod
     }
 
     if(key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS){
-          ResolutionScale -= 0.02; 
-          if(ResolutionScale > 1.0){
-              std::cout << "Warning Resolusion scale above 1.0" << " | " << ResolutionScale << std::endl;
-          } 
-          if(ResolutionScale < 0.01){
-              ResolutionScale = 0.01;
-          }
+        ResolutionScale -= 0.02; 
+        if(ResolutionScale > 1.0){
+            std::cout << "Warning Resolusion scale above 1.0" << " | " << ResolutionScale << std::endl;
+        } else if(ResolutionScale < 1.0){
+            std::cout << "Warning Resolusion scale bellow 1.0" << " | " << ResolutionScale << std::endl;
+        }  
+        if(ResolutionScale < 0.01){
+            ResolutionScale = 0.01;
+        }
     }
 
     if(key == GLFW_KEY_RIGHT_BRACKET && action == GLFW_PRESS){
-          ResolutionScale += 0.02;  
-          if(ResolutionScale > 1.0){
-              std::cout << "Warning Resolusion scale above 1.0" << " | " << ResolutionScale << std::endl;
-          }
-          if(ResolutionScale > 2.00){
-              ResolutionScale = 2.00;
-          }
+        ResolutionScale += 0.02;  
+        if(ResolutionScale > 1.0){
+            std::cout << "Warning Resolusion scale above 1.0" << " | " << ResolutionScale << std::endl;
+        }else if(ResolutionScale < 1.0){
+            std::cout << "Warning Resolusion scale bellow 1.0" << " | " << ResolutionScale << std::endl;
+        } 
+        if(ResolutionScale > 2.00){
+            ResolutionScale = 2.00;
+        }
     }
 
     if(key == GLFW_KEY_V && action == GLFW_PRESS){
@@ -151,7 +155,7 @@ int main(void){
     int width = 720;
     int height = 480;
     float MaxFPS = 70;
-    int OSscaler = 2; // This is mainly for macOS
+    int OSscaler = 1; // This is mainly for macOS
 
 
     GLFWwindow* window;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine.hpp"
+#include "kijuwGL.hpp"
 
 struct VertexBufferElements{
     unsigned int type;

@@ -149,7 +149,7 @@ void ThirdThread(){
 }
 
 int main(void){
-    Window window(720, 480, "Even Dumber OpenGLWindow");
+    Window window(720, 480, "Even Dumber OpenGLWindow", 2.0f);
     window.SetMaxFrameRateTarget(70);
     window.AttemptMaxFrameRateTarget();
 
@@ -194,6 +194,8 @@ int main(void){
     float FPS = 0;
     /* Loop until the user closes the window */
     while (window.IsOpen()){
+
+        window.SetResolutionScale(ResolutionScale);
         
         FPS = 1.0f/window.GetDeltaTime();
         std::string NewTile = TempTitle + "( " + std::to_string(FPS) + "FPS)";

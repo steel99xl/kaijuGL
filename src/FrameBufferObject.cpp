@@ -5,12 +5,9 @@ FrameBufferObject::FrameBufferObject(){}
 FrameBufferObject::~FrameBufferObject(){}
 
 void FrameBufferObject::Setup(int width, int height, int scale){
-    std::cout << "Entering the function" << std::endl;
     glGenFramebuffers(1, &m_FBO);
-    std::cout << "Generated FBO" << std::endl;
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER ,m_FBO));
 
-    std::cout << "FrameBufferObject::Setup() Part1" << std::endl;
 
     glGenTextures(1, &m_FrameBufferTexture);
     glBindTexture(GL_TEXTURE_2D, m_FrameBufferTexture);
@@ -23,7 +20,6 @@ void FrameBufferObject::Setup(int width, int height, int scale){
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D ,m_FrameBufferTexture, 0);
     
-    std::cout << "FrameBufferObject::Setup() Part2" << std::endl;
 
     glGenRenderbuffers(1, &m_RBO);
     glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
@@ -31,7 +27,6 @@ void FrameBufferObject::Setup(int width, int height, int scale){
 
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
 
-    std::cout << "FrameBufferObject::Setup() Part1" << std::endl;
 
     auto fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if(fboStatus != GL_FRAMEBUFFER_COMPLETE){

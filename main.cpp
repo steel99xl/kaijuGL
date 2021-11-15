@@ -150,8 +150,20 @@ void ThirdThread(){
 
 int main(void){
     Window window(720, 480, "Even Dumber OpenGLWindow");
+    window.SetMaxFrameRateTarget(70);
+    window.AttemptMaxFrameRateTarget();
 
     window.Init();
+
+    if(glewInit() != GLEW_OK){
+        std::cout << "ERROR..." << std::endl;
+        return -1;
+    }
+
+    std::cout << glGetString(GL_VERSION) << std::endl;
+    std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString (GL_SHADING_LANGUAGE_VERSION) << std::endl;
+
+    
 
     World.Setup();
     std::cout << "World Setup" << std::endl;
@@ -175,6 +187,8 @@ int main(void){
     /* 
     
     */ 
+
+    std::string TempTitle = "Some Dumb WindowGL ";
    
 // Draw LOOP
     float FPS = 0;
@@ -182,7 +196,7 @@ int main(void){
     while (window.IsOpen()){
         
         FPS = 1.0f/window.GetDeltaTime();
-        std::string NewTile = window.GetWindowTitle() + " " + "( " + std::to_string(FPS) + "FPS)";
+        std::string NewTile = TempTitle + "( " + std::to_string(FPS) + "FPS)";
         window.ChangeWindowTitle(NewTile.c_str());
 
         window.Update();

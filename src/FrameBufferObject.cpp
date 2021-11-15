@@ -7,6 +7,7 @@ FrameBufferObject::~FrameBufferObject(){}
 void FrameBufferObject::Setup(int width, int height, int scale){
     std::cout << "Entering the function" << std::endl;
     glGenFramebuffers(1, &m_FBO);
+    std::cout << "Generated FBO" << std::endl;
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER ,m_FBO));
 
     std::cout << "FrameBufferObject::Setup() Part1" << std::endl;

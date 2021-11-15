@@ -23,14 +23,17 @@ void TestWorld::Setup(){
     std::cout << "Press the ESC key to togle cursor lock" << std::endl;
     std::cout << "W A S D Moves the camera" << std::endl;
 
-    
-
+    AdvancedCam.Setup(glm::vec3(0.0, 0.0, 0.0f), glm::vec3(1.0, 0.0, 1.0f), glm::vec3(0.0, 1.0, 0.0f), 0.1f, 1.0f, 75.0f, 10000.0f );
+    std::cout << "Camera Setup" << std::endl;
 
     AdvancedCam.SetHorizontalSensitivity(0.1f);
     AdvancedCam.SetVerticalSensitivity(0.08f);
     AdvancedCam.InvertVertical();
 
+    std::cout << "Camera inverted on Y axis by default" << std::endl;
+
     m_FBO.Setup((int)m_Width, (int)m_Height,(int)m_Scale);
+    std::cout << "FBO Setup" << std::endl;
     Frame.Setup(2);
     Frame.SetShader("assets/Shaders/FrameVertex.shader");
     Frame.SetShader("assets/Shaders/FrameBuffer.shader");
@@ -597,6 +600,7 @@ void TestWorld::OnRender(){
             // Pre darw stuff if needed
 
         }
+
         m_FBO.Update((int)m_Width,(int)m_Height,(int)m_Scale);
 
         GLCall(glClearColor(0.60f, 0.60f, 0.75f, 0.0f));

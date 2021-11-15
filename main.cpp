@@ -149,78 +149,25 @@ void ThirdThread(){
 }
 
 int main(void){
-    float deltaTime, lastFrame = 0.0f;
+    Window window(720, 480, "Even Dumber OpenGLWindow");
 
-    std::string Title = "DUMB OPENGL WINDOW";
-    int width = 720;
-    int height = 480;
-    float MaxFPS = 70;
-    int OSscaler = 1; // This is mainly for macOS
-
-
-    GLFWwindow* window;
-
-    /* Initialize the library */
-    if (!glfwInit()) {
-        return -1;
-    }
-
-    //Set OpenGL Version
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(width, height, Title.c_str(), NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-    // Enables V sync
-    glfwSwapInterval(0);
-
-    /* setup GLEW */
-    if(glewInit() != GLEW_OK){
-        std::cout << "ERROR..." << std::endl;
-        return -1;
-    }
-
-    std::cout << glGetString(GL_VERSION) << std::endl;
-    std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString (GL_SHADING_LANGUAGE_VERSION) << std::endl;
-    
-
-
-    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-    GLCall(glEnable(GL_BLEND));
-
-
-
-    Renderer renderer;
-
-
-    glBindVertexArray(0);
-    glUseProgram(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+    window.Init();
 
     World.Setup();
+    std::cout << "World Setup" << std::endl;
     std::thread PhysicsThread(SecondThread,15);
     PhysicsThread.detach();
+    std::cout << "Thread information" << std::endl;
+    std::cout << "True = " << true << "| False = " << false << std::endl;
+    std::cout << PhysicsThread.joinable() << std::endl;
+    std::cout << PhysicsThread.get_id() << std::endl;
 
     World.m_running = true;
 
 
-    glfwSetKeyCallback(window, KeyCallBack);
-    glfwSetCursorPosCallback(window, MousePosCallBack);
-    glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    glfwSetKeyCallback(window.GetWindow(), KeyCallBack);
+    glfwSetCursorPosCallback(window.GetWindow(), MousePosCallBack);
+    glfwSetInputMode(window.GetWindow(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     
     //Temp Fixes/Places
     glEnable(GL_CULL_FACE);
@@ -232,77 +179,30 @@ int main(void){
 // Draw LOOP
     float FPS = 0;
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window)){
+    while (window.IsOpen()){
         
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame; 
-        int ChronoFPS =  1000/MaxFPS;
-        auto WaitTime = std::chrono::milliseconds(ChronoFPS);
-        if(VSync){
-            auto StartTime = std::chrono::steady_clock::now();
-            auto EndTime = std::chrono::steady_clock::now();
+        FPS = 1.0f/window.GetDeltaTime();
+        std::string NewTile = window.GetWindowTitle() + " " + "( " + std::to_string(FPS) + "FPS)";
+        window.ChangeWindowTitle(NewTile.c_str());
 
-            auto ElapsedTime = EndTime - StartTime;
-            auto FinalTime = WaitTime - ElapsedTime;
-            if(ElapsedTime > WaitTime){
-                std::this_thread::sleep_for(ElapsedTime);
-            } else {
-                std::this_thread::sleep_for(WaitTime);
-            }
-            
-        } else {
-            float TempTime = (1000.0f/MaxFPS)/1000.0f;
-            //std::cout << deltaTime << std::endl;
-            if(deltaTime < TempTime){
-                ResolutionScale += TempTime - deltaTime;
-                if(ResolutionScale > 1.00f){
-                    ResolutionScale = 1.00f;
-                }
-            } else if(deltaTime > TempTime){
-                ResolutionScale -= (TempTime - deltaTime) * -1;
-                if(ResolutionScale < 0.10f){
-                    ResolutionScale =  0.10f;
-                }
-            }
-        }
+        window.Update();
 
-        FPS = 1.0f/deltaTime;
-        std::string NewTile = Title + " " + "( " + std::to_string(FPS) + "FPS)";
-        glfwSetWindowTitle(window, NewTile.c_str());
-        glfwPollEvents();
-        glfwGetWindowSize(window, &width, &height);
-        //glViewport(0,0, width*OSscaler, height*OSscaler);
+        World.OnUpdate(window.GetDeltaTime(), (float)window.GetScaledWidth(), (float)window.GetScaledHeight());
 
-
-        World.OnUpdate(deltaTime, width * ResolutionScale, height * ResolutionScale);
-        // Make Shadows hopefully
-        //glViewport(0,0, 2048,2048);
-        //World.GenShadows();
-        //glBindFramebuffer(GL_FRAMEBUFFER,0);
-        //glViewport(0,0, width*OSscaler, height*OSscaler);
-
-        /* Render here */
-        renderer.Clear();
-
-        World.OnGui();
-        // Set Shader, Draw Object
-
-        glViewport(0,0, (width) * ResolutionScale, (height) * ResolutionScale);
+        window.SetSeenRender();
         World.OnRender();
 
-        glViewport(0,0, (width*OSscaler), (height*OSscaler));
+        window.SetPosFXRender();
         World.PaintFrame();
 
+        window.SwapRenderBuffer();
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
 
-        
 
     }
 
     World.m_running = false;
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     glfwTerminate();
     return 0;

@@ -2,7 +2,14 @@
 
 // 2DCamera Class
 
-Camera2D::Camera2D(glm::vec3 Pos, float ScaleFactor, float Width, float Height, float Layers){
+Camera2D::Camera2D(){
+}
+
+Camera2D::~Camera2D(){
+
+}
+
+void Camera2D::Setup(glm::vec3 Pos, float ScaleFactor, float Width, float Height, float Layers){
     m_pos = Pos;
 
     m_ScaleFactor = ScaleFactor;
@@ -12,13 +19,6 @@ Camera2D::Camera2D(glm::vec3 Pos, float ScaleFactor, float Width, float Height, 
     m_Height = Height;
 
     m_LayerDepth = Layers;
-}
-
-Camera2D::~Camera2D(){
-
-}
-
-void Camera2D::Setup(){
 
 }
 
@@ -44,7 +44,15 @@ void Camera2D::Input(){
 
 // 3DCamera Class
 
-Camera3D::Camera3D(glm::vec3 Pos, glm::vec3 Look, glm::vec3 Angle, float Sensitivity, float Ratio, float FOV, float ViewDistance){
+Camera3D::Camera3D(){
+
+}
+
+Camera3D::~Camera3D(){
+
+}
+
+void Camera3D::Setup(glm::vec3 Pos, glm::vec3 Look, glm::vec3 Angle, float Sensitivity, float Ratio, float FOV, float ViewDistance){
     m_pos = Pos;
 
     m_look = Look;
@@ -62,10 +70,6 @@ Camera3D::Camera3D(glm::vec3 Pos, glm::vec3 Look, glm::vec3 Angle, float Sensiti
 
     m_Proj = glm::perspective(glm::radians(m_FOV), m_AspecRatio, 0.1f, m_ViewDistance);
     m_View = glm::lookAt(m_pos, m_look, m_rotation);
-
-}
-
-Camera3D::~Camera3D(){
 
 }
 

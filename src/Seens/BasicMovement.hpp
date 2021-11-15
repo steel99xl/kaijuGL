@@ -58,9 +58,9 @@ class TestWorld{
 
         SimplePhysics BasicPhysics = SimplePhysics(2.0f ,0.0f,-1.0f,0.0f);
 
-        Camera2D SimpleCam = Camera2D(glm::vec3(0.0f,0.0f,0.0f) , 1.0f, 200.0f, 200.0f, 100.0f );
+        Camera2D SimpleCam;
         //SimpleObject Object;// = SimpleObject(1000);
-        Camera3D AdvancedCam = Camera3D(glm::vec3(0.0, 0.0, 0.0f), glm::vec3(1.0, 0.0, 1.0f), glm::vec3(0.0, 1.0, 0.0f), 0.1f, 1.0f, 75.0f, 10000.0f );
+        Camera3D AdvancedCam;
 
     public:
 

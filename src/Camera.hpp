@@ -15,10 +15,10 @@ class Camera2D{
 
     public:
 
-    Camera2D(glm::vec3 Pos, float ScaleFactor, float Width, float Height, float Layers);
+    Camera2D();
     ~Camera2D();
 
-    void Setup();
+    void Setup(glm::vec3 Pos, float ScaleFactor, float Width, float Height, float Layers);
 
     void Update(glm::vec3 Pos, float ScaleFactor = 0.0f, float Width = 0.0f, float Height = 0.0f, float Layers = 0.0f);
     void Input();
@@ -55,8 +55,10 @@ class Camera3D{
 
     public:
 
-    Camera3D(glm::vec3 Pos, glm::vec3 Look, glm::vec3 Angle, float Sensitivity, float Ratio, float FOV, float ViewDistance);
+    Camera3D();
     ~Camera3D();
+
+    void Setup(glm::vec3 Pos, glm::vec3 Look, glm::vec3 Angle, float Sensitivity, float Ratio, float FOV, float ViewDistance);
 
     void Update(float DeltaTime, float Ratio = 0.0f, float FOV = 0.0f, float ViewDistance = 0.0f);
     void Input();

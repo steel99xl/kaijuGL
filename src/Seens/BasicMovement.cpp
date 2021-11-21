@@ -456,78 +456,78 @@ void TestWorld::OnUpdate(float deltaTime, float width, float height, float scale
         //);
     }
 
-void TestWorld::KeyInput(int Keys[]){
+void TestWorld::KeyInput(std::array<int,512> Keys){
         m_NewPlayerDirection.clear();    
         PlayerMovmentSpeed = 4.317f;
         // Keys[] will be replaced with a vector or array of keyinput structs
         // Eventualy the movment will be forcebased
 
-        if(Keys[10] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_F] == GLFW_PRESS){
             PhysicsPos Temp = PlayerBlock.GetPhysicsPos();
             Temp.Y += 10.0f;
             TealBlock.SetPosition(Temp.X, Temp.Y, Temp.Z);
         }
 
-        if(Keys[6] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_LEFT_CONTROL] == GLFW_PRESS){
             //SpeedStep = 12.51f *m_DeltaTime;
             PlayerMovmentSpeed = 6.612;
         }
 
-        if(Keys[0] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_W] == GLFW_PRESS){
             m_pos2D[2] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(FORWARD, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(FORWARD));
         }
 
-        if(Keys[1] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_S] == GLFW_PRESS){
             m_pos2D[2] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(BACK, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(BACK));
         }
 
-        if(Keys[2] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_A] == GLFW_PRESS){
             m_pos2D[0] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(LEFT, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(LEFT));
         }
 
-        if(Keys[3] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_D] == GLFW_PRESS){
             m_pos2D[0] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(RIGHT, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(RIGHT));
         }
 
-        if(Keys[5] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_SPACE] == GLFW_PRESS){
             m_pos2D[1] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(UP, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(UP));
         }
 
-        if(Keys[4] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_LEFT_SHIFT] == GLFW_PRESS){
             m_pos2D[1] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(DOWN, SpeedStep);
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(DOWN));
         }
 
-        if(Keys[22] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_MINUS] == GLFW_PRESS){
             m_FOV -= 1.0f;
                     if(m_FOV <= 20.0f){
                         m_FOV = 20.0f;
                     }
         }
 
-        if(Keys[23] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_EQUAL] == GLFW_PRESS){
             m_FOV += 1.0f;
                     if(m_FOV >= 120.0f){
                         m_FOV = 120.0f;
                     }
         }
 
-        if(Keys[20] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_L] == GLFW_PRESS){
             AdvancedCam.InvertVertical();
         }
 
-        if(Keys[21] == GLFW_PRESS){
+        if(Keys[GLFW_KEY_K] == GLFW_PRESS){
             AdvancedCam.UnInvertVertical();
         }
 

@@ -1,6 +1,6 @@
-#include "Window.hpp"
+#include "KijuwWindow.hpp"
 
-Window::Window(int width, int height, std::string title, float OSResolutionScale ,int OpenGLMajorVersion, int OpenGLMinorVersion){
+KijuwWindow::KijuwWindow(int width, int height, std::string title, float OSResolutionScale ,int OpenGLMajorVersion, int OpenGLMinorVersion){
     m_Width = width;
     m_Height = height;
     m_Title = title;
@@ -19,11 +19,11 @@ Window::Window(int width, int height, std::string title, float OSResolutionScale
 
 }
 
-Window::~Window(){
+KijuwWindow::~KijuwWindow(){
     glfwDestroyWindow(m_Window);
 }
 
-void Window::Init(){
+void KijuwWindow::Init(){
     std::cout << "Initializing Window" << std::endl;
     m_Window = glfwCreateWindow(m_Width, m_Height, m_Title.c_str(), NULL, NULL);
     if(!m_Window){
@@ -41,7 +41,7 @@ void Window::Init(){
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Window::Update(){
+void KijuwWindow::Update(){
     m_CurrentFrameTime = glfwGetTime();
     m_DeltaTime = m_CurrentFrameTime - m_LastFrameTime;
     m_LastFrameTime = m_CurrentFrameTime;
@@ -52,28 +52,28 @@ void Window::Update(){
     glfwGetWindowSize(m_Window, &m_Width, &m_Height);
 
     if(m_AtmpMaxFPS){
-        Window::WindowThreadSleep();
+        KijuwWindow::WindowThreadSleep();
     }
 
 }
 
-void Window::SetSeenRender(){
-    glViewport(0, 0, Window::GetScaledWidth(), Window::GetScaledHeight());
+void KijuwWindow::SetSeenRender(){
+    glViewport(0, 0, KijuwWindow::GetScaledWidth(), KijuwWindow::GetScaledHeight());
 }
 
-void Window::SetPosFXRender(){
+void KijuwWindow::SetPosFXRender(){
     glViewport(0, 0, m_Width * m_OSScale, m_Height * m_OSScale);
 }
 
-void Window::SwapRenderBuffer(){
+void KijuwWindow::SwapRenderBuffer(){
     glfwSwapBuffers(m_Window);
 }
 
-void Window::SetResolutionScale(float scale){
+void KijuwWindow::SetResolutionScale(float scale){
     m_ResolutionScale = scale;
 }
 
-void Window::ManageVSync(bool enable){
+void KijuwWindow::ManageVSync(bool enable){
     if(enable){
         glfwSwapInterval(1);
     }else{
@@ -81,7 +81,10 @@ void Window::ManageVSync(bool enable){
     }
 }
 
+void KijuwWindow::SetKeyArray(int key){
+    m_Keys[key] = glfwGetKey(m_Window, key);
+}
 
-bool Window::IsOpen(){
+bool KijuwWindow::IsOpen(){
     return !glfwWindowShouldClose(m_Window);
 }

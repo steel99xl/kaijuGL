@@ -1,13 +1,11 @@
 #pragma once
-#include <cstring>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-#include <thread>
+
+#include "kijuwGL.hpp"
 
 
-class Window{
-    private:
+
+class KijuwWindow{
+    protected:
         // ya great naming scheme...
         GLFWwindow* m_Window;
         int m_Width;
@@ -16,6 +14,13 @@ class Window{
         // scale is determined by the OS, Mac is 2.0... unless on a non-retina display
         int m_OSScale;
         float m_ResolutionScale;
+
+        // This should be more than enough keys for any keyboard
+        std::array<int,512> m_Keys;
+
+        // So far the most mouse buttons ive seen on a mouse is 19
+        std::array<int, 32> m_MouseButtons;
+        int MouseX, MouseY, LastMousX, LastMouseY;
 
 
         float m_CurrentFrameTime, m_LastFrameTime, m_DeltaTime;
@@ -27,8 +32,8 @@ class Window{
 
 
     public:
-        Window(int width, int height, std::string title, float OSResolutionScale = 1.0f, int OpenGLMajorVersion = 3, int OpenGLMinorVersion = 3);
-        ~Window();
+        KijuwWindow(int width, int height, std::string title, float OSResolutionScale = 1.0f, int OpenGLMajorVersion = 3, int OpenGLMinorVersion = 3);
+        ~KijuwWindow();
 
 
         void Init();
@@ -57,10 +62,15 @@ class Window{
 
         inline GLFWwindow* GetWindow() {return m_Window;}
 
+        void SetKeyArray(int key);
+
+        inline std::array<int,512> GetKeyArray() {return m_Keys;}
 
         bool IsOpen();
 
-
+        inline void setWidth(int width) {m_Width = width;}
+        inline void setHeight(int height) {m_Height = height;}
+        inline void setOSScale(float scale) {m_OSScale = scale;}
 
         inline int GetScaledWidth() const { return m_Width * m_ResolutionScale;}
         inline int GetScaledHeight() const { return m_Height * m_ResolutionScale;}

@@ -13,6 +13,8 @@
 //#include "src/VertexArray.h"
 //#include "src/Shader.h"
 
+// Window Context
+KijuwWindow window(720, 480, "Kijuw");
 
 // Worlds
 TestWorld World;
@@ -25,38 +27,27 @@ double lastY = 0;
 
 float ResolutionScale = 1.0f;
 
-// This is the Main keycall back function to pass keys to the world
-void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mods){
+// This is the Main keycall back function so you can either manage key iputs globaly or have the worlds handle it
+void KeyCallBack( GLFWwindow *InputWindow, int key, int scancode, int action, int mods){
     //std::cout << key << std::endl;
-    int Keys[100];
-    Keys[0] = glfwGetKey(window, GLFW_KEY_W);
-    Keys[1] = glfwGetKey(window, GLFW_KEY_S);
-    Keys[2] = glfwGetKey(window, GLFW_KEY_A);
-    Keys[3] = glfwGetKey(window, GLFW_KEY_D);
+    // Some keys put in to an array to be passed to the worlds
+    window.SetKeyArray(GLFW_KEY_W);
+    window.SetKeyArray(GLFW_KEY_S);
+    window.SetKeyArray(GLFW_KEY_A);
+    window.SetKeyArray(GLFW_KEY_D);
+    window.SetKeyArray(GLFW_KEY_LEFT_SHIFT);
+    window.SetKeyArray(GLFW_KEY_SPACE);
+    window.SetKeyArray(GLFW_KEY_LEFT_CONTROL);
+    window.SetKeyArray(GLFW_KEY_F);
+    window.SetKeyArray(GLFW_KEY_S);
+    window.SetKeyArray(GLFW_KEY_L);
+    window.SetKeyArray(GLFW_KEY_K);
+    window.SetKeyArray(GLFW_KEY_MINUS);
+    window.SetKeyArray(GLFW_KEY_EQUAL);
 
-    Keys[4] = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT);
-    Keys[5] = glfwGetKey(window, GLFW_KEY_SPACE);
-    Keys[6] = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL);
-
-    Keys[10] = glfwGetKey(window, GLFW_KEY_F);
-    Keys[11] = glfwGetKey(window, GLFW_KEY_S);
-    Keys[12] = glfwGetKey(window, GLFW_KEY_A);
-    Keys[13] = glfwGetKey(window, GLFW_KEY_D);
-
-    Keys[14] = glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT);
-    Keys[15] = glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
-    Keys[16] = glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL);
-
-    Keys[20] = glfwGetKey(window, GLFW_KEY_L);
-    Keys[21] = glfwGetKey(window, GLFW_KEY_K);
-
-    Keys[22] = glfwGetKey(window, GLFW_KEY_MINUS);
-    Keys[23] = glfwGetKey(window, GLFW_KEY_EQUAL);
-
-
-
+    World.KeyInput(window.GetKeyArray());
     
-    World.KeyInput(Keys);
+    //World.KeyInput(Keys);
 
     // This is only done for an example of out of "world" controls
 
@@ -64,10 +55,10 @@ void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mod
         std::cout << "Toggling Cursor Lock" << std::endl;
         CursorLock = !CursorLock;
         if(!CursorLock){
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            glfwSetInputMode(InputWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         } else {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            glfwSetCursorPos(window,lastX,lastY);
+            glfwSetInputMode(InputWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetCursorPos(InputWindow,lastX,lastY);
         }
     }
 
@@ -97,6 +88,7 @@ void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mod
 
     if(key == GLFW_KEY_V && action == GLFW_PRESS){
         VSync = !VSync;
+        window.AttemptMaxFrameRateTarget();
         if(VSync){
             std::cout << "VSync : ON" << std::endl;
         } else {
@@ -114,10 +106,6 @@ void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
         lastX = xpos;
         lastY = ypos;
     }
-    
-    // Why does this work..
-    //World.Test(xpos, ypos);
-
 }
 
 //This is the Physics thread
@@ -148,12 +136,21 @@ void ThirdThread(){
 
 }
 
+
 int main(void){
-    Window window(720, 480, "Even Dumber OpenGLWindow", 2.0f);
+    
+    std::string TempTitle = "Some Dumb WindowGL ";
+    // just to test/ show some options
+    window.setWidth(720);
+    window.setHeight(480);
+    window.setOSScale(1.0f);
+    window.ChangeWindowTitle("Kijuw");
     window.SetMaxFrameRateTarget(70);
     window.AttemptMaxFrameRateTarget();
 
     window.Init();
+
+
 
     if(glewInit() != GLEW_OK){
         std::cout << "ERROR..." << std::endl;
@@ -176,7 +173,7 @@ int main(void){
 
     World.m_running = true;
 
-
+    // Yes the KeyCallBack and MouseCallBack must be a function in main (or where ever you have the ability to call) or you can handle passing a static pointer from a class to it.
     glfwSetKeyCallback(window.GetWindow(), KeyCallBack);
     glfwSetCursorPosCallback(window.GetWindow(), MousePosCallBack);
     glfwSetInputMode(window.GetWindow(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
@@ -184,12 +181,7 @@ int main(void){
     //Temp Fixes/Places
     glEnable(GL_CULL_FACE);
     //glEnable(GL_FRAMEBUFFER_SRGB);
-    /* 
-    
-    */ 
 
-    std::string TempTitle = "Some Dumb WindowGL ";
-   
 // Draw LOOP
     float FPS = 0;
     /* Loop until the user closes the window */

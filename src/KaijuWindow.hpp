@@ -1,10 +1,10 @@
 #pragma once
 
-#include "kijuwGL.hpp"
+#include "kaijuGL.hpp"
 
 
 
-class KijuwWindow{
+class KaijuWindow{
     protected:
         // ya great naming scheme...
         GLFWwindow* m_Window;
@@ -20,7 +20,9 @@ class KijuwWindow{
 
         // So far the most mouse buttons ive seen on a mouse is 19
         std::array<int, 32> m_MouseButtons;
-        int MouseX, MouseY, LastMousX, LastMouseY;
+        int m_MouseX, m_MouseY, m_LastMouseX, m_LastMouseY;
+
+        bool m_CursorLock = false;
 
 
         float m_CurrentFrameTime, m_LastFrameTime, m_DeltaTime;
@@ -32,8 +34,8 @@ class KijuwWindow{
 
 
     public:
-        KijuwWindow(int width, int height, std::string title, float OSResolutionScale = 1.0f, int OpenGLMajorVersion = 3, int OpenGLMinorVersion = 3);
-        ~KijuwWindow();
+        KaijuWindow(int width, int height, std::string title, float OSResolutionScale = 1.0f, int OpenGLMajorVersion = 3, int OpenGLMinorVersion = 3);
+        ~KaijuWindow();
 
 
         void Init();
@@ -48,11 +50,15 @@ class KijuwWindow{
 
         void SetResolutionScale(float scale);
 
+        inline float GetResolutionScale() { return m_ResolutionScale; };
+
         void ManageVSync(bool enabled);
 
         inline void SetMaxFrameRateTarget(int target) {m_MaxFrameRate = 1000/target;}
 
-        inline void AttemptMaxFrameRateTarget() { m_AtmpMaxFPS = !m_AtmpMaxFPS; }; 
+        inline void AttemptMaxFrameRateTarget() { m_AtmpMaxFPS = !m_AtmpMaxFPS; };
+
+        inline bool IsAttemptMaxFrameRateTarget() { return m_AtmpMaxFPS; }
 
         inline void ChangeWindowTitle(std::string title){m_Title = title;}
 
@@ -65,6 +71,20 @@ class KijuwWindow{
         void SetKeyArray(int key);
 
         inline std::array<int,512> GetKeyArray() {return m_Keys;}
+
+        inline void SetMousePos(int x, int y) {m_LastMouseX = m_MouseX; m_LastMouseY = m_MouseY; m_MouseX = x; m_MouseY = y;}
+
+        inline void SetLastMousePos(int x, int y) {m_LastMouseX = x; m_LastMouseY = y;}
+        
+        inline int GetLastMouseX() {return m_LastMouseX;}
+
+        inline int GetLastMouseY() {return m_LastMouseY;}
+
+        inline void ToggleCursorLock() {m_CursorLock = !m_CursorLock;}
+        
+        inline bool IsCursorLock() {return m_CursorLock;}
+
+        void CursorLock(bool enabled);
 
         bool IsOpen();
 

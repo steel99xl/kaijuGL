@@ -1,5 +1,5 @@
 #pragma once
-#include "kijuwGL.hpp"
+#include "kaijuGL.hpp"
 
 
  enum CamDirection{UP, DOWN, LEFT, RIGHT, FORWARD, BACK};

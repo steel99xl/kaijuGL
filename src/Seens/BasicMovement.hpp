@@ -1,7 +1,6 @@
 #pragma once
-#include "../kijuwGL.hpp"
+#include "../kaijuGL.hpp"
 
-  
     
 class TestWorld{
 

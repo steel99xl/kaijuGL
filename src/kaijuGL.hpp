@@ -23,4 +23,4 @@
 #include "SimpleObject.hpp"
 #include "Camera.hpp"
 #include "FrameBufferObject.hpp"
-#include "KijuwWindow.hpp"
+#include "KaijuWindow.hpp"

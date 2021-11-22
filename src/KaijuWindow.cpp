@@ -1,6 +1,6 @@
-#include "KijuwWindow.hpp"
+#include "KaijuWindow.hpp"
 
-KijuwWindow::KijuwWindow(int width, int height, std::string title, float OSResolutionScale ,int OpenGLMajorVersion, int OpenGLMinorVersion){
+KaijuWindow::KaijuWindow(int width, int height, std::string title, float OSResolutionScale ,int OpenGLMajorVersion, int OpenGLMinorVersion){
     m_Width = width;
     m_Height = height;
     m_Title = title;
@@ -19,11 +19,11 @@ KijuwWindow::KijuwWindow(int width, int height, std::string title, float OSResol
 
 }
 
-KijuwWindow::~KijuwWindow(){
+KaijuWindow::~KaijuWindow(){
     glfwDestroyWindow(m_Window);
 }
 
-void KijuwWindow::Init(){
+void KaijuWindow::Init(){
     std::cout << "Initializing Window" << std::endl;
     m_Window = glfwCreateWindow(m_Width, m_Height, m_Title.c_str(), NULL, NULL);
     if(!m_Window){
@@ -35,13 +35,20 @@ void KijuwWindow::Init(){
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
 
+    if(glewInit() != GLEW_OK){
+        std::cout << "Failed to initialize GLEW" << std::endl;
+        exit(-1);
+    }
+
+    glEnable(GL_CULL_FACE);
+
     //glBindVertexArray(0);
     //glUseProgram(0);
     //glBindBuffer(GL_ARRAY_BUFFER, 0);
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void KijuwWindow::Update(){
+void KaijuWindow::Update(){
     m_CurrentFrameTime = glfwGetTime();
     m_DeltaTime = m_CurrentFrameTime - m_LastFrameTime;
     m_LastFrameTime = m_CurrentFrameTime;
@@ -52,28 +59,28 @@ void KijuwWindow::Update(){
     glfwGetWindowSize(m_Window, &m_Width, &m_Height);
 
     if(m_AtmpMaxFPS){
-        KijuwWindow::WindowThreadSleep();
+        KaijuWindow::WindowThreadSleep();
     }
 
 }
 
-void KijuwWindow::SetSeenRender(){
-    glViewport(0, 0, KijuwWindow::GetScaledWidth(), KijuwWindow::GetScaledHeight());
+void KaijuWindow::SetSeenRender(){
+    glViewport(0, 0, KaijuWindow::GetScaledWidth(), KaijuWindow::GetScaledHeight());
 }
 
-void KijuwWindow::SetPosFXRender(){
+void KaijuWindow::SetPosFXRender(){
     glViewport(0, 0, m_Width * m_OSScale, m_Height * m_OSScale);
 }
 
-void KijuwWindow::SwapRenderBuffer(){
+void KaijuWindow::SwapRenderBuffer(){
     glfwSwapBuffers(m_Window);
 }
 
-void KijuwWindow::SetResolutionScale(float scale){
+void KaijuWindow::SetResolutionScale(float scale){
     m_ResolutionScale = scale;
 }
 
-void KijuwWindow::ManageVSync(bool enable){
+void KaijuWindow::ManageVSync(bool enable){
     if(enable){
         glfwSwapInterval(1);
     }else{
@@ -81,10 +88,21 @@ void KijuwWindow::ManageVSync(bool enable){
     }
 }
 
-void KijuwWindow::SetKeyArray(int key){
+void KaijuWindow::SetKeyArray(int key){
     m_Keys[key] = glfwGetKey(m_Window, key);
 }
 
-bool KijuwWindow::IsOpen(){
+
+void KaijuWindow::CursorLock(bool enable){
+    if(enable){
+        glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetCursorPos(m_Window, m_LastMouseX, m_LastMouseY);
+    }else{
+        glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+}
+
+
+bool KaijuWindow::IsOpen(){
     return !glfwWindowShouldClose(m_Window);
 }

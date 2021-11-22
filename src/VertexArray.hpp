@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VertexBufferLayout.hpp"
-#include "kijuwGL.hpp"
+#include "kaijuGL.hpp"
 
 class VertexArray{
 private:

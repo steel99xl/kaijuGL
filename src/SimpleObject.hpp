@@ -2,7 +2,7 @@
 //#include "VertexBuffer.hpp"
 //#include "VertexBufferLayout.hpp"
 #include "Texture.hpp"
-#include "kijuwGL.hpp"
+#include "kaijuGL.hpp"
 
 
 struct VertexPos{

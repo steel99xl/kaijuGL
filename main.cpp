@@ -1,31 +1,13 @@
-#include <iostream>
-#include <thread>
-#include <fstream>
-#include <cstring>
-#include <sstream>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-//#include "src/Renderer.h"
-#include "src/kijuwGL.hpp"
+#include "src/kaijuGL.hpp"
 #include "src/Seens/BasicMovement.hpp"
-//#include "src/IndexBuffer.h"
-//#include "src/VertexArray.h"
-//#include "src/Shader.h"
 
 // Window Context
-KijuwWindow window(720, 480, "Kijuw");
+KaijuWindow window(720, 480, "Kaiju");
 
 // Worlds
 TestWorld World;
 
 // Global Stuff to any thing can read or write it from this main file
-bool CursorLock = false;
-bool VSync = true;
-double lastX = 0;
-double lastY = 0;
-
-float ResolutionScale = 1.0f;
 
 // This is the Main keycall back function so you can either manage key iputs globaly or have the worlds handle it
 void KeyCallBack( GLFWwindow *InputWindow, int key, int scancode, int action, int mods){
@@ -53,43 +35,37 @@ void KeyCallBack( GLFWwindow *InputWindow, int key, int scancode, int action, in
 
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
         std::cout << "Toggling Cursor Lock" << std::endl;
-        CursorLock = !CursorLock;
-        if(!CursorLock){
-            glfwSetInputMode(InputWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        } else {
-            glfwSetInputMode(InputWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            glfwSetCursorPos(InputWindow,lastX,lastY);
-        }
+        window.ToggleCursorLock();
+        window.CursorLock(window.IsCursorLock());
     }
 
     if(key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS){
-        ResolutionScale -= 0.02; 
-        if(ResolutionScale > 1.0){
-            std::cout << "Warning Resolusion scale above 1.0" << " | " << ResolutionScale << std::endl;
-        } else if(ResolutionScale < 1.0){
-            std::cout << "Warning Resolusion scale bellow 1.0" << " | " << ResolutionScale << std::endl;
+        window.SetResolutionScale(window.GetResolutionScale() - 0.02);
+        if(window.GetResolutionScale() > 1.0){
+            std::cout << "Warning Resolusion scale above 1.0" << " | " << window.GetResolutionScale() << std::endl;
+        } else if(window.GetResolutionScale() < 1.0){
+            std::cout << "Warning Resolusion scale bellow 1.0" << " | " << window.GetResolutionScale() << std::endl;
         }  
-        if(ResolutionScale < 0.01){
-            ResolutionScale = 0.01;
+        if(window.GetResolutionScale() < 0.01){
+            window.SetResolutionScale(0.01);
         }
     }
 
     if(key == GLFW_KEY_RIGHT_BRACKET && action == GLFW_PRESS){
-        ResolutionScale += 0.02;  
-        if(ResolutionScale > 1.0){
-            std::cout << "Warning Resolusion scale above 1.0" << " | " << ResolutionScale << std::endl;
-        }else if(ResolutionScale < 1.0){
-            std::cout << "Warning Resolusion scale bellow 1.0" << " | " << ResolutionScale << std::endl;
+        window.SetResolutionScale(window.GetResolutionScale() + 0.02);
+        if(window.GetResolutionScale() > 1.0){
+            std::cout << "Warning Resolusion scale above 1.0" << " | " << window.GetResolutionScale() << std::endl;
+        }else if(window.GetResolutionScale() < 1.0){
+            std::cout << "Warning Resolusion scale bellow 1.0" << " | " << window.GetResolutionScale() << std::endl;
         } 
-        if(ResolutionScale > 2.00){
-            ResolutionScale = 2.00;
+        if(window.GetResolutionScale() > 2.00){
+            window.SetResolutionScale(2.00);
         }
     }
 
     if(key == GLFW_KEY_V && action == GLFW_PRESS){
-        VSync = !VSync;
         window.AttemptMaxFrameRateTarget();
-        if(VSync){
+        if(window.IsAttemptMaxFrameRateTarget()){
             std::cout << "VSync : ON" << std::endl;
         } else {
             std::cout << "VSync : OFF" << std::endl;
@@ -99,12 +75,11 @@ void KeyCallBack( GLFWwindow *InputWindow, int key, int scancode, int action, in
 
 }
 
-void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
+void MousePosCallBack(GLFWwindow *InputWindow, double xpos, double ypos){
 
-    if(CursorLock){
+    if(window.IsCursorLock()){
         World.MouseInput(xpos, ypos);
-        lastX = xpos;
-        lastY = ypos;
+        window.SetMousePos(xpos, ypos);
     }
 }
 
@@ -143,19 +118,14 @@ int main(void){
     // just to test/ show some options
     window.setWidth(720);
     window.setHeight(480);
-    window.setOSScale(1.0f);
+    window.setOSScale(2.0f);
+    window.SetResolutionScale(1.0f);
     window.ChangeWindowTitle("Kijuw");
     window.SetMaxFrameRateTarget(70);
     window.AttemptMaxFrameRateTarget();
 
     window.Init();
 
-
-
-    if(glewInit() != GLEW_OK){
-        std::cout << "ERROR..." << std::endl;
-        return -1;
-    }
 
     std::cout << glGetString(GL_VERSION) << std::endl;
     std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString (GL_SHADING_LANGUAGE_VERSION) << std::endl;
@@ -178,16 +148,13 @@ int main(void){
     glfwSetCursorPosCallback(window.GetWindow(), MousePosCallBack);
     glfwSetInputMode(window.GetWindow(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     
-    //Temp Fixes/Places
-    glEnable(GL_CULL_FACE);
-    //glEnable(GL_FRAMEBUFFER_SRGB);
 
 // Draw LOOP
     float FPS = 0;
     /* Loop until the user closes the window */
     while (window.IsOpen()){
 
-        window.SetResolutionScale(ResolutionScale);
+        //window.SetResolutionScale(ResolutionScale);
         
         FPS = 1.0f/window.GetDeltaTime();
         std::string NewTile = TempTitle + "( " + std::to_string(FPS) + "FPS)";
@@ -204,8 +171,6 @@ int main(void){
         World.PaintFrame();
 
         window.SwapRenderBuffer();
-
-
 
     }
 

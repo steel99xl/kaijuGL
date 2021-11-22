@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "kijuwGL.hpp"
+#include "kaijuGL.hpp"
 
 /*
 #include <GL/glew.h>

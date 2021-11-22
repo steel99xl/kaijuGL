@@ -1,6 +1,6 @@
 #pragma once
 
-#include "kijuwGL.hpp"
+#include "kaijuGL.hpp"
 
 class Texture{
     private:

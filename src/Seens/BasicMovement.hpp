@@ -84,7 +84,9 @@ class TestWorld{
         void PaintFrame();
         void OnGui();
 
-
+        inline void Start() { m_running = true; };
+        inline bool IsWorldRunning() { return m_running; };
+        inline void Stop() { m_running = false; };
         inline void Test(double xpos, double ypos){std::cout << xpos << " | " << ypos << std::endl;};
 
 

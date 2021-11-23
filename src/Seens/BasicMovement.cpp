@@ -242,6 +242,8 @@ void TestWorld::Setup(){
     NewTestInt = PlayerBlock.GetObjectQuadID()->size();
 
     std::cout << NewTestInt << std::endl;
+
+    m_running = true;
 }
 
 void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){

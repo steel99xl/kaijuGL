@@ -7,8 +7,6 @@ KaijuWindow window(720, 480, "Kaiju");
 // Worlds
 TestWorld World;
 
-// Global Stuff to any thing can read or write it from this main file
-
 // This is the Main keycall back function so you can either manage key iputs globaly or have the worlds handle it
 void KeyCallBack( GLFWwindow *InputWindow, int key, int scancode, int action, int mods){
     //std::cout << key << std::endl;
@@ -29,8 +27,6 @@ void KeyCallBack( GLFWwindow *InputWindow, int key, int scancode, int action, in
 
     World.KeyInput(window.GetKeyArray());
     
-    //World.KeyInput(Keys);
-
     // This is only done for an example of out of "world" controls
 
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
@@ -88,9 +84,9 @@ void SecondThread(int UpdateSpeed){
     float currentPhysicsFrame, lastPhysicsFrame;
     lastPhysicsFrame = 0.0f;
     // This is to wait for the renderinfg thread to startup
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(200));
     auto WaitTime = std::chrono::milliseconds(UpdateSpeed);
-    while(World.m_running){
+    while(World.IsWorldRunning()){
         currentPhysicsFrame= glfwGetTime();
         auto StartTime = std::chrono::steady_clock::now();
 
@@ -107,7 +103,7 @@ void SecondThread(int UpdateSpeed){
     
 }
 
-// Reserved for future use
+// Reserved for future use, lol
 void ThirdThread(){
 
 }
@@ -116,7 +112,7 @@ void ThirdThread(){
 int main(void){
     
     std::string TempTitle = "Some Dumb WindowGL ";
-    // just to test/ show some options
+    // just to test/show some options
     window.setWidth(720);
     window.setHeight(480);
     window.setOSScale(2.0f);
@@ -131,18 +127,13 @@ int main(void){
     std::cout << glGetString(GL_VERSION) << std::endl;
     std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString (GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
-    
 
     World.Setup();
+    //World.m_running = true;
     std::cout << "World Setup" << std::endl;
     std::thread PhysicsThread(SecondThread,15);
     PhysicsThread.detach();
-    std::cout << "Thread information" << std::endl;
-    std::cout << "True = " << true << "| False = " << false << std::endl;
-    std::cout << PhysicsThread.joinable() << std::endl;
-    std::cout << PhysicsThread.get_id() << std::endl;
-
-    World.m_running = true;
+    std::cout << "Physics Thread Running..." << std::endl;
 
     // Yes the KeyCallBack and MouseCallBack must be a function in main (or where ever you have the ability to call) or you can handle passing a static pointer from a class to it.
     glfwSetKeyCallback(window.GetWindow(), KeyCallBack);
@@ -150,7 +141,7 @@ int main(void){
     glfwSetInputMode(window.GetWindow(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     
 
-// Draw LOOP
+    // Draw LOOP
     float FPS = 0;
     /* Loop until the user closes the window */
     while (window.IsOpen()){
@@ -174,8 +165,8 @@ int main(void){
         window.SwapRenderBuffer();
 
     }
-
-    World.m_running = false;
+    World.Stop();
+    //World.m_running = false;
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     glfwTerminate();

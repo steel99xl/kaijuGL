@@ -6,7 +6,7 @@
 #include "kaijuGL.hpp"
 
 class VertexBuffer{
-private:
+protected:
     unsigned int  m_RenderID;
 public:
     VertexBuffer();

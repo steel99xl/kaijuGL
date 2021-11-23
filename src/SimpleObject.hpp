@@ -86,7 +86,7 @@ enum BufferType{StaticBuffer, DynamicBuffer};
 
 
 class SimpleObject{
-    private:
+    protected:
         int m_MaxQuadCount, m_MaxQuads, m_UsedQuads;
 
 

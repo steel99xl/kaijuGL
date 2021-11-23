@@ -17,7 +17,7 @@ struct ShaderProgramSource{
 };
 
 class Shader{
-private:
+protected:
     std::string m_FilePath;
     unsigned int m_RenderID;
     unsigned int m_TempRender;

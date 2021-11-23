@@ -24,8 +24,8 @@ class KaijuWindow{
 
         bool m_CursorLock = false;
 
-
-        float m_CurrentFrameTime, m_LastFrameTime, m_DeltaTime;
+        float m_CurrentFrameTime, m_DeltaTime;
+        float m_LastFrameTime = 0.0f;
 
         int m_MaxFrameRate;
         bool m_AtmpMaxFPS = false;

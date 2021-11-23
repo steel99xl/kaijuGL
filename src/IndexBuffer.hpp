@@ -5,7 +5,7 @@
 #include "kaijuGL.hpp"
 
 class IndexBuffer{
-private:
+protected:
     unsigned int  m_RenderID;
     unsigned int m_Count;
     unsigned int m_Unquie;

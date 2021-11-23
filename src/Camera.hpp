@@ -6,7 +6,7 @@
 
 
 class Camera2D{
-    private:
+    protected:
     float m_LayerDepth, m_ScaleFactor, m_Width, m_Height;
     glm::vec3  m_pos;
     // Camera is at (4,3,3), in World Space // and looks at the  //glm::vec3(0,1,0)
@@ -30,7 +30,7 @@ class Camera2D{
 
 
 class Camera3D{
-    private:
+    protected:
      // How far you can see from the camera
     float m_ViewDistance;
     float m_FOV;

@@ -2,7 +2,7 @@
 #include "kaijuGL.hpp"
 
 class FrameBufferObject{
-    private:
+    protected:
         unsigned int m_FBO;
         unsigned int m_FrameBufferTexture;
         unsigned int m_RBO;

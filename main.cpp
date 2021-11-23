@@ -87,19 +87,20 @@ void MousePosCallBack(GLFWwindow *InputWindow, double xpos, double ypos){
 void SecondThread(int UpdateSpeed){
     float currentPhysicsFrame, lastPhysicsFrame;
     lastPhysicsFrame = 0.0f;
+    // This is to wait for the renderinfg thread to startup
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     auto WaitTime = std::chrono::milliseconds(UpdateSpeed);
     while(World.m_running){
         currentPhysicsFrame= glfwGetTime();
         auto StartTime = std::chrono::steady_clock::now();
+
         World.PhysicsUpdate(currentPhysicsFrame - lastPhysicsFrame);
         lastPhysicsFrame = currentPhysicsFrame; 
-        auto EndTime = std::chrono::steady_clock::now();
 
+        auto EndTime = std::chrono::steady_clock::now();
         auto ElapsedTime = EndTime - StartTime;
         auto FinalTime = WaitTime - ElapsedTime;
         if(FinalTime > std::chrono::milliseconds::zero()){
-            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
             std::this_thread::sleep_for(FinalTime);
         }
     }

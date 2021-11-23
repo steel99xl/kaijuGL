@@ -3,7 +3,7 @@
 #include "kaijuGL.hpp"
 
 class Texture{
-    private:
+    protected:
         unsigned int m_RendererID;
         GLuint m_CurrentTexture[32];
         std::string m_FilePath;

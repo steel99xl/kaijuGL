@@ -1,7 +1,5 @@
 #include "BasicMovement.hpp"
 
-#include <GLFW/glfw3.h>
-
 
 
 TestWorld::TestWorld() :  m_Effect(false), m_Width(800.0f), m_Height(680.0f), m_Scale(1.0f),  m_running(false){

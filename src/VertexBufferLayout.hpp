@@ -20,7 +20,7 @@ struct VertexBufferElements{
 
 
 class VertexBufferLayout{
-private:
+protected:
     std::vector<VertexBufferElements> m_Elements;
     unsigned int m_Stride;
 

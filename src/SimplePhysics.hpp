@@ -108,7 +108,7 @@ struct MultiThreadPhysUpdate{
 
 
 class SimplePhysics{
-    private:
+    protected:
         float m_DeltaTime;
 
         ForceDirection m_Gravity;

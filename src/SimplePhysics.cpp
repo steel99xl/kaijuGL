@@ -906,7 +906,7 @@ void SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsP
     //ColisionInfo Temp;
     Output->IsColision = false;
 
-    QuadPhysicsBody *TempObject;
+    //QuadPhysicsBody *TempObject;
 
     bool XColision = false;
     bool YColision = false;

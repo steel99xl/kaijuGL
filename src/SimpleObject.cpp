@@ -34,9 +34,13 @@ void SimpleObject::Setup(int MaxQuads, BufferType buffertype){
 
         std::cout << m_MaxQuadCount << std::endl;
 
-
-        m_IBO->MakeDynamicBuffer(NULL, (m_MaxQuadCount*4)*6 );
-        m_VertexBuffer->MakeDynamicBuffer(NULL, sizeof(Vertex) * (m_MaxQuadCount*4));
+        if(m_BufferType == BufferType::StaticBuffer){
+                m_IBO->MakeStaticBuffer(NULL, (m_MaxQuadCount*4)*6 );
+                m_VertexBuffer->MakeStaticBuffer(NULL, sizeof(Vertex) * (m_MaxQuadCount*4));
+        } else {
+                m_IBO->MakeDynamicBuffer(NULL, (m_MaxQuadCount*4)*6 );
+                m_VertexBuffer->MakeDynamicBuffer(NULL, sizeof(Vertex) * (m_MaxQuadCount*4));
+        }
         
         //m_Shader->SetShader("assets/Shaders/MultiImg.shader");
         // This is just to set the basic rotation for the object in work space

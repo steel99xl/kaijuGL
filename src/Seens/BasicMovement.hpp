@@ -77,6 +77,7 @@ class TestWorld{
 
         void OnUpdate(float deltaTime, float width, float hight, float scale = 1.0f);
         void KeyInput(std::array<int, 512> Keys);
+        void MouseButton(std::array<int, 32> MouseButtons);
         void MouseInput(double xpos, double ypos);
         // Yes this needs to be called every frame if you have moving objects;
         void GenShadows();

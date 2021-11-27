@@ -92,6 +92,9 @@ void KaijuWindow::SetKeyArray(int key){
     m_Keys[key] = glfwGetKey(m_Window, key);
 }
 
+void KaijuWindow::SetMouseButtonArray(int button){
+    m_MouseButtons[button] = glfwGetMouseButton(m_Window, button);
+}
 
 void KaijuWindow::CursorLock(bool enable){
     if(enable){

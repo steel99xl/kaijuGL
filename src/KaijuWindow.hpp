@@ -72,6 +72,10 @@ class KaijuWindow{
 
         inline std::array<int,512> GetKeyArray() {return m_Keys;}
 
+        void SetMouseButtonArray(int button);
+
+        inline std::array<int,32> GetMouseButtonArray() {return m_MouseButtons;}
+
         inline void SetMousePos(int x, int y) {m_LastMouseX = m_MouseX; m_LastMouseY = m_MouseY; m_MouseX = x; m_MouseY = y;}
 
         inline void SetLastMousePos(int x, int y) {m_LastMouseX = x; m_LastMouseY = y;}

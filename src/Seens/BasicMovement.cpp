@@ -39,7 +39,7 @@ void TestWorld::Setup(){
     Frame.SetFloatUniform("u_Size.width", m_Width);
 
     PlayerBlock.Setup(18, DynamicBuffer);
-    Land.Setup(15000, DynamicBuffer);
+    Land.Setup(15000, StaticBuffer);
     OtherSuns.Setup(6, DynamicBuffer);
     Sun.Setup(32, DynamicBuffer);
     TealBlock.Setup(6, DynamicBuffer);
@@ -235,6 +235,8 @@ void TestWorld::Setup(){
 
     PlayerBlock.SetMaterial(BasicMetalCube);
     PlayerBlock.PreFillLights(4);
+
+    Land.BindBufferData();
 
     std::cout << PlayerBlock.GetVerticies()[1].Pos.X << " | " << PlayerBlock.GetVerticies()[0].Pos.Y << " | " << PlayerBlock.GetVerticies()[0].Pos.Z << std::endl;
 
@@ -535,6 +537,13 @@ void TestWorld::KeyInput(std::array<int,512> Keys){
 
 }
 
+void TestWorld::MouseButton(std::array<int,32> MouseButtons){
+    if(MouseButtons[GLFW_MOUSE_BUTTON_LEFT] == GLFW_PRESS){
+        glm::vec3 Temp = AdvancedCam.GetCurrentLook();
+        std::cout << "Current Look : " << Temp.x << " | " << Temp.y << " | " << Temp.z << std::endl;
+    }
+}
+
 void TestWorld::MouseInput(double xpos, double ypos){
 
     AdvancedCam.LookRelative(xpos,ypos);
@@ -612,7 +621,7 @@ void TestWorld::OnRender(){
 
 
 
-        Land.BindBufferData();
+        //Land.BindBufferData();
         
         Land.SetDrawPos(m_Projection, m_View);
         Land.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);

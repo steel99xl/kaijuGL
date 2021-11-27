@@ -72,13 +72,17 @@ void KeyCallBack( GLFWwindow *InputWindow, int key, int scancode, int action, in
 }
 
 void MousePosCallBack(GLFWwindow *InputWindow, double xpos, double ypos){
-
+    // Global Locking and unlocking of the mouse position
     if(window.IsCursorLock()){
         World.MouseInput(xpos, ypos);
         window.SetMousePos(xpos, ypos);
     }
 }
 
+void MouseButtonCallBack(GLFWwindow *InputWindow, int button, int action, int mods){
+    window.SetMouseButtonArray(GLFW_MOUSE_BUTTON_LEFT);
+    World.MouseButton(window.GetMouseButtonArray());
+}
 //This is the Physics thread
 void SecondThread(int UpdateSpeed){
     float currentPhysicsFrame, lastPhysicsFrame;
@@ -115,8 +119,8 @@ int main(void){
     // just to test/show some options
     window.setWidth(720);
     window.setHeight(480);
-    window.setOSScale(1.0f);
-    window.SetResolutionScale(1.0f);
+    window.setOSScale(2.0f);
+    window.SetResolutionScale(2.0f);
     window.ChangeWindowTitle("Kijuw");
     window.SetMaxFrameRateTarget(70);
     window.AttemptMaxFrameRateTarget();
@@ -138,15 +142,20 @@ int main(void){
     // Yes the KeyCallBack and MouseCallBack must be a function in main (or where ever you have the ability to call) or you can handle passing a static pointer from a class to it.
     glfwSetKeyCallback(window.GetWindow(), KeyCallBack);
     glfwSetCursorPosCallback(window.GetWindow(), MousePosCallBack);
+    glfwSetMouseButtonCallback(window.GetWindow(), MouseButtonCallBack);
     glfwSetInputMode(window.GetWindow(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     
 
     // Draw LOOP
     float FPS = 0;
     /* Loop until the user closes the window */
+    std::cout << "Simple FPS Testing" << std::endl;
+    std::cout << std::to_string(FPS) << std::endl;
     while (window.IsOpen()){
 
         //window.SetResolutionScale(ResolutionScale);
+
+        window.Update();
         
         FPS = 1.0f/window.GetDeltaTime();
         std::string NewTile = TempTitle + "( " + std::to_string(FPS) + "FPS)";

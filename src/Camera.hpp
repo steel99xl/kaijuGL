@@ -1,12 +1,12 @@
 #pragma once
-#include "Engine.hpp"
+#include "kaijuGL.hpp"
 
 
  enum CamDirection{UP, DOWN, LEFT, RIGHT, FORWARD, BACK};
 
 
 class Camera2D{
-    private:
+    protected:
     float m_LayerDepth, m_ScaleFactor, m_Width, m_Height;
     glm::vec3  m_pos;
     // Camera is at (4,3,3), in World Space // and looks at the  //glm::vec3(0,1,0)
@@ -15,10 +15,10 @@ class Camera2D{
 
     public:
 
-    Camera2D(glm::vec3 Pos, float ScaleFactor, float Width, float Height, float Layers);
+    Camera2D();
     ~Camera2D();
 
-    void Setup();
+    void Setup(glm::vec3 Pos, float ScaleFactor, float Width, float Height, float Layers);
 
     void Update(glm::vec3 Pos, float ScaleFactor = 0.0f, float Width = 0.0f, float Height = 0.0f, float Layers = 0.0f);
     void Input();
@@ -30,7 +30,7 @@ class Camera2D{
 
 
 class Camera3D{
-    private:
+    protected:
      // How far you can see from the camera
     float m_ViewDistance;
     float m_FOV;
@@ -55,8 +55,10 @@ class Camera3D{
 
     public:
 
-    Camera3D(glm::vec3 Pos, glm::vec3 Look, glm::vec3 Angle, float Sensitivity, float Ratio, float FOV, float ViewDistance);
+    Camera3D();
     ~Camera3D();
+
+    void Setup(glm::vec3 Pos, glm::vec3 Look, glm::vec3 Angle, float Sensitivity, float Ratio, float FOV, float ViewDistance);
 
     void Update(float DeltaTime, float Ratio = 0.0f, float FOV = 0.0f, float ViewDistance = 0.0f);
     void Input();

@@ -2,13 +2,23 @@
 //#include "VertexBuffer.hpp"
 //#include "VertexBufferLayout.hpp"
 #include "Texture.hpp"
-#include "Engine.hpp"
+#include "kaijuGL.hpp"
 
 
 struct VertexPos{
     float X;
     float Y;
     float Z;
+    
+    VertexPos(){}
+    ~VertexPos(){}
+    void Input(float x, float y, float z){
+        X = x;
+        Y = y;
+        Z = z;
+    }
+    
+
 };
 
 struct VertexTexCord{
@@ -76,7 +86,7 @@ enum BufferType{StaticBuffer, DynamicBuffer};
 
 
 class SimpleObject{
-    private:
+    protected:
         int m_MaxQuadCount, m_MaxQuads, m_UsedQuads;
 
 
@@ -105,6 +115,9 @@ class SimpleObject{
         // The weight of the object vertexs in KG
         std::vector<float> m_Weights;
         float m_TotalWeight;
+
+        float m_CurrentMovmentSpeed;
+        VertexPos m_CurrentMovementDir;
 
         bool SimpleColision;
 
@@ -145,10 +158,10 @@ class SimpleObject{
 
         int ColisionID, ObjectPositionPastID, ObjectPositionID, ObjectPositionFutureID;
 
-        SimpleObject(int MaxQuads = 10000, BufferType buffertype = DynamicBuffer);
+        SimpleObject();
         ~SimpleObject();
 
-        void Setup();
+        void Setup(int MaxQuads = 10000, BufferType buffertype = DynamicBuffer);
 
         // This will be used my the shader to place the "object" in the world
 
@@ -201,16 +214,16 @@ class SimpleObject{
         inline glm::vec3 GetLightColor() { return glm::vec3(m_LR, m_LG, m_LB);}
         inline void SetPosition(float X, float Y, float Z){m_OldX = m_X, m_OldY = m_Y, m_OldZ = m_Z, m_X = X; m_Y = Y; m_Z = Z;}
         inline glm::vec3 GetPos() {return glm::vec3(m_X,m_Y,m_Z);}
-        inline PhysicsPoint GetPhysicsPos() {PhysicsPoint Output; Output.X = m_X; Output.Y = m_Y; Output.Z = m_Z; return Output;}
+        inline PhysicsPos GetPhysicsPos() {PhysicsPos Output; Output.Input(m_X, m_Y, m_Z); return Output;}
         inline glm::vec3 GetPreviouPos(){return glm::vec3(m_OldX, m_OldY, m_OldZ);}
-        inline PhysicsPoint GetPreviouPhysicsPos() {PhysicsPoint Output; Output.X = m_OldX; Output.Y = m_OldY; Output.Z = m_OldZ; return Output;}
+        inline PhysicsPos GetPreviouPhysicsPos() {PhysicsPos Output; Output.Input(m_OldX, m_OldY, m_OldZ); return Output;}
 
         inline void SetColision(bool basic){ SimpleColision = basic;}
         inline bool GetColision(){return SimpleColision;}
 
         inline std::vector<ObjectQuadID> *GetObjectQuadID(){return &m_SubObjectIDList;}
 
-        inline float GetTotlalWeight(){return m_TotalWeight;}
+        inline float GetTotalWeight(){return m_TotalWeight;}
 
         void SumAllWeights();
 

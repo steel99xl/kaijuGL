@@ -4,7 +4,7 @@
 #include <cstring>
 #include <sstream>
 #include <unordered_map>
-#include "Engine.hpp"
+#include "kaijuGL.hpp"
 
 enum ShaderType{
     NONE = -1, VERTEX = 0, FRAGMENT = 1, GEOMETRY = 2
@@ -17,7 +17,7 @@ struct ShaderProgramSource{
 };
 
 class Shader{
-private:
+protected:
     std::string m_FilePath;
     unsigned int m_RenderID;
     unsigned int m_TempRender;

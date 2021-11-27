@@ -1,291 +1,181 @@
-#include <iostream>
-#include <thread>
-#include <fstream>
-#include <cstring>
-#include <sstream>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-//#include "src/Renderer.h"
-#include "src/Engine.hpp"
+#include "src/kaijuGL.hpp"
 #include "src/Seens/BasicMovement.hpp"
-//#include "src/IndexBuffer.h"
-//#include "src/VertexArray.h"
-//#include "src/Shader.h"
 
+// Window Context
+KaijuWindow window(720, 480, "Kaiju");
 
 // Worlds
 TestWorld World;
 
-// Global Stuff to any thing can read or write it from this main file
-bool CursorLock = false;
-bool VSync = true;
-double lastX = 0;
-double lastY = 0;
-
-float ResolutionScale = 1.0f;
-
-// This is the Main keycall back function to pass keys to the world
-void KeyCallBack( GLFWwindow *window, int key, int scancode, int action, int mods){
+// This is the Main keycall back function so you can either manage key iputs globaly or have the worlds handle it
+void KeyCallBack( GLFWwindow *InputWindow, int key, int scancode, int action, int mods){
     //std::cout << key << std::endl;
-    int Keys[100];
-    Keys[0] = glfwGetKey(window, GLFW_KEY_W);
-    Keys[1] = glfwGetKey(window, GLFW_KEY_S);
-    Keys[2] = glfwGetKey(window, GLFW_KEY_A);
-    Keys[3] = glfwGetKey(window, GLFW_KEY_D);
+    // Some keys put in to an array to be passed to the worlds
+    window.SetKeyArray(GLFW_KEY_W);
+    window.SetKeyArray(GLFW_KEY_S);
+    window.SetKeyArray(GLFW_KEY_A);
+    window.SetKeyArray(GLFW_KEY_D);
+    window.SetKeyArray(GLFW_KEY_LEFT_SHIFT);
+    window.SetKeyArray(GLFW_KEY_SPACE);
+    window.SetKeyArray(GLFW_KEY_LEFT_CONTROL);
+    window.SetKeyArray(GLFW_KEY_F);
+    window.SetKeyArray(GLFW_KEY_S);
+    window.SetKeyArray(GLFW_KEY_L);
+    window.SetKeyArray(GLFW_KEY_K);
+    window.SetKeyArray(GLFW_KEY_MINUS);
+    window.SetKeyArray(GLFW_KEY_EQUAL);
 
-    Keys[4] = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT);
-    Keys[5] = glfwGetKey(window, GLFW_KEY_SPACE);
-    Keys[6] = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL);
-
-    Keys[10] = glfwGetKey(window, GLFW_KEY_F);
-    Keys[11] = glfwGetKey(window, GLFW_KEY_S);
-    Keys[12] = glfwGetKey(window, GLFW_KEY_A);
-    Keys[13] = glfwGetKey(window, GLFW_KEY_D);
-
-    Keys[14] = glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT);
-    Keys[15] = glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
-    Keys[16] = glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL);
-
-    Keys[20] = glfwGetKey(window, GLFW_KEY_L);
-    Keys[21] = glfwGetKey(window, GLFW_KEY_K);
-
-    Keys[22] = glfwGetKey(window, GLFW_KEY_MINUS);
-    Keys[23] = glfwGetKey(window, GLFW_KEY_EQUAL);
-
-
-
+    World.KeyInput(window.GetKeyArray());
     
-    World.KeyInput(Keys);
-
     // This is only done for an example of out of "world" controls
 
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
         std::cout << "Toggling Cursor Lock" << std::endl;
-        CursorLock = !CursorLock;
-        if(!CursorLock){
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        } else {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            glfwSetCursorPos(window,lastX,lastY);
-        }
+        window.ToggleCursorLock();
+        window.CursorLock(window.IsCursorLock());
     }
 
     if(key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS){
-          ResolutionScale -= 0.02; 
-          if(ResolutionScale > 1.0){
-              std::cout << "Warning Resolusion scale above 1.0" << " | " << ResolutionScale << std::endl;
-          } 
-          if(ResolutionScale < 0.01){
-              ResolutionScale = 0.01;
-          }
+        window.SetResolutionScale(window.GetResolutionScale() - 0.02);
+        if(window.GetResolutionScale() > 1.0){
+            std::cout << "Warning Resolusion scale above 1.0" << " | " << window.GetResolutionScale() << std::endl;
+        } else if(window.GetResolutionScale() < 1.0){
+            std::cout << "Warning Resolusion scale bellow 1.0" << " | " << window.GetResolutionScale() << std::endl;
+        }  
+        if(window.GetResolutionScale() < 0.01){
+            window.SetResolutionScale(0.01);
+        }
     }
 
     if(key == GLFW_KEY_RIGHT_BRACKET && action == GLFW_PRESS){
-          ResolutionScale += 0.02;  
-          if(ResolutionScale > 1.0){
-              std::cout << "Warning Resolusion scale above 1.0" << " | " << ResolutionScale << std::endl;
-          }
-          if(ResolutionScale > 2.00){
-              ResolutionScale = 2.00;
-          }
+        window.SetResolutionScale(window.GetResolutionScale() + 0.02);
+        if(window.GetResolutionScale() > 1.0){
+            std::cout << "Warning Resolusion scale above 1.0" << " | " << window.GetResolutionScale() << std::endl;
+        }else if(window.GetResolutionScale() < 1.0){
+            std::cout << "Warning Resolusion scale bellow 1.0" << " | " << window.GetResolutionScale() << std::endl;
+        } 
+        if(window.GetResolutionScale() > 2.00){
+            window.SetResolutionScale(2.00);
+        }
     }
 
     if(key == GLFW_KEY_V && action == GLFW_PRESS){
-        VSync = !VSync;
-        if(VSync){
-            glfwSwapInterval(1);
+        window.AttemptMaxFrameRateTarget();
+        if(window.IsAttemptMaxFrameRateTarget()){
+            std::cout << "VSync : ON" << std::endl;
         } else {
-            glfwSwapInterval(0);
+            std::cout << "VSync : OFF" << std::endl;
         }
     }
     
 
 }
 
-void MousePosCallBack(GLFWwindow *window, double xpos, double ypos){
-
-    if(CursorLock){
+void MousePosCallBack(GLFWwindow *InputWindow, double xpos, double ypos){
+    // Global Locking and unlocking of the mouse position
+    if(window.IsCursorLock()){
         World.MouseInput(xpos, ypos);
-        lastX = xpos;
-        lastY = ypos;
+        window.SetMousePos(xpos, ypos);
     }
-    
-    // Why does this work..
-    //World.Test(xpos, ypos);
-
 }
 
+void MouseButtonCallBack(GLFWwindow *InputWindow, int button, int action, int mods){
+    window.SetMouseButtonArray(GLFW_MOUSE_BUTTON_LEFT);
+    World.MouseButton(window.GetMouseButtonArray());
+}
 //This is the Physics thread
 void SecondThread(int UpdateSpeed){
     float currentPhysicsFrame, lastPhysicsFrame;
     lastPhysicsFrame = 0.0f;
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    // This is to wait for the renderinfg thread to startup
+    //std::this_thread::sleep_for(std::chrono::milliseconds(200));
     auto WaitTime = std::chrono::milliseconds(UpdateSpeed);
-    while(World.m_running){
+    while(World.IsWorldRunning()){
         currentPhysicsFrame= glfwGetTime();
         auto StartTime = std::chrono::steady_clock::now();
+
         World.PhysicsUpdate(currentPhysicsFrame - lastPhysicsFrame);
         lastPhysicsFrame = currentPhysicsFrame; 
-        auto EndTime = std::chrono::steady_clock::now();
 
+        auto EndTime = std::chrono::steady_clock::now();
         auto ElapsedTime = EndTime - StartTime;
         auto FinalTime = WaitTime - ElapsedTime;
         if(FinalTime > std::chrono::milliseconds::zero()){
-            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
             std::this_thread::sleep_for(FinalTime);
         }
     }
     
 }
 
-// Reserved for future use
+// Reserved for future use, lol
 void ThirdThread(){
 
 }
 
+
 int main(void){
-    float deltaTime, lastFrame = 0.0f;
+    
+    std::string TempTitle = "Some Dumb WindowGL ";
+    // just to test/show some options
+    window.setWidth(720);
+    window.setHeight(480);
+    window.setOSScale(2.0f);
+    window.SetResolutionScale(2.0f);
+    window.ChangeWindowTitle("Kijuw");
+    window.SetMaxFrameRateTarget(70);
+    window.AttemptMaxFrameRateTarget();
 
-    std::string Title = "DUMB OPENGL WINDOW";
-    int width = 720;
-    int height = 480;
-    float MaxFPS = 70;
-    int OSscaler = 2; // This is mainly for macOS
+    window.Init();
 
-
-    GLFWwindow* window;
-
-    /* Initialize the library */
-    if (!glfwInit()) {
-        return -1;
-    }
-
-    //Set OpenGL Version
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(width, height, Title.c_str(), NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-    // Enables V sync
-    glfwSwapInterval(1);
-
-    /* setup GLEW */
-    if(glewInit() != GLEW_OK){
-        std::cout << "ERROR..." << std::endl;
-        return -1;
-    }
 
     std::cout << glGetString(GL_VERSION) << std::endl;
     std::cout << "GL_SHADING_LANGUAGE_VERSION: " << glGetString (GL_SHADING_LANGUAGE_VERSION) << std::endl;
-    
-
-
-    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-    GLCall(glEnable(GL_BLEND));
-
-
-
-    Renderer renderer;
-
-
-    glBindVertexArray(0);
-    glUseProgram(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
     World.Setup();
+    //World.m_running = true;
+    std::cout << "World Setup" << std::endl;
     std::thread PhysicsThread(SecondThread,15);
     PhysicsThread.detach();
+    std::cout << "Physics Thread Running..." << std::endl;
 
-    World.m_running = true;
-
-
-    glfwSetKeyCallback(window, KeyCallBack);
-    glfwSetCursorPosCallback(window, MousePosCallBack);
-    glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    // Yes the KeyCallBack and MouseCallBack must be a function in main (or where ever you have the ability to call) or you can handle passing a static pointer from a class to it.
+    glfwSetKeyCallback(window.GetWindow(), KeyCallBack);
+    glfwSetCursorPosCallback(window.GetWindow(), MousePosCallBack);
+    glfwSetMouseButtonCallback(window.GetWindow(), MouseButtonCallBack);
+    glfwSetInputMode(window.GetWindow(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     
-    //Temp Fixes/Places
-    glEnable(GL_CULL_FACE);
-    //glEnable(GL_FRAMEBUFFER_SRGB);
-    /* 
-    
-    */ 
-   
-// Draw LOOP
+
+    // Draw LOOP
     float FPS = 0;
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window)){
+    std::cout << "Simple FPS Testing" << std::endl;
+    std::cout << std::to_string(FPS) << std::endl;
+    while (window.IsOpen()){
+
+        //window.SetResolutionScale(ResolutionScale);
+
+        window.Update();
         
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame; 
-
-        if(!VSync){
-            float TempTime = (1000.0f/MaxFPS)/1000.0f;
-            //std::cout << deltaTime << std::endl;
-            if(deltaTime < TempTime){
-                ResolutionScale += TempTime - deltaTime;
-                if(ResolutionScale > 1.00f){
-                    ResolutionScale = 1.00f;
-                }
-            } else if(deltaTime > TempTime){
-                ResolutionScale -= (TempTime - deltaTime) * -1;
-                if(ResolutionScale < 0.10f){
-                    ResolutionScale =  0.10f;
-                }
-            }
-        }
-
-        FPS = 1.0f/deltaTime;
-        std::string NewTile = Title + " " + "( " + std::to_string(FPS) + "FPS)";
-        glfwSetWindowTitle(window, NewTile.c_str());
-        glfwPollEvents();
-        glfwGetWindowSize(window, &width, &height);
-        //glViewport(0,0, width*OSscaler, height*OSscaler);
+        FPS = 1.0f/window.GetDeltaTime();
+        std::string NewTile = TempTitle + "( " + std::to_string(FPS) + "FPS)";
+        window.ChangeWindowTitle(NewTile.c_str());
 
 
-        World.OnUpdate(deltaTime, width * ResolutionScale, height * ResolutionScale);
-        // Make Shadows hopefully
-        //glViewport(0,0, 2048,2048);
-        //World.GenShadows();
-        //glBindFramebuffer(GL_FRAMEBUFFER,0);
-        //glViewport(0,0, width*OSscaler, height*OSscaler);
+        World.OnUpdate(window.GetDeltaTime(), (float)window.GetScaledWidth(), (float)window.GetScaledHeight());
 
-        /* Render here */
-        renderer.Clear();
-
-        World.OnGui();
-        // Set Shader, Draw Object
-
-        glViewport(0,0, (width) * ResolutionScale, (height) * ResolutionScale);
+        window.SetSeenRender();
         World.OnRender();
 
-        glViewport(0,0, (width*OSscaler), (height*OSscaler));
+        window.SetPosFXRender();
         World.PaintFrame();
 
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-
-        
+        window.SwapRenderBuffer();
 
     }
-
-    World.m_running = false;
+    World.Stop();
+    //World.m_running = false;
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     glfwTerminate();
     return 0;

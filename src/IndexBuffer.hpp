@@ -2,10 +2,10 @@
 // Created by steel99xl on 6/14/21.
 //
 #pragma once
-#include "Engine.hpp"
+#include "kaijuGL.hpp"
 
 class IndexBuffer{
-private:
+protected:
     unsigned int  m_RenderID;
     unsigned int m_Count;
     unsigned int m_Unquie;

@@ -8,6 +8,7 @@ void FrameBufferObject::Setup(int width, int height, int scale){
     glGenFramebuffers(1, &m_FBO);
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER ,m_FBO));
 
+
     glGenTextures(1, &m_FrameBufferTexture);
     glBindTexture(GL_TEXTURE_2D, m_FrameBufferTexture);
     glTexImage2D(GL_TEXTURE_2D, 0 , GL_RGB, width*scale, height*scale, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
@@ -19,11 +20,13 @@ void FrameBufferObject::Setup(int width, int height, int scale){
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D ,m_FrameBufferTexture, 0);
     
+
     glGenRenderbuffers(1, &m_RBO);
     glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width*scale, height*scale);
 
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
+
 
     auto fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if(fboStatus != GL_FRAMEBUFFER_COMPLETE){

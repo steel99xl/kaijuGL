@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <iostream>
 #include <cstring>
 #include <functional>
@@ -8,6 +9,7 @@
 #include <memory>
 #include <vector>
 #include <array>
+#include <thread>
 #include "Imports/glm/glm.hpp"
 #include "Imports/glm/gtc/matrix_transform.hpp"
 #include "VertexArray.hpp"
@@ -21,3 +23,4 @@
 #include "SimpleObject.hpp"
 #include "Camera.hpp"
 #include "FrameBufferObject.hpp"
+#include "KaijuWindow.hpp"

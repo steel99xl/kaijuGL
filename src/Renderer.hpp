@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Engine.hpp"
+#include "kaijuGL.hpp"
 
 /*
 #include <GL/glew.h>
@@ -42,7 +42,7 @@ void GLLogCall(const char *function, const char *file, int line);
 
 class Renderer{
 
-private:
+protected:
 
 public:
 

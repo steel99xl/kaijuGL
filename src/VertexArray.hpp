@@ -1,10 +1,10 @@
 #pragma once
 
 #include "VertexBufferLayout.hpp"
-#include "Engine.hpp"
+#include "kaijuGL.hpp"
 
 class VertexArray{
-private:
+protected:
 
     unsigned int m_RenderID;
 

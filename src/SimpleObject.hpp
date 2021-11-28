@@ -81,11 +81,13 @@ struct ObjectQuadID{
     }
 };
 
-enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
-enum BufferType{StaticBuffer, DynamicBuffer};
+
 
 
 class SimpleObject{
+    public:
+        enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
+        enum BufferType{StaticBuffer, DynamicBuffer};
     protected:
         int m_MaxQuadCount, m_MaxQuads, m_UsedQuads;
 
@@ -121,7 +123,7 @@ class SimpleObject{
 
         bool SimpleColision;
 
-        BufferType m_BufferType;
+        SimpleObject::BufferType m_BufferType;
 
 
         std::unique_ptr<VertexArray> m_VAO;
@@ -161,7 +163,8 @@ class SimpleObject{
         SimpleObject();
         ~SimpleObject();
 
-        void Setup(int MaxQuads = 10000, BufferType buffertype = DynamicBuffer);
+        // if the buffer is a StaticBuffer then you only have to bind the buffer once outside the draw loop
+        void Setup(int MaxQuads = 10000, SimpleObject::BufferType buffertype = DynamicBuffer);
 
         // This will be used my the shader to place the "object" in the world
 

@@ -85,6 +85,7 @@ void MouseButtonCallBack(GLFWwindow *InputWindow, int button, int action, int mo
 }
 //This is the Physics thread
 void SecondThread(int UpdateSpeed){
+    // This needs to be moved into the Physics Engine for a cleaner look
     float currentPhysicsFrame, lastPhysicsFrame;
     lastPhysicsFrame = 0.0f;
     // This is to wait for the renderinfg thread to startup

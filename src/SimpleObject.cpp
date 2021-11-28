@@ -11,7 +11,7 @@ SimpleObject::~SimpleObject(){
 
 }
 
-void SimpleObject::Setup(int MaxQuads, BufferType buffertype){
+void SimpleObject::Setup(int MaxQuads, SimpleObject::BufferType buffertype){
         m_MaxQuadCount = MaxQuads;
         m_VerticiesMax = MaxQuads * 4;
         m_IndicOffset = 0;

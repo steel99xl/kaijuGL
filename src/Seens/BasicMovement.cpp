@@ -311,7 +311,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         LandPhysics = BasicPhysics.MakePhysicsQuads(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), Land.GetWeights());
         TealBlockPhysics = BasicPhysics.MakePhysicsQuads(TealBlock.GetVertexPositions(), TealBlock.GetVertexNormlPositions(), TealBlock.GetWeights());
 
-        
+
         // Checking the Teal bocks current position for a colision incase it was missed
         BasicPhysics.AABBColision(TealBlockPhysics, m_ObjectWorldPositions[TealBlock.ObjectPositionID], LandPhysics, m_ObjectWorldPositions[Land.ObjectPositionID], &TealBlockColision);
         if(!TealBlockColision.IsColision){

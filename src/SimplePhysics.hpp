@@ -165,7 +165,7 @@ class SimplePhysics{
         PhysicsPos Center2Point(PhysicsPos PointA, PhysicsPos PointB);
         PhysicsPos Center4Point(PhysicsPos *PointA, PhysicsPos *PointB, PhysicsPos *PointC, PhysicsPos *PointD);
 
-        
+        ColisionInfo SphearToPlane(PhysicsPos ObjectA, float ObjectARadius, QuadPhysicsBody ObjectB);
 
         ForceDirection NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces);
         void NormalizeForceDirection(ForceDirection ForceA, ForceDirection ForceB, ForceDirection *Output);

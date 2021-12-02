@@ -1238,6 +1238,12 @@ PhysicsPos SimplePhysics::Center4Point(PhysicsPos *PointA, PhysicsPos *PointB, P
 }
 
 
+ColisionInfo SimplePhysics::SphearToPlane(PhysicsPos ObjectA, float ObjectARadius, QuadPhysicsBody ObjectB) {
+    ColisionInfo Output;
+
+    return Output;
+}
+
 
 ForceDirection SimplePhysics::NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces){
     ForceDirection Output;

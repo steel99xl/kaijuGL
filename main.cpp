@@ -121,7 +121,7 @@ int main(void){
     window.setWidth(720);
     window.setHeight(480);
     window.setOSScale(2.0f);
-    window.SetResolutionScale(2.0f);
+    window.SetResolutionScale(1.0f);
     window.ChangeWindowTitle("Kijuw");
     window.SetMaxFrameRateTarget(70);
     window.AttemptMaxFrameRateTarget();

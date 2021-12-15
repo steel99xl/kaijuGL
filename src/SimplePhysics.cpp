@@ -1209,6 +1209,12 @@ void SimplePhysics::SphearColison(PhysicsPos ObjectAPos, float ObjectASize, Phys
     return;
 }
 
+float SimplePhysics::PointToPointDistance(PhysicsPos PointA, PhysicsPos PointB){
+    float Distance = std::sqrt((PointA.X - PointB.X)*(PointA.X - PointB.X) + (PointA.Y - PointB.Y)*(PointA.Y - PointB.Y) + (PointA.Z - PointB.Z)*(PointA.Z - PointB.Z));
+
+    return Distance;
+}
+
 float SimplePhysics::DotPointToForce(PhysicsPos Point, ForceDirection Projection, PhysicsPos ProjectionPos){
     float Output;
 
@@ -1238,8 +1244,84 @@ PhysicsPos SimplePhysics::Center4Point(PhysicsPos *PointA, PhysicsPos *PointB, P
 }
 
 
-ColisionInfo SimplePhysics::SphearToPlane(PhysicsPos ObjectA, float ObjectARadius, QuadPhysicsBody ObjectB) {
+ColisionInfo SimplePhysics::SphearToPlane(SphearPhysicsBody ObjectA, QuadPhysicsBody ObjectB, PhysicsPos ObjectBPos) {
     ColisionInfo Output;
+    QuadPhysicsBody TempQuad;
+
+    TempQuad.PosA.Pos.X = ObjectB.PosA.Pos.X * ObjectBPos.X;
+    TempQuad.PosA.Pos.X = ObjectB.PosA.Pos.X * ObjectBPos.X;
+    TempQuad.PosA.Pos.X = ObjectB.PosA.Pos.X * ObjectBPos.X;
+
+    TempQuad.PosA.Pos.Y = ObjectB.PosA.Pos.Y * ObjectBPos.Y;
+    TempQuad.PosA.Pos.Y = ObjectB.PosA.Pos.Y * ObjectBPos.Y;
+    TempQuad.PosA.Pos.Y = ObjectB.PosA.Pos.Y * ObjectBPos.Y;
+
+    TempQuad.PosA.Pos.Z = ObjectB.PosA.Pos.Z * ObjectBPos.Z;
+    TempQuad.PosA.Pos.Z = ObjectB.PosA.Pos.Z * ObjectBPos.Z;
+    TempQuad.PosA.Pos.Z = ObjectB.PosA.Pos.Z * ObjectBPos.Z;
+
+    TempQuad.PosB.Pos.X = ObjectB.PosB.Pos.X * ObjectBPos.X;
+    TempQuad.PosB.Pos.X = ObjectB.PosB.Pos.X * ObjectBPos.X;
+    TempQuad.PosB.Pos.X = ObjectB.PosB.Pos.X * ObjectBPos.X;
+
+    TempQuad.PosB.Pos.Y = ObjectB.PosB.Pos.Y * ObjectBPos.Y;
+    TempQuad.PosB.Pos.Y = ObjectB.PosB.Pos.Y * ObjectBPos.Y;
+    TempQuad.PosB.Pos.Y = ObjectB.PosB.Pos.Y * ObjectBPos.Y;
+
+    TempQuad.PosB.Pos.Z = ObjectB.PosB.Pos.Z * ObjectBPos.Z;
+    TempQuad.PosB.Pos.Z = ObjectB.PosB.Pos.Z * ObjectBPos.Z;
+    TempQuad.PosB.Pos.Z = ObjectB.PosB.Pos.Z * ObjectBPos.Z;
+
+    TempQuad.PosC.Pos.X = ObjectB.PosC.Pos.X * ObjectBPos.X;
+    TempQuad.PosC.Pos.X = ObjectB.PosC.Pos.X * ObjectBPos.X;
+    TempQuad.PosC.Pos.X = ObjectB.PosC.Pos.X * ObjectBPos.X;
+
+    TempQuad.PosC.Pos.Y = ObjectB.PosC.Pos.Y * ObjectBPos.Y;
+    TempQuad.PosC.Pos.Y = ObjectB.PosC.Pos.Y * ObjectBPos.Y;
+    TempQuad.PosC.Pos.Y = ObjectB.PosC.Pos.Y * ObjectBPos.Y;
+
+    TempQuad.PosC.Pos.Z = ObjectB.PosC.Pos.Z * ObjectBPos.Z;
+    TempQuad.PosC.Pos.Z = ObjectB.PosC.Pos.Z * ObjectBPos.Z;
+    TempQuad.PosC.Pos.Z = ObjectB.PosC.Pos.Z * ObjectBPos.Z;
+
+    TempQuad.PosD.Pos.X = ObjectB.PosD.Pos.X * ObjectBPos.X;
+    TempQuad.PosD.Pos.X = ObjectB.PosD.Pos.X * ObjectBPos.X;
+    TempQuad.PosD.Pos.X = ObjectB.PosD.Pos.X * ObjectBPos.X;
+
+    TempQuad.PosD.Pos.Y = ObjectB.PosD.Pos.Y * ObjectBPos.Y;
+    TempQuad.PosD.Pos.Y = ObjectB.PosD.Pos.Y * ObjectBPos.Y;
+    TempQuad.PosD.Pos.Y = ObjectB.PosD.Pos.Y * ObjectBPos.Y;
+
+    TempQuad.PosD.Pos.Z = ObjectB.PosD.Pos.Z * ObjectBPos.Z;
+    TempQuad.PosD.Pos.Z = ObjectB.PosD.Pos.Z * ObjectBPos.Z;
+    TempQuad.PosD.Pos.Z = ObjectB.PosD.Pos.Z * ObjectBPos.Z;
+
+
+
+    // see if the sphear is inside the quad
+    if(ObjectA.Radius > SimplePhysics::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosA.Pos)){
+        Output.IsColision = true;
+    } else if(ObjectA.Radius > SimplePhysics::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosB.Pos)){
+        Output.IsColision = true;
+    } else if(ObjectA.Radius > SimplePhysics::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosC.Pos)){
+        Output.IsColision = true;
+    } else if(ObjectA.Radius > SimplePhysics::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosD.Pos)){
+        Output.IsColision = true;
+    }
+
+    // if it is then we can just return the normal of the quad
+    // if it is not then we need to find the closest point on the quad to the sphear
+    // then we can find the normal of the quad at that point
+    // then we can find the normal of the sphear at that point
+    // then we can find the force direction
+    // then we can find the force
+    // then we can return the output
+
+    if(Output.IsColision){
+        std::cout << "Colision" << std::endl;
+        Output.MovmentDirectionA = ObjectB.PlaneNorm;
+        Output.MovmentDirectionB = ObjectB.PlaneNorm;
+    }
 
     return Output;
 }

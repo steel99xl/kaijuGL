@@ -227,7 +227,7 @@ void TestWorld::Setup(){
     //OtherSuns.SetMaterial(BasicMetalCube);
     //OtherSuns.PreFillLights(4);
 
-    TealBlock.SetPosition(8.0f,10.0f,8.0f);
+    TealBlock.SetPosition(8.0f,40.0f,8.0f);
     TealBlock.SetColor(0.5f, 0.75f, 0.75f, 1.0f);
     TealBlock.SetMaterial(BasicMetalCube);
     TealBlock.PreFillLights(4);
@@ -250,6 +250,7 @@ void TestWorld::Setup(){
 }
 
 void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
+    //std::cout << MaxUpdateSpeed << std::endl;
 		// Physics rewite. So each object will be moved in an order
 		// probaly as the use just adds or sets them, lol
 		// but during the movment it will do sphear collision and if their is one
@@ -311,7 +312,6 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         LandPhysics = BasicPhysics.MakePhysicsQuads(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), Land.GetWeights());
         TealBlockPhysics = BasicPhysics.MakePhysicsQuads(TealBlock.GetVertexPositions(), TealBlock.GetVertexNormlPositions(), TealBlock.GetWeights());
 
-
         // Checking the Teal bocks current position for a colision incase it was missed
         BasicPhysics.AABBColision(TealBlockPhysics, m_ObjectWorldPositions[TealBlock.ObjectPositionID], LandPhysics, m_ObjectWorldPositions[Land.ObjectPositionID], &TealBlockColision);
         if(!TealBlockColision.IsColision){
@@ -359,9 +359,32 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         
         //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsTealBlock, TealBlockFuturePos, PhysicsLand, Land.GetPhysicsPos());
         //TealBlockColision = BasicPhysics.QuadBodyColision(PhysicsLand, Land.GetPhysicsPos(), PhysicsTealBlock, TealBlockFuturePos);
-        
-        
 
+        // remove when done testing
+        //PhysicsPos TempPos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity(), BasicPhysics.GetGravity().Speed);
+        //TealBlock.SetPosition(TempPos.X, TempPos.Y, TempPos.Z);
+        /*
+        SphearPhysicsBody TestSphear;
+        TestSphear.PosA.Pos = TealBlock.GetPhysicsPos();
+        TestSphear.Radius = 1.0f;
+
+        //BasicPhysics.SphearToPlanetColision(TestSphear, PhysicsLand, Land.GetPhysicsPos(), &TealBlockColision);
+        TealBlockColision.IsColision = false;
+        for(unsigned long i = 0; i < LandPhysics.size(); i++){
+            TealBlockColision = BasicPhysics.SphearToPlane(TestSphear, LandPhysics[i], Land.GetPhysicsPos());
+            if(TealBlockColision.IsColision){
+                std::cout << "Colision" << std::endl;
+                //std::cout << TealBlock.GetPhysicsPos().X << " " << TealBlock.GetPhysicsPos().Y << " " << TealBlock.GetPhysicsPos().Z << std::endl;
+                break;
+            }
+        }
+
+
+        if(TealBlockColision.IsColision){
+            TealBlock.SetPosition(TealBlock.GetPhysicsPos().X * TealBlockColision.MovmentDirectionB.X, TealBlock.GetPhysicsPos().Y * TealBlockColision.MovmentDirectionB.Y, TealBlock.GetPhysicsPos().Z * TealBlockColision.MovmentDirectionB.Z);
+        }
+
+        */
         
 
         // Move Player based on player input
@@ -468,7 +491,7 @@ void TestWorld::KeyInput(std::array<int,512> Keys){
         if(Keys[GLFW_KEY_F] == GLFW_PRESS){
             PhysicsPos Temp = PlayerBlock.GetPhysicsPos();
             Temp.Y += 10.0f;
-            TealBlock.SetPosition(Temp.X, Temp.Y, Temp.Z);
+            //TealBlock.SetNextPhysicsPos(Temp.X, Temp.Y, Temp.Z);
         }
 
         if(Keys[GLFW_KEY_LEFT_CONTROL] == GLFW_PRESS){

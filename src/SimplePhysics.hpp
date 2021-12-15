@@ -73,8 +73,8 @@ struct TriPhysicsBody{
 };
 
 struct SphearPhysicsBody{
-    PhysicsPoint Pos;
-    float Size;
+    PhysicsPoint PosA;
+    float Radius;
 };
 
 
@@ -158,6 +158,9 @@ class SimplePhysics{
 
         void SphearColison(PhysicsPos ObjectAPos, float ObjectASize, PhysicsPos ObjectBPos, float ObjectBSize, ColisionInfo *Output);
 
+        // IDK why i didn't make this earlier... 
+        float PointToPointDistance(PhysicsPos PointeA, PhysicsPos PointB);
+
         std::vector<QuadPhysicsBody> MakePhysicsQuads(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float> Weights);
 
         float DotPointToForce(PhysicsPos Point, ForceDirection Projection, PhysicsPos ProjectionPos);
@@ -165,7 +168,7 @@ class SimplePhysics{
         PhysicsPos Center2Point(PhysicsPos PointA, PhysicsPos PointB);
         PhysicsPos Center4Point(PhysicsPos *PointA, PhysicsPos *PointB, PhysicsPos *PointC, PhysicsPos *PointD);
 
-        ColisionInfo SphearToPlane(PhysicsPos ObjectA, float ObjectARadius, QuadPhysicsBody ObjectB);
+        ColisionInfo SphearToPlane(SphearPhysicsBody ObjectA, QuadPhysicsBody ObjectB, PhysicsPos ObjectBPos);
 
         ForceDirection NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces);
         void NormalizeForceDirection(ForceDirection ForceA, ForceDirection ForceB, ForceDirection *Output);

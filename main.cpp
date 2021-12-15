@@ -150,8 +150,6 @@ int main(void){
     // Draw LOOP
     float FPS = 0;
     /* Loop until the user closes the window */
-    std::cout << "Simple FPS Testing" << std::endl;
-    std::cout << std::to_string(FPS) << std::endl;
     while (window.IsOpen()){
 
         //window.SetResolutionScale(ResolutionScale);

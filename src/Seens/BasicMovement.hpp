@@ -25,6 +25,7 @@ class TestWorld{
         FrameBufferObject m_FBO;
         SimpleObject Frame;
 
+        double m_MouseX = 0.0, m_MouseY = 0.0;
 
         // This is currently hnit being used
         unsigned int ShadowMapFBO, ShadowMapRBO,ShadowMapTexture;

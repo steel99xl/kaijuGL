@@ -24,6 +24,10 @@ void KeyCallBack( GLFWwindow *InputWindow, int key, int scancode, int action, in
     window.SetKeyArray(GLFW_KEY_K);
     window.SetKeyArray(GLFW_KEY_MINUS);
     window.SetKeyArray(GLFW_KEY_EQUAL);
+    window.SetKeyArray(GLFW_KEY_UP);
+    window.SetKeyArray(GLFW_KEY_DOWN);
+    window.SetKeyArray(GLFW_KEY_LEFT);
+    window.SetKeyArray(GLFW_KEY_RIGHT);
 
     World.KeyInput(window.GetKeyArray());
     

@@ -22,10 +22,10 @@ void TestWorld::Setup(){
     std::cout << "W A S D Moves the camera" << std::endl;
 
     AdvancedCam.Setup(glm::vec3(0.0, 0.0, 0.0f), glm::vec3(1.0, 0.0, 1.0f), glm::vec3(0.0, 1.0, 0.0f), 0.1f, 1.0f, 75.0f, 10000.0f );
-
     AdvancedCam.SetHorizontalSensitivity(0.1f);
     AdvancedCam.SetVerticalSensitivity(0.08f);
     AdvancedCam.InvertVertical();
+    AdvancedCam.LookRelative(m_MouseX, m_MouseY);
 
 
     m_FBO.Setup((int)m_Width, (int)m_Height,(int)m_Scale);
@@ -535,6 +535,26 @@ void TestWorld::KeyInput(std::array<int,512> Keys){
             m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(DOWN));
         }
 
+        if(Keys[GLFW_KEY_UP] == GLFW_PRESS){
+            m_MouseY -= (double)PlayerMovmentSpeed * 2;
+            AdvancedCam.LookRelative(m_MouseX,m_MouseY);
+        }
+
+        if(Keys[GLFW_KEY_DOWN] == GLFW_PRESS){
+            m_MouseY += (double)PlayerMovmentSpeed * 2;
+            AdvancedCam.LookRelative(m_MouseX, m_MouseY);
+        }
+
+        if(Keys[GLFW_KEY_LEFT] == GLFW_PRESS){
+            m_MouseX -= (double)PlayerMovmentSpeed * 2;
+            AdvancedCam.LookRelative(m_MouseX, m_MouseY);
+        }
+
+        if(Keys[GLFW_KEY_RIGHT] == GLFW_PRESS){
+            m_MouseX += (double)PlayerMovmentSpeed * 2;
+            AdvancedCam.LookRelative(m_MouseX, m_MouseY);
+        }
+
         if(Keys[GLFW_KEY_MINUS] == GLFW_PRESS){
             m_FOV -= 1.0f;
                     if(m_FOV <= 20.0f){
@@ -569,8 +589,10 @@ void TestWorld::MouseButton(std::array<int,32> MouseButtons){
 }
 
 void TestWorld::MouseInput(double xpos, double ypos){
+    m_MouseX = xpos;
+    m_MouseY = ypos;
 
-    AdvancedCam.LookRelative(xpos,ypos);
+    AdvancedCam.LookRelative(m_MouseX,m_MouseY);
 
 }
 

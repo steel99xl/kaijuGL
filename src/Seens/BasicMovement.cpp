@@ -294,13 +294,22 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
             m_ObjectWorldPositions[Land.ObjectPositionID] = Land.GetPhysicsPos();
         }
 
+    if(TealBlock.GetFuturePositionStatus()){
+        TealBlock.SwapFuturePosition();
+        // This should make it false
+        TealBlock.SetFuturePositionUpdate(!TealBlock.GetFuturePositionStatus());
+        std::cout << TealBlock.GetPos().x << " | " << TealBlock.GetPos().y << " | " << TealBlock.GetPos().z << std::endl;
+    }
+
         if(TealBlock.ObjectPositionID == -1){
             TealBlock.ObjectPositionID =  m_ObjectWorldPositions.size();
             m_ObjectWorldPositions.push_back(TealBlock.GetPhysicsPos());
         } else {
             m_ObjectWorldPositions[TealBlock.ObjectPositionID] = TealBlock.GetPhysicsPos();
         }
-        
+
+
+
         //TealBlockCurrentPos = TealBlock.GetPhysicsPos();
         //ForceDirection LeftFromOrigion;
 
@@ -491,6 +500,8 @@ void TestWorld::KeyInput(std::array<int,512> Keys){
         if(Keys[GLFW_KEY_F] == GLFW_PRESS){
             PhysicsPos Temp = PlayerBlock.GetPhysicsPos();
             Temp.Y += 10.0f;
+            TealBlock.SetFuturePositionUpdate(true);
+            TealBlock.SetFuturePosition(Temp.X, Temp.Y, Temp.Z);
             //TealBlock.SetNextPhysicsPos(Temp.X, Temp.Y, Temp.Z);
         }
 

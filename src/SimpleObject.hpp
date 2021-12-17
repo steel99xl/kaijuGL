@@ -106,6 +106,8 @@ class SimpleObject{
         float m_OldX, m_OldY, m_OldZ;
         // The position of the object
         float m_X, m_Y, m_Z;
+        bool m_FuturePosition = false;
+        float m_FutureX, m_FutureY, m_FutureZ;
         // The Previouse position;
         // The calculated rotation of point (0.0, 1.0, 0.0) from the origin of the object
         // This is just so the movment calculcatons can be similar to the camera
@@ -216,6 +218,11 @@ class SimpleObject{
 
         inline glm::vec3 GetLightColor() { return glm::vec3(m_LR, m_LG, m_LB);}
         inline void SetPosition(float X, float Y, float Z){m_OldX = m_X, m_OldY = m_Y, m_OldZ = m_Z, m_X = X; m_Y = Y; m_Z = Z;}
+        inline void SetFuturePosition(float X, float Y, float Z){m_FutureX = X; m_FutureY = Y; m_FutureZ = Z;}
+        // this swaps the future position with the current postiton with no context for movment
+        inline void SwapFuturePosition(){m_X = m_FutureX; m_Y = m_FutureY; m_Z = m_FutureZ;}
+        inline void SetFuturePositionUpdate(bool enable){m_FuturePosition = enable;}
+        inline bool GetFuturePositionStatus(){return m_FuturePosition;}
         inline glm::vec3 GetPos() {return glm::vec3(m_X,m_Y,m_Z);}
         inline PhysicsPos GetPhysicsPos() {PhysicsPos Output; Output.Input(m_X, m_Y, m_Z); return Output;}
         inline glm::vec3 GetPreviouPos(){return glm::vec3(m_OldX, m_OldY, m_OldZ);}

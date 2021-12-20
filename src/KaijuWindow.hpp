@@ -56,7 +56,7 @@ class KaijuWindow{
 
         inline void SetMaxFrameRateTarget(int target) {m_MaxFrameRate = 1000/target;}
 
-        inline void AttemptMaxFrameRateTarget() { m_AtmpMaxFPS = !m_AtmpMaxFPS; };
+        inline void ToggleAttemptMaxFrameRateTarget() { m_AtmpMaxFPS = !m_AtmpMaxFPS; };
 
         inline bool IsAttemptMaxFrameRateTarget() { return m_AtmpMaxFPS; }
 

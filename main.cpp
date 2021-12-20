@@ -64,11 +64,13 @@ void KeyCallBack( GLFWwindow *InputWindow, int key, int scancode, int action, in
     }
 
     if(key == GLFW_KEY_V && action == GLFW_PRESS){
-        window.AttemptMaxFrameRateTarget();
+        window.ToggleAttemptMaxFrameRateTarget();
         if(window.IsAttemptMaxFrameRateTarget()){
             std::cout << "VSync : ON" << std::endl;
+            window.ManageVSync(window.IsAttemptMaxFrameRateTarget());
         } else {
             std::cout << "VSync : OFF" << std::endl;
+            window.ManageVSync(window.IsAttemptMaxFrameRateTarget());
         }
     }
     
@@ -119,6 +121,8 @@ void ThirdThread(){
 
 
 int main(void){
+
+    glfwSwapInterval(0);
     
     std::string TempTitle = "Some Dumb WindowGL ";
     // just to test/show some options
@@ -128,7 +132,7 @@ int main(void){
     window.SetResolutionScale(1.0f);
     window.ChangeWindowTitle("Kijuw");
     window.SetMaxFrameRateTarget(70);
-    window.AttemptMaxFrameRateTarget();
+    window.ToggleAttemptMaxFrameRateTarget();
 
     window.Init();
 
@@ -154,18 +158,18 @@ int main(void){
     // Draw LOOP
     float FPS = 0;
     /* Loop until the user closes the window */
-    while (window.IsOpen()){
+    while (window.IsOpen()) {
 
         //window.SetResolutionScale(ResolutionScale);
 
         window.Update();
-        
-        FPS = 1.0f/window.GetDeltaTime();
+
+        FPS = 1.0f / window.GetDeltaTime();
         std::string NewTile = TempTitle + "( " + std::to_string(FPS) + "FPS)";
         window.ChangeWindowTitle(NewTile.c_str());
 
 
-        World.OnUpdate(window.GetDeltaTime(), (float)window.GetScaledWidth(), (float)window.GetScaledHeight());
+        World.OnUpdate(window.GetDeltaTime(), (float) window.GetScaledWidth(), (float) window.GetScaledHeight());
 
         window.SetSeenRender();
         World.OnRender();
@@ -176,6 +180,7 @@ int main(void){
         window.SwapRenderBuffer();
 
     }
+
     World.Stop();
     //World.m_running = false;
     std::this_thread::sleep_for(std::chrono::milliseconds(500));

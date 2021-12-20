@@ -153,7 +153,12 @@ void TestWorld::Setup(){
     Sun.FinishShader();
     Sun.ClearShaderCache();
 
-
+    Land.SetPhysicsTypeID(1);
+    PlayerBlock.SetPhysicsTypeID(0);
+    TealBlock.SetPhysicsTypeID(2);
+    // For this TestWorld the ID 100 will be used for object that do not collide with anything
+    Sun.SetPhysicsTypeID(100);
+    OtherSuns.SetPhysicsTypeID(Sun.GetPhysicsTypeID());
     
     glGenFramebuffers(1, &ShadowMapFBO);
 
@@ -547,22 +552,22 @@ void TestWorld::KeyInput(std::array<int,512> Keys){
         }
 
         if(Keys[GLFW_KEY_UP] == GLFW_PRESS){
-            m_MouseY -= (double)PlayerMovmentSpeed * 2;
+            m_MouseY -= (double)PlayerMovmentSpeed * 5;
             AdvancedCam.LookRelative(m_MouseX,m_MouseY);
         }
 
         if(Keys[GLFW_KEY_DOWN] == GLFW_PRESS){
-            m_MouseY += (double)PlayerMovmentSpeed * 2;
+            m_MouseY += (double)PlayerMovmentSpeed * 5;
             AdvancedCam.LookRelative(m_MouseX, m_MouseY);
         }
 
         if(Keys[GLFW_KEY_LEFT] == GLFW_PRESS){
-            m_MouseX -= (double)PlayerMovmentSpeed * 2;
+            m_MouseX -= (double)PlayerMovmentSpeed * 5;
             AdvancedCam.LookRelative(m_MouseX, m_MouseY);
         }
 
         if(Keys[GLFW_KEY_RIGHT] == GLFW_PRESS){
-            m_MouseX += (double)PlayerMovmentSpeed * 2;
+            m_MouseX += (double)PlayerMovmentSpeed * 5;
             AdvancedCam.LookRelative(m_MouseX, m_MouseY);
         }
 

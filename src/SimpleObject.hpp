@@ -99,6 +99,8 @@ class SimpleObject{
         std::vector<Vertex> m_Verticies;
         unsigned int m_VerticiesMax;
 
+        unsigned int m_PhysicsTypeID;
+
         std::vector<unsigned int> m_Indices;
         unsigned int m_IndicMax;
         unsigned int m_IndicOffset;
@@ -216,6 +218,9 @@ class SimpleObject{
 
         inline void SetLightColor(float R, float G, float B) { m_LR = R; m_LG = G; m_LB = B;}
 
+        // Cause why would any one want a negative PhysicsTypeID?
+        inline void SetPhysicsTypeID(unsigned int TypeID){ m_PhysicsTypeID = TypeID;}
+        inline unsigned int GetPhysicsTypeID() {return m_PhysicsTypeID;}
         inline glm::vec3 GetLightColor() { return glm::vec3(m_LR, m_LG, m_LB);}
         inline void SetPosition(float X, float Y, float Z){m_OldX = m_X, m_OldY = m_Y, m_OldZ = m_Z, m_X = X; m_Y = Y; m_Z = Z;}
         inline void SetFuturePosition(float X, float Y, float Z){m_FutureX = X; m_FutureY = Y; m_FutureZ = Z;}

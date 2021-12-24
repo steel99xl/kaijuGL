@@ -30,33 +30,17 @@ std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsQuads(std::vector<Physics
     for(long unsigned int i = 0; i < Pos.size(); i+=4){
         PointA.Pos.Input(Pos[i].X, Pos[i].Y, Pos[i].Z);
         PointA.Weight = Weights[i];
-        PointA.Movment.X = 0;
-        PointA.Movment.Y = 0;
-        PointA.Movment.Z = 0;
-        PointA.Movment.Speed = 0.0f;
 
         PointB.Pos.Input(Pos[i+1].X, Pos[i+1].Y, Pos[i+1].Z);
         PointB.Weight = Weights[i+1];
-        PointB.Movment.X = 0;
-        PointB.Movment.Y = 0;
-        PointB.Movment.Z = 0;
-        PointB.Movment.Speed = 0.0f;
 
 
         PointC.Pos.Input(Pos[i+2].X, Pos[i+2].Y, Pos[i+2].Z);
         PointC.Weight = Weights[i+2];
-        PointC.Movment.X = 0;
-        PointC.Movment.Y = 0;
-        PointC.Movment.Z = 0;
-        PointC.Movment.Speed = 0.0f;
 
 
         PointD.Pos.Input(Pos[i+3].X, Pos[i+3].Y, Pos[i+3].Z);
         PointD.Weight = Weights[i+3];
-        PointD.Movment.X = 0;
-        PointD.Movment.Y = 0;
-        PointD.Movment.Z = 0;
-        PointD.Movment.Speed = 0.0f;
 
         TempQuad.PosA = PointA;
         TempQuad.PosB = PointB;
@@ -506,28 +490,24 @@ void SimplePhysics::QuadPosToPoints(std::vector<QuadPhysicsBody> Object, Physics
     for(long unsigned int i = 0; i < Object.size(); i++){
         Temp.Pos.Input((Object[i].PosA.Pos.X + ObjectPos.X), (Object[i].PosA.Pos.Y + ObjectPos.Y), (Object[i].PosA.Pos.Z + ObjectPos.Z));
         Temp.Weight = Object[i].PosA.Weight;
-        Temp.Movment = Object[i].PosA.Movment;
 
         Output->push_back(Temp);
 
 
         Temp.Pos.Input((Object[i].PosB.Pos.X + ObjectPos.X), (Object[i].PosB.Pos.Y + ObjectPos.Y), (Object[i].PosB.Pos.Z + ObjectPos.Z));
         Temp.Weight = Object[i].PosB.Weight;
-        Temp.Movment = Object[i].PosB.Movment;
 
         Output->push_back(Temp);
 
 
         Temp.Pos.Input((Object[i].PosC.Pos.X + ObjectPos.X), (Object[i].PosC.Pos.Y + ObjectPos.Y), (Object[i].PosC.Pos.Z + ObjectPos.Z));
         Temp.Weight = Object[i].PosC.Weight;
-        Temp.Movment = Object[i].PosC.Movment;
 
         Output->push_back(Temp);
 
 
         Temp.Pos.Input((Object[i].PosD.Pos.X + ObjectPos.X), (Object[i].PosD.Pos.Y + ObjectPos.Y), (Object[i].PosD.Pos.Z + ObjectPos.Z));
         Temp.Weight = Object[i].PosD.Weight;
-        Temp.Movment = Object[i].PosD.Movment;
 
         Output->push_back(Temp);
 
@@ -546,7 +526,6 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
         Temp.PosB.Pos.Input(Object[i].PlaneNorm.X, Object[i].PlaneNorm.Y, Object[i].PlaneNorm.Z);
         //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosA.Weight;
-        Temp.PosA.Movment = Object[i].PosA.Movment;
 
         Output->push_back(Temp);
 
@@ -555,7 +534,6 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
         Temp.PosB.Pos.Input(Object[i].PlaneNorm.X, Object[i].PlaneNorm.Y, Object[i].PlaneNorm.Z);
         //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosB.Weight;
-        Temp.PosA.Movment = Object[i].PosB.Movment;
 
         Output->push_back(Temp);
 
@@ -564,7 +542,6 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
         Temp.PosB.Pos.Input(Object[i].PlaneNorm.X, Object[i].PlaneNorm.Y, Object[i].PlaneNorm.Z);
         //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosC.Weight;
-        Temp.PosA.Movment = Object[i].PosC.Movment;
 
         Output->push_back(Temp);
 
@@ -573,7 +550,6 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
         Temp.PosB.Pos.Input(Object[i].PlaneNorm.X, Object[i].PlaneNorm.Y, Object[i].PlaneNorm.Z);
         //Temp.PosB = TempPoint;
         Temp.PosA.Weight = Object[i].PosD.Weight;
-        Temp.PosA.Movment = Object[i].PosD.Movment;
 
         Output->push_back(Temp);
 
@@ -1399,6 +1375,21 @@ void SimplePhysics::NormalizeForceDirection(ForceDirection ForceA, ForceDirectio
 
 
     return;
+}
+
+void SimplePhysics::StepPhysicsEnviroment() {
+    // For every Physics Object in the Game World(or just a limited type)
+
+    // Process Player Input
+
+    // Attempt to move any objects that need to be moved
+
+    // Check if their are any Simpile colisions befor moving the object
+
+    // If Simple Colision then Type Check the Objects for further instructions
+
+    // Move Object and check for colision at new point (in the future you can take more than one time step)
+
 }
 
 void SimplePhysics::SimpleThreadTest(){

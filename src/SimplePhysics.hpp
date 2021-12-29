@@ -106,88 +106,8 @@ struct MultiThreadPhysUpdate{
 
 };
 
-struct SimplePhysicsObject{
-    // This Will mainly be used for the StepPhysicsEnviroment()
-
-    unsigned int TYPE;
-
-    std::vector<unsigned int> TypeReactionList;
-
-    std::vector<QuadPhysicsBody> QuadPhysicsBodyVector;
-    std::vector<PhysicsPoint> PhysicsPointVector;
-    std::vector<SphearPhysicsBody> SphearPhysicsBodyVector;
-
-    // I might keep this just to force every Object to have a basic sphear colidor at first
-    unsigned int RangeFromCenter{};
-
-    // This is just to normalize some expectec/ required inputs for and Physics Objects
-    SimplePhysicsObject(){
-
-    }
-    // Some feneric functons to minipulate the focibly included data
-
-    void AddQuadPhysicsBody(PhysicsPoint A, PhysicsPoint B , PhysicsPoint C, PhysicsPoint D, ForceDirection PlaneNormal){
-        QuadPhysicsBody Temp;
-        Temp.PosA = A;
-        Temp.PosB = B;
-        Temp.PosC = C;
-        Temp.PosD = D;
-        Temp.PlaneNorm = PlaneNormal;
-
-        this->QuadPhysicsBodyVector.push_back(Temp);
-    }
-    void RemoveQuadPhysicsBody(unsigned int ID){
-        this->QuadPhysicsBodyVector.erase(this->QuadPhysicsBodyVector.begin()+ID);
-    }
-
-    void AddPhysicsPoint(PhysicsPos Pos, float Weight) {
-        PhysicsPoint Temp;
-        Temp.Pos = Pos;
-        Temp.Weight = Weight;
-
-        this->PhysicsPointVector.push_back(Temp);
-    }
-    void RemovePhysicsPoint(unsigned int ID){
-        this->PhysicsPointVector.erase(this->PhysicsPointVector.begin()+ID);
-    }
-
-    void AddSphearPhysicsBody(PhysicsPoint A, float Radius){
-        SphearPhysicsBody Temp;
-        Temp.PosA = A;
-        Temp.Radius = Radius;
-
-        this->SphearPhysicsBodyVector.push_back(Temp);
-    }
-    void RemoveSphearPhysicsBody(unsigned int ID){
-        this->SphearPhysicsBodyVector.erase(this->SphearPhysicsBodyVector.begin()+ID);
-    }
-
-    void AddCollisionType(unsigned int type){
-        this->TypeReactionList.push_back(type);
-    }
-    void RemoveCollisionType(unsigned int type){
-        this->TypeReactionList.erase(this->TypeReactionList.begin() + type);
-    }
-
-    unsigned int CollisionTypeComparison(unsigned int type){
-        for(unsigned long i = 0; this->TypeReactionList.size(); i++){
-            if(type == this->TypeReactionList[i]){
-                return type;
-            }
-        }
-        return -1;
-    }
-
-    virtual void Update(){};
-
-    // Generic colision type resoluton function and operation
-    operator unsigned int(){return TYPE;}
 
 
-    // This is to give a general idea of a physics update function
-
-    //
-};
 
 
 class SimplePhysics{
@@ -266,4 +186,89 @@ class SimplePhysics{
         void SimpleThreadTest();
     
 
+};
+
+
+
+struct SimplePhysicsObject{
+    // This Will mainly be used for the StepPhysicsEnviroment()
+
+    unsigned int TYPE;
+
+    SimplePhysics *PhysicsContext;
+
+    std::vector<unsigned int> TypeReactionList;
+
+    std::vector<QuadPhysicsBody> QuadPhysicsBodyVector;
+    std::vector<PhysicsPoint> PhysicsPointVector;
+    std::vector<SphearPhysicsBody> SphearPhysicsBodyVector;
+
+    // I might keep this just to force every Object to have a basic sphear colidor at first
+    unsigned int RangeFromCenter{};
+
+    // This is just to normalize some expectec/ required inputs for and Physics Objects
+    SimplePhysicsObject(SimplePhysics *physicsContect){
+        this->PhysicsContext = physicsContect;
+    }
+    // Some feneric functons to minipulate the focibly included data
+
+    void AddQuadPhysicsBody(PhysicsPoint A, PhysicsPoint B , PhysicsPoint C, PhysicsPoint D, ForceDirection PlaneNormal){
+        QuadPhysicsBody Temp;
+        Temp.PosA = A;
+        Temp.PosB = B;
+        Temp.PosC = C;
+        Temp.PosD = D;
+        Temp.PlaneNorm = PlaneNormal;
+
+        this->QuadPhysicsBodyVector.push_back(Temp);
+    }
+    void RemoveQuadPhysicsBody(unsigned int ID){
+        this->QuadPhysicsBodyVector.erase(this->QuadPhysicsBodyVector.begin()+ID);
+    }
+
+    void AddPhysicsPoint(PhysicsPos Pos, float Weight) {
+        PhysicsPoint Temp;
+        Temp.Pos = Pos;
+        Temp.Weight = Weight;
+
+        this->PhysicsPointVector.push_back(Temp);
+    }
+    void RemovePhysicsPoint(unsigned int ID){
+        this->PhysicsPointVector.erase(this->PhysicsPointVector.begin()+ID);
+    }
+
+    void AddSphearPhysicsBody(PhysicsPoint A, float Radius){
+        SphearPhysicsBody Temp;
+        Temp.PosA = A;
+        Temp.Radius = Radius;
+
+        this->SphearPhysicsBodyVector.push_back(Temp);
+    }
+    void RemoveSphearPhysicsBody(unsigned int ID){
+        this->SphearPhysicsBodyVector.erase(this->SphearPhysicsBodyVector.begin()+ID);
+    }
+
+    void AddCollisionType(unsigned int type){
+        this->TypeReactionList.push_back(type);
+    }
+    void RemoveCollisionType(unsigned int type){
+        this->TypeReactionList.erase(this->TypeReactionList.begin() + type);
+    }
+
+    unsigned int CollisionTypeComparison(unsigned int type){
+        for(unsigned long i = 0; this->TypeReactionList.size(); i++){
+            if(type == this->TypeReactionList[i]){
+                return type;
+            }
+        }
+        return -1;
+    }
+
+    virtual void Update(){};
+
+    // Generic colision type resoluton function and operation
+    operator unsigned int(){return TYPE;}
+    // This is to give a general idea of a physics update function
+
+    //
 };

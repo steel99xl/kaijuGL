@@ -162,7 +162,7 @@ class SimpleObject{
 
     public:
 
-        int ColisionID, ObjectPositionPastID, ObjectPositionID, ObjectPositionFutureID;
+        int ObjectPositionPastID, ObjectPositionID, ObjectPositionFutureID;
 
         SimpleObject();
         ~SimpleObject();

@@ -38,6 +38,7 @@ class TestWorld{
         SimpleObject TealBlock;
         // Lol Voxl Land Test set back to about 5k when done
         SimpleObject Land;
+        SimpleObject Platform;
         SimpleObject OtherSuns;
         SimpleObject Sun;
 

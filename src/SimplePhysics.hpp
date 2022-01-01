@@ -193,7 +193,9 @@ class SimplePhysics{
 struct SimplePhysicsObject{
     // This Will mainly be used for the StepPhysicsEnviroment()
 
-    unsigned int TYPE;
+    unsigned int TYPE{};
+
+    PhysicsPos Position;
 
     SimplePhysics *PhysicsContext;
 
@@ -206,9 +208,11 @@ struct SimplePhysicsObject{
     // I might keep this just to force every Object to have a basic sphear colidor at first
     unsigned int RangeFromCenter{};
 
+    float MinXPos, MinYPos, MaxXPos, MaxYPos;
+
     // This is just to normalize some expectec/ required inputs for and Physics Objects
-    SimplePhysicsObject(SimplePhysics *physicsContect){
-        this->PhysicsContext = physicsContect;
+    SimplePhysicsObject(SimplePhysics *physicsContext){
+        this->PhysicsContext = physicsContext;
     }
     // Some feneric functons to minipulate the focibly included data
 
@@ -264,11 +268,44 @@ struct SimplePhysicsObject{
         return -1;
     }
 
-    virtual void Update(){};
+    bool NearObject(float Range, SimplePhysicsObject *OtherObject) {
+        if (Range >(this->PhysicsContext->PointToPointDistance(this->Position, OtherObject->Position))){
+            return true;
+        }
+        return false;
+    };
+l
+    virtual void Update() override{};
 
     // Generic colision type resoluton function and operation
     operator unsigned int(){return TYPE;}
     // This is to give a general idea of a physics update function
 
     //
+};
+
+// Some basic physics objects useing the SimplePhysicsObject struct
+
+struct SimplePhysicsSphereObject : public SimplePhysicsObject{
+
+
+    SimplePhysicsSphereObject(SimplePhysics *physicsContext) : SimplePhysicsObject(physicsContext) {
+        // Junk number that hopfully wont conflict with other peoples
+        this->TYPE = 42069;
+    };
+
+    void Update(){
+
+    };
+};
+
+struct SimplePhysicsBoxObject : public SimplePhysicsObject{
+    SimplePhysicsBoxObject(SimplePhysics *physicsContext) : SimplePhysicsObject(physicsContext){
+        // Junk number to identify type
+        this->TYPE = 69420;
+    };
+
+    void Update() {
+        std::cout << "uwu Box Update" << std::endl;
+    };
 };

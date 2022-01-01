@@ -40,6 +40,7 @@ void TestWorld::Setup(){
 
     PlayerBlock.Setup(18, SimpleObject::DynamicBuffer);
     Land.Setup(15000, SimpleObject::StaticBuffer);
+    Platform.Setup(6, SimpleObject::StaticBuffer);
     OtherSuns.Setup(6, SimpleObject::DynamicBuffer);
     Sun.Setup(6, SimpleObject::StaticBuffer);
     TealBlock.Setup(6, SimpleObject::DynamicBuffer);
@@ -48,11 +49,6 @@ void TestWorld::Setup(){
     for(int i = 0; i < 5; i++){
         m_ObjectColissions.push_back(TempColison);
     }
-    PlayerBlock.ColisionID = 0;
-    Land.ColisionID = 1;
-    OtherSuns.ColisionID = 2;
-    Sun.ColisionID = 3;
-    TealBlock.ColisionID = 4;
 
     BasicMetalCube.ambient.R = 0.3;
     BasicMetalCube.ambient.G = 0.3;
@@ -74,9 +70,8 @@ void TestWorld::Setup(){
 
 
 
-
     //Land.Create2dQuad(0.0f,-3.0f,0.0f, -90.0f,0.0f,0.0f, 5.0f,5.0f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
-    
+
     for(int i = 1; i < 41; i++){
         for(int j = 1; j < 41; j++){
             //for(int n = 1; n < 51; n++){
@@ -99,16 +94,18 @@ void TestWorld::Setup(){
 
     Sun.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.10f,0.10f,0.10f, 10.0f, 0.0f,0.0f, 1.0f,1.0f, 0.0f);
 
-    OtherSuns.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 2.0f,2.0f,2.0f, 10, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+    OtherSuns.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 5.0f,1.0f,5.0f, 1000, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     PlayerBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,0.6f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
+
+    Platform.CreateCube(0.0f, 0.0f, 0.0f,  0.0f, 0.0f, 0.0f,  5.0f, 1.0f, 5.0f, 10000.0f, 0.0f, 0.0f, 1.0f,1.0f, 0.0f);
     //PlayerBlock.CreateCube(1.0f,0.0f,0.0f, 0.0f,0.0f,0.0f, 0.9f,2.0f,0.9f, 10.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     TealBlock.CreateCube(0.0f,0.0f,0.0f, 0.0f,45.0f,0.0f, 1.0f,1.0f,1.0f, 500.0f, 0.0f,0.0f,1.0f,1.0f, 0.0f);
 
     m_FOV = 75.0f;
 
-
+    /*
     Land.SetShadowShader("assets/Shaders/ShadowVertex.shader");
     Land.SetShadowShader("assets/Shaders/ShadowFragment.shader");
     Land.FinishShadowShader();
@@ -118,10 +115,12 @@ void TestWorld::Setup(){
 
     TealBlock.ImportShadowShaders(Land.ExportShadowShaders());
     TealBlock.FinishShadowShader();
+
     
     Land.ClearShadowShaderCache();
     PlayerBlock.ClearShadowShaderCache();
     TealBlock.ClearShadowShaderCache();
+    */
 
     Land.SetShader("assets/Shaders/BasicVertex.shader");
     Land.SetShader("assets/Shaders/BasicLighting.shader");
@@ -130,7 +129,8 @@ void TestWorld::Setup(){
     Land.SumAllWeights();
     std::cout << "Land Weights: " << Land.GetTotalWeight() << std::endl;
 
-   
+    Platform.ImportShaders(Land.ExportShaders());
+    Platform.FinishShader();
 
     PlayerBlock.ImportShaders(Land.ExportShaders());
     PlayerBlock.FinishShader();
@@ -140,12 +140,12 @@ void TestWorld::Setup(){
 
     Land.ClearShaderCache();
     //OtherSuns.ClearShaderCache();
+    Platform.ClearShaderCache();
     PlayerBlock.ClearShaderCache();
     TealBlock.ClearShaderCache();
     // The light does not get a shadow shader
     Sun.SetShader("assets/Shaders/BasicVertex.shader");
     Sun.SetShader("assets/Shaders/BasicLightObject.shader");
-
     OtherSuns.ImportShaders(Sun.ExportShaders());
     OtherSuns.FinishShader();
     OtherSuns.ClearShaderCache();
@@ -153,12 +153,7 @@ void TestWorld::Setup(){
     Sun.FinishShader();
     Sun.ClearShaderCache();
 
-    Land.SetPhysicsTypeID(1);
-    PlayerBlock.SetPhysicsTypeID(0);
-    TealBlock.SetPhysicsTypeID(2);
-    // For this TestWorld the ID 100 will be used for object that do not collide with anything
-    Sun.SetPhysicsTypeID(100);
-    OtherSuns.SetPhysicsTypeID(Sun.GetPhysicsTypeID());
+
     
     glGenFramebuffers(1, &ShadowMapFBO);
 
@@ -226,6 +221,11 @@ void TestWorld::Setup(){
     Land.SetMaterial(BasicMetalCube);
     Land.PreFillLights(4);
 
+    Platform.SetPosition(8.0f, 5.0f, 8.0f);
+    Platform.SetColor(0.6, 0.6, 0.7, 0.8);
+    Platform.SetMaterial(BasicMetalCube);
+    Platform.PreFillLights(4);
+
     OtherSuns.SetPosition(30.0f,5.0f,30.0f);
     OtherSuns.SetColor(1.0f,0.0f,0.0f,1.0f);
     OtherSuns.SetLightColor(1.0f,1.0f,1.0f);
@@ -242,14 +242,36 @@ void TestWorld::Setup(){
     PlayerBlock.PreFillLights(4);
 
     Land.BindBufferData();
+    Platform.BindBufferData();
     Sun.BindBufferData();
 
     std::cout << PlayerBlock.GetVerticies()[1].Pos.X << " | " << PlayerBlock.GetVerticies()[0].Pos.Y << " | " << PlayerBlock.GetVerticies()[0].Pos.Z << std::endl;
 
-    int NewTestInt;
+    unsigned int NewTestInt;
     NewTestInt = PlayerBlock.GetObjectQuadID()->size();
 
-    std::cout << NewTestInt << std::endl;
+
+    // New Physics Preffintion stuff
+    Land.SetPhysicsTypeID(1);
+    Platform.SetPhysicsTypeID(3);
+    PlayerBlock.SetPhysicsTypeID(0);
+    TealBlock.SetPhysicsTypeID(2);
+    // For this TestWorld the ID 100 will be used for object that do not collide with anything
+    Sun.SetPhysicsTypeID(100);
+    OtherSuns.SetPhysicsTypeID(Sun.GetPhysicsTypeID());
+
+    std::cout << "New Physics Stuff and DEBUG" << std::endl;
+    // The TealBlock on the new physics Engine
+    SimplePhysicsSphereObject TBPhysics(&BasicPhysics);
+    // This is the Platform only being represented as the new objet
+    SimplePhysicsBoxObject PlatformPhysics(&BasicPhysics);
+
+    // Sense the Platform does not move (on its own) Im only going to make the TealCube Process the Physics Interatino
+    // NOTE : This would have a more reliable physics action if bouth objects had the PhysicsType for their onw colison
+    TBPhysics.AddCollisionType(PlatformPhysics);
+
+    std::cout << TBPhysics.TYPE << std::endl;
+
 
     m_running = true;
 }
@@ -689,6 +711,12 @@ void TestWorld::OnRender(){
         Land.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
         Land.SetLight(OtherSuns.GetLightInfo(), OtherSuns.GetPos(), m_3dCamPos, 1);
         Land.Paint();
+
+        Platform.SetDrawPos(m_Projection, m_View);
+        Platform.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
+        Platform.SetLight(OtherSuns.GetLightInfo(), OtherSuns.GetPos(), m_3dCamPos);
+        Platform.Paint();
+
 
         OtherSuns.BindBufferData();
         OtherSuns.SetDrawPos(m_Projection, m_View);

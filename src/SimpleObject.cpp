@@ -18,7 +18,6 @@ void SimpleObject::Setup(int MaxQuads, SimpleObject::BufferType buffertype){
         
         m_BufferType = buffertype;
 
-        ColisionID = -1;
         ObjectPositionPastID = -1;
         ObjectPositionID = -1;
         ObjectPositionFutureID = -1;

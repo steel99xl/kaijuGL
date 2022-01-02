@@ -274,7 +274,7 @@ struct SimplePhysicsObject{
         }
         return false;
     };
-l
+
     virtual void Update() override{};
 
     // Generic colision type resoluton function and operation

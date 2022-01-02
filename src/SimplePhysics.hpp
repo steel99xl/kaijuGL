@@ -275,7 +275,7 @@ struct SimplePhysicsObject{
         return false;
     };
 
-    virtual void Update() override{};
+    virtual void Update() {};
 
     // Generic colision type resoluton function and operation
     operator unsigned int(){return TYPE;}
@@ -294,8 +294,8 @@ struct SimplePhysicsSphereObject : public SimplePhysicsObject{
         this->TYPE = 42069;
     };
 
-    void Update(){
-
+    void Update() override{
+        std::cout << "uwu Sphere Update" << std::endl;
     };
 };
 
@@ -305,7 +305,7 @@ struct SimplePhysicsBoxObject : public SimplePhysicsObject{
         this->TYPE = 69420;
     };
 
-    void Update() {
+    void Update() override{
         std::cout << "uwu Box Update" << std::endl;
     };
 };

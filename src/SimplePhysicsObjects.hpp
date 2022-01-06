@@ -1,0 +1,32 @@
+//
+// Created by steel99xl on 1/2/22.
+//
+#pragma once
+#include "SimplePhysics.hpp"
+
+
+// Some basic physics objects useing the SimplePhysicsObject struct
+
+struct SimplePhysicsSphereObject : public SimplePhysics::SimplePhysicsObject{
+
+
+    SimplePhysicsSphereObject() : SimplePhysicsObject() {
+        // Junk number that hopfully wont conflict with other peoples
+        this->TYPE = 42069;
+    };
+
+    void Update() override{
+        std::cout << "uwu Sphere Update" << std::endl;
+    };
+};
+
+struct SimplePhysicsBoxObject : public SimplePhysics::SimplePhysicsObject{
+    SimplePhysicsBoxObject() : SimplePhysicsObject(){
+        // Junk number to identify type
+        this->TYPE = 69420;
+    };
+
+    void Update() override{
+        std::cout << "uwu Box Update" << std::endl;
+    };
+};

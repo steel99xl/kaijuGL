@@ -676,9 +676,9 @@ void SimpleObject::SumAllWeights(){
 
 // Oh boy the physics engien is creeping in to the object
 
-std::vector<PhysicsPos> SimpleObject::GetVertexPositions(){
-    std::vector<PhysicsPos> Output;
-    PhysicsPos Temp;
+std::vector<SimplePhysics::PhysicsPos> SimpleObject::GetVertexPositions(){
+    std::vector<SimplePhysics::PhysicsPos> Output;
+    SimplePhysics::PhysicsPos Temp;
     for(long unsigned int i = 0; i < m_Verticies.size(); i++){
         Temp.X = m_Verticies[i].Pos.X;
         Temp.Y = m_Verticies[i].Pos.Y;
@@ -690,9 +690,9 @@ std::vector<PhysicsPos> SimpleObject::GetVertexPositions(){
     return Output;
 }
 
-std::vector<PhysicsPos> SimpleObject::GetVertexNormlPositions(){
-    std::vector<PhysicsPos> Output;
-    PhysicsPos Temp;
+std::vector<SimplePhysics::PhysicsPos> SimpleObject::GetVertexNormlPositions(){
+    std::vector<SimplePhysics::PhysicsPos> Output;
+    SimplePhysics::PhysicsPos Temp;
     for(long unsigned int i = 0; i < m_Verticies.size(); i++){
         Temp.X = m_Verticies[i].NormalPos.X;
         Temp.Y = m_Verticies[i].NormalPos.Y;

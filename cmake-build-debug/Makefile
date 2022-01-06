@@ -48,48 +48,48 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake
+CMAKE_COMMAND = /app/extra/clion/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E rm -f
+RM = /app/extra/clion/bin/cmake/linux/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/slishy/Documents/Programing/C++/kaijuGL
+CMAKE_SOURCE_DIR = /home/steel99xl/Documents/Programing/C++/kaijuGL
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug
+CMAKE_BINARY_DIR = /home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/app/extra/clion/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
 edit_cache/fast: edit_cache
 .PHONY : edit_cache/fast
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/app/extra/clion/bin/cmake/linux/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+.PHONY : rebuild_cache/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles /Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles /home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -417,6 +417,30 @@ src/SimplePhysics.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kaijuGL.dir/build.make CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.s
 .PHONY : src/SimplePhysics.cpp.s
 
+src/SimplePhysicsObjects.o: src/SimplePhysicsObjects.cpp.o
+.PHONY : src/SimplePhysicsObjects.o
+
+# target to build an object file
+src/SimplePhysicsObjects.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kaijuGL.dir/build.make CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o
+.PHONY : src/SimplePhysicsObjects.cpp.o
+
+src/SimplePhysicsObjects.i: src/SimplePhysicsObjects.cpp.i
+.PHONY : src/SimplePhysicsObjects.i
+
+# target to preprocess a source file
+src/SimplePhysicsObjects.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kaijuGL.dir/build.make CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.i
+.PHONY : src/SimplePhysicsObjects.cpp.i
+
+src/SimplePhysicsObjects.s: src/SimplePhysicsObjects.cpp.s
+.PHONY : src/SimplePhysicsObjects.s
+
+# target to generate assembly for a file
+src/SimplePhysicsObjects.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kaijuGL.dir/build.make CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.s
+.PHONY : src/SimplePhysicsObjects.cpp.s
+
 src/Texture.o: src/Texture.cpp.o
 .PHONY : src/Texture.o
 
@@ -534,6 +558,9 @@ help:
 	@echo "... src/SimplePhysics.o"
 	@echo "... src/SimplePhysics.i"
 	@echo "... src/SimplePhysics.s"
+	@echo "... src/SimplePhysicsObjects.o"
+	@echo "... src/SimplePhysicsObjects.i"
+	@echo "... src/SimplePhysicsObjects.s"
 	@echo "... src/Texture.o"
 	@echo "... src/Texture.i"
 	@echo "... src/Texture.s"

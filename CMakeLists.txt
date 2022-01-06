@@ -461,4 +461,4 @@ add_executable(kaijuGL
         src/VertexBuffer.cpp
         src/VertexBuffer.hpp
         src/VertexBufferLayout.hpp
-        main.cpp)
+        main.cpp src/SimplePhysicsObjects.cpp src/SimplePhysicsObjects.hpp)

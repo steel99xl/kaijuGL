@@ -1,6 +1,6 @@
 #include "SimplePhysics.hpp"
-
-SimplePhysics::SimplePhysics(float GravityForce, float GravityX, float GravityY, float GravityZ){
+using namespace SimplePhysics;
+PhysicsEngine::PhysicsEngine(float GravityForce, float GravityX, float GravityY, float GravityZ){
     float Length = std::sqrt(GravityX * GravityX + GravityY * GravityY + GravityZ * GravityZ);
 
     if(Length != 0.){
@@ -16,9 +16,9 @@ SimplePhysics::SimplePhysics(float GravityForce, float GravityX, float GravityY,
     m_Gravity.Speed = GravityForce;
 }
 
-SimplePhysics::~SimplePhysics(){}
+PhysicsEngine::~PhysicsEngine(){}
 
-std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsQuads(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float>Weights){
+std::vector<QuadPhysicsBody> PhysicsEngine::MakePhysicsQuads(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float>Weights){
     std::vector<QuadPhysicsBody> Output;
 
     QuadPhysicsBody TempQuad;
@@ -56,7 +56,7 @@ std::vector<QuadPhysicsBody> SimplePhysics::MakePhysicsQuads(std::vector<Physics
     return Output;
 }
 
-PhysicsPos SimplePhysics::MovePhysicsObject(PhysicsPos Object, ForceDirection NormalDir, float Speed){
+PhysicsPos PhysicsEngine::MovePhysicsObject(PhysicsPos Object, ForceDirection NormalDir, float Speed){
     Speed *= m_DeltaTime;
 
     NormalDir.X *= Speed;
@@ -70,7 +70,7 @@ PhysicsPos SimplePhysics::MovePhysicsObject(PhysicsPos Object, ForceDirection No
     return Object;
 }
 
-ForceDirection SimplePhysics::MakeForceDirection(PhysicsPos ObjectA, PhysicsPos ObjectB){
+ForceDirection PhysicsEngine::MakeForceDirection(PhysicsPos ObjectA, PhysicsPos ObjectB){
     ForceDirection Output;
     float Length;
     Output.X = ObjectB.X - ObjectA.X;
@@ -88,7 +88,7 @@ ForceDirection SimplePhysics::MakeForceDirection(PhysicsPos ObjectA, PhysicsPos 
     return Output;
 }
 
-void SimplePhysics::QuadsToLinesVoid(std::vector<QuadPhysicsBody> Object ,std::vector<PhysicsLine> *Output){
+void PhysicsEngine::QuadsToLinesVoid(std::vector<QuadPhysicsBody> Object ,std::vector<PhysicsLine> *Output){
     PhysicsLine Temp;
 
     for(long unsigned int i = 0; i < Object.size(); i++){
@@ -126,7 +126,7 @@ void SimplePhysics::QuadsToLinesVoid(std::vector<QuadPhysicsBody> Object ,std::v
 }
 
 // Each Quad has 6 PhysicsLines generated from the 4 points
-std::vector<PhysicsLine> SimplePhysics::QuadsToLines(std::vector<QuadPhysicsBody> Object){
+std::vector<PhysicsLine> PhysicsEngine::QuadsToLines(std::vector<QuadPhysicsBody> Object){
     std::vector<PhysicsLine> Output;
     PhysicsLine Temp;
 
@@ -181,7 +181,7 @@ std::vector<PhysicsLine> SimplePhysics::QuadsToLines(std::vector<QuadPhysicsBody
     return Output;
 }
 
-void SimplePhysics::FullQuadLineColisionVoid(std::vector<PhysicsLine> ObjectALines, PhysicsPos ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPos ObjectBPos, float Offset, ColisionInfo *Output){
+void PhysicsEngine::FullQuadLineColisionVoid(std::vector<PhysicsLine> ObjectALines, PhysicsPos ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPos ObjectBPos, float Offset, ColisionInfo *Output){
     // Assume no colision
     Output->IsColision = false;
     float A,B,C,D;
@@ -228,7 +228,7 @@ void SimplePhysics::FullQuadLineColisionVoid(std::vector<PhysicsLine> ObjectALin
 
 }
 
-ColisionInfo SimplePhysics::FullQuadLineColision(std::vector<PhysicsLine> ObjectALines, PhysicsPos ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPos ObjectBPos, float Offset){
+ColisionInfo PhysicsEngine::FullQuadLineColision(std::vector<PhysicsLine> ObjectALines, PhysicsPos ObjectAPos, std::vector<PhysicsLine> ObjectBLines, PhysicsPos ObjectBPos, float Offset){
     ColisionInfo Output;
     Output.IsColision = false;
     float A,B,C,D;
@@ -339,7 +339,7 @@ ColisionInfo SimplePhysics::FullQuadLineColision(std::vector<PhysicsLine> Object
     return Output;
 }
 
-void SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPos ObjectBPos, ColisionInfo *Output, float OffSet){
+void PhysicsEngine::QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPos ObjectBPos, ColisionInfo *Output, float OffSet){
     Output->IsColision = false;
     
     // Each point after being translated to its world Pos
@@ -361,15 +361,15 @@ void SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, Physi
     */
 
 
-    SimplePhysics::QuadPosToPointsNormal(ObjectA, ObjectAPos, &TranslatedA); 
-    SimplePhysics::QuadPosToPointsNormal(ObjectB, ObjectBPos, &TranslatedB);
+    PhysicsEngine::QuadPosToPointsNormal(ObjectA, ObjectAPos, &TranslatedA); 
+    PhysicsEngine::QuadPosToPointsNormal(ObjectB, ObjectBPos, &TranslatedB);
 
     //TranslationThreadA.join();
     //TranslationThreadB.join();
 
 
-    SimplePhysics::LinesToLines(&TranslatedA, &TranslatedB, &Compare);
-    //SimplePhysics::PointsToPointsNormal(TranslatedB, TranslatedA, &AltCompare);
+    PhysicsEngine::LinesToLines(&TranslatedA, &TranslatedB, &Compare);
+    //PhysicsEngine::PointsToPointsNormal(TranslatedB, TranslatedA, &AltCompare);
 
     
 
@@ -485,7 +485,7 @@ void SimplePhysics::QuadBodyColision(std::vector<QuadPhysicsBody> ObjectA, Physi
     return;
 }
 
-void SimplePhysics::QuadPosToPoints(std::vector<QuadPhysicsBody> Object, PhysicsPos ObjectPos, std::vector<PhysicsPoint> *Output){
+void PhysicsEngine::QuadPosToPoints(std::vector<QuadPhysicsBody> Object, PhysicsPos ObjectPos, std::vector<PhysicsPoint> *Output){
     PhysicsPoint Temp;
     for(long unsigned int i = 0; i < Object.size(); i++){
         Temp.Pos.Input((Object[i].PosA.Pos.X + ObjectPos.X), (Object[i].PosA.Pos.Y + ObjectPos.Y), (Object[i].PosA.Pos.Z + ObjectPos.Z));
@@ -516,7 +516,7 @@ void SimplePhysics::QuadPosToPoints(std::vector<QuadPhysicsBody> Object, Physics
 
 
 
-void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, PhysicsPos ObjectPos, std::vector<PhysicsLine> *Output){
+void PhysicsEngine::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, PhysicsPos ObjectPos, std::vector<PhysicsLine> *Output){
     PhysicsLine Temp;
     //PhysicsPoint TempPoint;
     for(long unsigned int i = 0; i < Object.size(); i++){
@@ -561,7 +561,7 @@ void SimplePhysics::QuadPosToPointsNormal(std::vector<QuadPhysicsBody> Object, P
 
 
 // Normalizes ObjectAs points to ObjectBs points
-void SimplePhysics::PointsToPointsNormal(std::vector<PhysicsPos> ObjectA, std::vector<PhysicsPos> ObjectB, std::vector<PhysicsPos> *Output){
+void PhysicsEngine::PointsToPointsNormal(std::vector<PhysicsPos> ObjectA, std::vector<PhysicsPos> ObjectB, std::vector<PhysicsPos> *Output){
     PhysicsPos Temp;
     for(long unsigned int i = 0; i < ObjectA.size(); i++){
         for(long unsigned int j = 0; j < ObjectB.size(); j++){
@@ -571,26 +571,26 @@ void SimplePhysics::PointsToPointsNormal(std::vector<PhysicsPos> ObjectA, std::v
     }
 }
 
-void SimplePhysics::PointToPoint(PhysicsPos *ObjectA, PhysicsPos *ObjectB, PhysicsPos *Output){
+void PhysicsEngine::PointToPoint(PhysicsPos *ObjectA, PhysicsPos *ObjectB, PhysicsPos *Output){
 
         Output->Input((ObjectB->X - ObjectA->X), (ObjectB->Y - ObjectA->Y), (ObjectB->Z - ObjectA->Z));
 
 }
 
-void SimplePhysics::LinesToLines(std::vector<PhysicsLine> *ObjectA, std::vector<PhysicsLine> *ObjectB, std::vector<PhysicsLine> *Output){
+void PhysicsEngine::LinesToLines(std::vector<PhysicsLine> *ObjectA, std::vector<PhysicsLine> *ObjectB, std::vector<PhysicsLine> *Output){
     PhysicsLine Temp;
 
     for(long unsigned int i = 0; i < ObjectA->size(); i++){
         for(long unsigned int j = 0; j < ObjectB->size(); j++){
-            SimplePhysics::PointToPoint(&ObjectA->at(i).PosA.Pos, &ObjectB->at(j).PosA.Pos, &Temp.PosA.Pos);
+            PhysicsEngine::PointToPoint(&ObjectA->at(i).PosA.Pos, &ObjectB->at(j).PosA.Pos, &Temp.PosA.Pos);
             Output->push_back(Temp);
-            SimplePhysics::PointToPoint(&ObjectA->at(i).PosA.Pos, &ObjectB->at(j).PosB.Pos, &Temp.PosB.Pos);
+            PhysicsEngine::PointToPoint(&ObjectA->at(i).PosA.Pos, &ObjectB->at(j).PosB.Pos, &Temp.PosB.Pos);
             Output->push_back(Temp);
         }
     }
 }
 
-ColisionInfo SimplePhysics::SATColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPos ObjectBPos){
+ColisionInfo PhysicsEngine::SATColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<QuadPhysicsBody> ObjectB, PhysicsPos ObjectBPos){
     ColisionInfo Output;
     Output.IsColision = false; 
 
@@ -611,7 +611,7 @@ ColisionInfo SimplePhysics::SATColision(std::vector<QuadPhysicsBody> ObjectA, Ph
         //CenterPointB.Y = ObjectA[i].PosD.Y + ObjectAPos.Y;
         //CenterPointB.Z = ObjectA[i].PosD.Z + ObjectAPos.Z;
 
-        //CenterPoint = SimplePhysics::CenterPoint(CenterPointA, CenterPointB);
+        //CenterPoint = PhysicsEngine::CenterPoint(CenterPointA, CenterPointB);
         CenterPoint.Input(0.0f,0.0f,0.0f);
 
         for(long unsigned int j = 0; j < ObjectA.size(); j++){
@@ -630,7 +630,7 @@ ColisionInfo SimplePhysics::SATColision(std::vector<QuadPhysicsBody> ObjectA, Ph
                         TempAPoint.Input((ObjectA[j].PosD.Pos.X + ObjectAPos.X), (ObjectA[j].PosD.Pos.Y + ObjectAPos.Y), (ObjectA[j].PosD.Pos.Z + ObjectAPos.Z));
                         break;
                 }
-                ObjectAShadow.push_back(SimplePhysics::DotPointToForce(TempAPoint, ObjectA[i].PlaneNorm, CenterPoint));
+                ObjectAShadow.push_back(PhysicsEngine::DotPointToForce(TempAPoint, ObjectA[i].PlaneNorm, CenterPoint));
 
             }
         }
@@ -653,7 +653,7 @@ ColisionInfo SimplePhysics::SATColision(std::vector<QuadPhysicsBody> ObjectA, Ph
                         TempBPoint.Input((ObjectB[j].PosD.Pos.X + ObjectBPos.X), (ObjectB[j].PosD.Pos.Y + ObjectBPos.Y), (ObjectB[j].PosD.Pos.Z + ObjectBPos.Z));
                         break;
                 }
-                ObjectBShadow.push_back(SimplePhysics::DotPointToForce(TempBPoint, ObjectB[i].PlaneNorm, CenterPoint));
+                ObjectBShadow.push_back(PhysicsEngine::DotPointToForce(TempBPoint, ObjectB[i].PlaneNorm, CenterPoint));
             }
         }
 
@@ -694,8 +694,8 @@ ColisionInfo SimplePhysics::SATColision(std::vector<QuadPhysicsBody> ObjectA, Ph
     }
 
     Output.IsColision = true;
-    Output.MovmentDirectionA = SimplePhysics::MakeForceDirection(ObjectAPos, ObjectBPos);
-    Output.MovmentDirectionB = SimplePhysics::MakeForceDirection(ObjectBPos, ObjectAPos);
+    Output.MovmentDirectionA = PhysicsEngine::MakeForceDirection(ObjectAPos, ObjectBPos);
+    Output.MovmentDirectionB = PhysicsEngine::MakeForceDirection(ObjectBPos, ObjectAPos);
     //take the noral of each polly and dot product each point to it to make a "shadow"
     
 
@@ -705,7 +705,7 @@ ColisionInfo SimplePhysics::SATColision(std::vector<QuadPhysicsBody> ObjectA, Ph
     return Output;
 }
 
-std::vector<PlaneMinMax> SimplePhysics::MinMaxFromQuads(std::vector<QuadPhysicsBody> Object, PhysicsPos ObjectPos){
+std::vector<PlaneMinMax> PhysicsEngine::MinMaxFromQuads(std::vector<QuadPhysicsBody> Object, PhysicsPos ObjectPos){
     std::vector<PlaneMinMax> Output;
 
     PlaneMinMax TempMinMax;
@@ -812,7 +812,7 @@ std::vector<PlaneMinMax> SimplePhysics::MinMaxFromQuads(std::vector<QuadPhysicsB
     return Output;
 }
 
-ColisionInfo SimplePhysics::PointsToAABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<PlaneMinMax> ObjectB){
+ColisionInfo PhysicsEngine::PointsToAABBColision(std::vector<QuadPhysicsBody> ObjectA, PhysicsPos ObjectAPos, std::vector<PlaneMinMax> ObjectB){
     ColisionInfo Output;
     Output.IsColision = false;
 
@@ -878,7 +878,7 @@ ColisionInfo SimplePhysics::PointsToAABBColision(std::vector<QuadPhysicsBody> Ob
     return Output;
 }
 
-void SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsPos &ObjectAPos, std::vector<QuadPhysicsBody> &ObjectB, PhysicsPos &ObjectBPos, ColisionInfo *Output){
+void PhysicsEngine::AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsPos &ObjectAPos, std::vector<QuadPhysicsBody> &ObjectB, PhysicsPos &ObjectBPos, ColisionInfo *Output){
     //ColisionInfo Temp;
     Output->IsColision = false;
 
@@ -1169,7 +1169,7 @@ void SimplePhysics::AABBColision(std::vector<QuadPhysicsBody> &ObjectA, PhysicsP
     return;
 }
 
-void SimplePhysics::SphearColison(PhysicsPos ObjectAPos, float ObjectASize, PhysicsPos ObjectBPos, float ObjectBSize, ColisionInfo *Output){
+void PhysicsEngine::SphearColison(PhysicsPos ObjectAPos, float ObjectASize, PhysicsPos ObjectBPos, float ObjectBSize, ColisionInfo *Output){
     //ColisionInfo Output;
 
     Output->IsColision = false;
@@ -1185,13 +1185,13 @@ void SimplePhysics::SphearColison(PhysicsPos ObjectAPos, float ObjectASize, Phys
     return;
 }
 
-float SimplePhysics::PointToPointDistance(PhysicsPos PointA, PhysicsPos PointB){
+float PhysicsEngine::PointToPointDistance(PhysicsPos PointA, PhysicsPos PointB){
     float Distance = std::sqrt((PointA.X - PointB.X)*(PointA.X - PointB.X) + (PointA.Y - PointB.Y)*(PointA.Y - PointB.Y) + (PointA.Z - PointB.Z)*(PointA.Z - PointB.Z));
 
     return Distance;
 }
 
-float SimplePhysics::DotPointToForce(PhysicsPos Point, ForceDirection Projection, PhysicsPos ProjectionPos){
+float PhysicsEngine::DotPointToForce(PhysicsPos Point, ForceDirection Projection, PhysicsPos ProjectionPos){
     float Output;
 
     Output = ((Point.X * (Projection.X + ProjectionPos.X)) + (Point.Y * (Projection.Y + ProjectionPos.Y)) + (Point.Z * (Projection.Z + ProjectionPos.Z)));
@@ -1199,7 +1199,7 @@ float SimplePhysics::DotPointToForce(PhysicsPos Point, ForceDirection Projection
     return Output;
 }
 
-PhysicsPos SimplePhysics::Center2Point(PhysicsPos PointA, PhysicsPos PointB){
+PhysicsPos PhysicsEngine::Center2Point(PhysicsPos PointA, PhysicsPos PointB){
     PhysicsPos Output;
     Output.X = (PointA.X + PointB.X)/2.0f;
     Output.Y = (PointA.Y + PointB.Y)/2.0f;
@@ -1209,7 +1209,7 @@ PhysicsPos SimplePhysics::Center2Point(PhysicsPos PointA, PhysicsPos PointB){
 
 }
 
-PhysicsPos SimplePhysics::Center4Point(PhysicsPos *PointA, PhysicsPos *PointB, PhysicsPos *PointC, PhysicsPos *PointD){
+PhysicsPos PhysicsEngine::Center4Point(PhysicsPos *PointA, PhysicsPos *PointB, PhysicsPos *PointC, PhysicsPos *PointD){
     PhysicsPos Output;
     Output.X = (PointA->X + PointB->X + PointC->X + PointD->X)/4.0f;
     Output.Y = (PointA->Y + PointB->Y + PointC->Y + PointD->Y)/4.0f;
@@ -1220,7 +1220,7 @@ PhysicsPos SimplePhysics::Center4Point(PhysicsPos *PointA, PhysicsPos *PointB, P
 }
 
 
-ColisionInfo SimplePhysics::SphearToPlane(SphearPhysicsBody ObjectA, QuadPhysicsBody ObjectB, PhysicsPos ObjectBPos) {
+ColisionInfo PhysicsEngine::SphearToPlane(SphearPhysicsBody ObjectA, QuadPhysicsBody ObjectB, PhysicsPos ObjectBPos) {
     ColisionInfo Output;
     QuadPhysicsBody TempQuad;
 
@@ -1275,13 +1275,13 @@ ColisionInfo SimplePhysics::SphearToPlane(SphearPhysicsBody ObjectA, QuadPhysics
 
 
     // see if the sphear is inside the quad
-    if(ObjectA.Radius > SimplePhysics::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosA.Pos)){
+    if(ObjectA.Radius > PhysicsEngine::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosA.Pos)){
         Output.IsColision = true;
-    } else if(ObjectA.Radius > SimplePhysics::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosB.Pos)){
+    } else if(ObjectA.Radius > PhysicsEngine::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosB.Pos)){
         Output.IsColision = true;
-    } else if(ObjectA.Radius > SimplePhysics::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosC.Pos)){
+    } else if(ObjectA.Radius > PhysicsEngine::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosC.Pos)){
         Output.IsColision = true;
-    } else if(ObjectA.Radius > SimplePhysics::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosD.Pos)){
+    } else if(ObjectA.Radius > PhysicsEngine::PointToPointDistance(ObjectA.PosA.Pos, TempQuad.PosD.Pos)){
         Output.IsColision = true;
     }
 
@@ -1303,7 +1303,7 @@ ColisionInfo SimplePhysics::SphearToPlane(SphearPhysicsBody ObjectA, QuadPhysics
 }
 
 
-ForceDirection SimplePhysics::NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces){
+ForceDirection PhysicsEngine::NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces){
     ForceDirection Output;
     int VectorSize = VectorOfForces.size();
     float Temp;
@@ -1332,7 +1332,7 @@ ForceDirection SimplePhysics::NormalizeVectorOfForceDirection(std::vector<ForceD
     return Output;
 }
 
-void SimplePhysics::NormalizeForceDirection(ForceDirection ForceA, ForceDirection ForceB, ForceDirection *Output){
+void PhysicsEngine::NormalizeForceDirection(ForceDirection ForceA, ForceDirection ForceB, ForceDirection *Output){
     ForceDirection TempA, TempB;
     float Temp;
     // For TempA
@@ -1377,7 +1377,7 @@ void SimplePhysics::NormalizeForceDirection(ForceDirection ForceA, ForceDirectio
     return;
 }
 
-void SimplePhysics::StepPhysicsEnviroment() {
+void PhysicsEngine::StepPhysicsEnviroment() {
     // For every Physics Object in the Game World(or just a limited type)
 
     // Process Player Input
@@ -1392,6 +1392,6 @@ void SimplePhysics::StepPhysicsEnviroment() {
 
 }
 
-void SimplePhysics::SimpleThreadTest(){
+void PhysicsEngine::SimpleThreadTest(){
     std::cout << "Ya the Simple Thread Teast Worked" << std::endl;
 }

@@ -45,7 +45,7 @@ void TestWorld::Setup(){
     Sun.Setup(6, SimpleObject::StaticBuffer);
     TealBlock.Setup(6, SimpleObject::DynamicBuffer);
 
-    ColisionInfo TempColison;
+    SimplePhysics::ColisionInfo TempColison;
     for(int i = 0; i < 5; i++){
         m_ObjectColissions.push_back(TempColison);
     }
@@ -262,9 +262,9 @@ void TestWorld::Setup(){
 
     std::cout << "New Physics Stuff and DEBUG" << std::endl;
     // The TealBlock on the new physics Engine
-    SimplePhysicsSphereObject TBPhysics(&BasicPhysics);
+    SimplePhysicsSphereObject TBPhysics;
     // This is the Platform only being represented as the new objet
-    SimplePhysicsBoxObject PlatformPhysics(&BasicPhysics);
+    SimplePhysicsBoxObject PlatformPhysics;
 
     // Sense the Platform does not move (on its own) Im only going to make the TealCube Process the Physics Interatino
     // NOTE : This would have a more reliable physics action if bouth objects had the PhysicsType for their onw colison
@@ -308,7 +308,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
 
         //bool Test = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);
         // This is just to seperate the old colision system from the new one
-        ColisionInfo PlayerTOObject, TealBlockColision;
+        SimplePhysics::ColisionInfo PlayerTOObject, TealBlockColision;
         PlayerTOObject.IsColision = false;
 
         //std::vector<QuadPhysicsBody> Player, PhysicsLand, OtherPhysicsLand, PhysicsTealBlock;
@@ -525,7 +525,7 @@ void TestWorld::KeyInput(std::array<int,512> Keys){
         // Eventualy the movment will be forcebased
 
         if(Keys[GLFW_KEY_F] == GLFW_PRESS){
-            PhysicsPos Temp = PlayerBlock.GetPhysicsPos();
+            SimplePhysics::PhysicsPos Temp = PlayerBlock.GetPhysicsPos();
             Temp.Y += 10.0f;
             TealBlock.SetFuturePositionUpdate(true);
             TealBlock.SetFuturePosition(Temp.X, Temp.Y, Temp.Z);

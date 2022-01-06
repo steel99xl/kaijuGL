@@ -19,6 +19,7 @@
 #include "IndexBuffer.hpp"
 #include "Shader.hpp"
 #include "Renderer.hpp"
+#include "SimplePhysicsObjects.hpp"
 #include "SimplePhysics.hpp"
 #include "SimpleObject.hpp"
 #include "Camera.hpp"

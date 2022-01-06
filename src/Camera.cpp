@@ -129,8 +129,8 @@ void Camera3D::Move(CamDirection direction, float Speed){
 
 }
 
-ForceDirection Camera3D::MoveDir(CamDirection direction){
-    ForceDirection Output;
+SimplePhysics::ForceDirection Camera3D::MoveDir(CamDirection direction){
+    SimplePhysics::ForceDirection Output;
     glm::vec3 Temp;
 
     switch(direction){

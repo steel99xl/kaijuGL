@@ -229,9 +229,9 @@ class SimpleObject{
         inline void SetFuturePositionUpdate(bool enable){m_FuturePosition = enable;}
         inline bool GetFuturePositionStatus(){return m_FuturePosition;}
         inline glm::vec3 GetPos() {return glm::vec3(m_X,m_Y,m_Z);}
-        inline PhysicsPos GetPhysicsPos() {PhysicsPos Output; Output.Input(m_X, m_Y, m_Z); return Output;}
+        inline SimplePhysics::PhysicsPos GetPhysicsPos() {SimplePhysics::PhysicsPos Output; Output.Input(m_X, m_Y, m_Z); return Output;}
         inline glm::vec3 GetPreviouPos(){return glm::vec3(m_OldX, m_OldY, m_OldZ);}
-        inline PhysicsPos GetPreviouPhysicsPos() {PhysicsPos Output; Output.Input(m_OldX, m_OldY, m_OldZ); return Output;}
+        inline SimplePhysics::PhysicsPos GetPreviouPhysicsPos() {SimplePhysics::PhysicsPos Output; Output.Input(m_OldX, m_OldY, m_OldZ); return Output;}
 
         inline void SetColision(bool basic){ SimpleColision = basic;}
         inline bool GetColision(){return SimpleColision;}
@@ -242,8 +242,8 @@ class SimpleObject{
 
         void SumAllWeights();
 
-        std::vector<PhysicsPos> GetVertexPositions();
-        std::vector<PhysicsPos> GetVertexNormlPositions();
+        std::vector<SimplePhysics::PhysicsPos> GetVertexPositions();
+        std::vector<SimplePhysics::PhysicsPos> GetVertexNormlPositions();
 
         void SetShader(const std::string &filePath);
         void FinishShader();

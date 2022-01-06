@@ -44,12 +44,12 @@ class TestWorld{
 
 
         //Elements for Physics Engine
-        std::vector<ForceDirection> m_NewPlayerDirection;
-        std::vector<ColisionInfo> m_ObjectColissions;
-        std::vector<QuadPhysicsBody> PlayerPhysics, LandPhysics, TealBlockPhysics;
+        std::vector<SimplePhysics::ForceDirection> m_NewPlayerDirection;
+        std::vector<SimplePhysics::ColisionInfo> m_ObjectColissions;
+        std::vector<SimplePhysics::QuadPhysicsBody> PlayerPhysics, LandPhysics, TealBlockPhysics;
 
         // Temp PlaceHolder for Object Posisons;
-        std::vector<PhysicsPos> m_ObjectWorldPositions;
+        std::vector<SimplePhysics::PhysicsPos> m_ObjectWorldPositions;
 
 
 
@@ -57,7 +57,7 @@ class TestWorld{
 
         SimpleMaterialInfo BasicMetalCube;
 
-        SimplePhysics BasicPhysics = SimplePhysics(2.0f ,0.0f,-1.0f,0.0f);
+        SimplePhysics::PhysicsEngine BasicPhysics = SimplePhysics::PhysicsEngine(2.0f ,0.0f,-1.0f,0.0f);
 
         Camera2D SimpleCam;
         //SimpleObject Object;// = SimpleObject(1000);

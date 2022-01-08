@@ -261,14 +261,12 @@ void TestWorld::Setup(){
     OtherSuns.SetPhysicsTypeID(Sun.GetPhysicsTypeID());
 
     std::cout << "New Physics Stuff and DEBUG" << std::endl;
-    // The TealBlock on the new physics Engine
-    SimplePhysicsSphereObject TBPhysics;
-    // This is the Platform only being represented as the new objet
-    SimplePhysicsBoxObject PlatformPhysics;
+
 
     // Sense the Platform does not move (on its own) Im only going to make the TealCube Process the Physics Interatino
     // NOTE : This would have a more reliable physics action if bouth objects had the PhysicsType for their onw colison
     TBPhysics.AddCollisionType(PlatformPhysics);
+
 
     std::cout << TBPhysics.TYPE << std::endl;
 
@@ -714,7 +712,7 @@ void TestWorld::OnRender(){
 
         Platform.SetDrawPos(m_Projection, m_View);
         Platform.SetLight(Sun.GetLightInfo(), Sun.GetPos(), m_3dCamPos);
-        Platform.SetLight(OtherSuns.GetLightInfo(), OtherSuns.GetPos(), m_3dCamPos);
+        Platform.SetLight(OtherSuns.GetLightInfo(), OtherSuns.GetPos(), m_3dCamPos, 1);
         Platform.Paint();
 
 

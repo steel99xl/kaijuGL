@@ -110,12 +110,16 @@ namespace SimplePhysics {
 
     struct SimplePhysicsObject{
         // This Will mainly be used for the StepPhysicsEnviroment()
+        // This can be anytihng but im calling it UUID cause idk its better than ID
+        const char* UUID;
 
         unsigned int TYPE{};
 
         SimplePhysics::PhysicsPos Position;
+        SimplePhysics::PhysicsPos FuturePosition[4];
 
-        std::vector<unsigned int> TypeReactionList;
+        std::vector<unsigned int> *TypeReactionList;
+        std::vector<unsigned int> CustomReactionList;
 
         std::vector<SimplePhysics::QuadPhysicsBody> QuadPhysicsBodyVector;
         std::vector<SimplePhysics::PhysicsPoint> PhysicsPointVector;
@@ -127,7 +131,10 @@ namespace SimplePhysics {
         float MinXPos, MinYPos, MaxXPos, MaxYPos;
 
         // This is just to normalize some expectec/ required inputs for and Physics Objects
-        SimplePhysicsObject(){}
+        SimplePhysicsObject(const char* UniqueID = nullptr, std::vector<unsigned int> *PhysicsTypeReactionList = nullptr){
+            UUID = UniqueID;
+            this->TypeReactionList = PhysicsTypeReactionList;
+        }
         // Some feneric functons to minipulate the focibly included data
 
         void AddQuadPhysicsBody(SimplePhysics::PhysicsPoint A, SimplePhysics::PhysicsPoint B , SimplePhysics::PhysicsPoint C, SimplePhysics::PhysicsPoint D, SimplePhysics::ForceDirection PlaneNormal){
@@ -167,15 +174,23 @@ namespace SimplePhysics {
         }
 
         void AddCollisionType(unsigned int type){
-            this->TypeReactionList.push_back(type);
+            this->CustomReactionList.push_back(type);
         }
         void RemoveCollisionType(unsigned int type){
-            this->TypeReactionList.erase(this->TypeReactionList.begin() + type);
+            this->CustomReactionList.erase(this->CustomReactionList.begin() + type);
+        }
+        std::vector<unsigned int> *ExportCollisionTypes(){
+           return this->TypeReactionList;
         }
 
         unsigned int CollisionTypeComparison(unsigned int type){
-            for(unsigned long i = 0; this->TypeReactionList.size(); i++){
-                if(type == this->TypeReactionList[i]){
+            for(unsigned int i : *this->TypeReactionList){
+                if(type == i){
+                    return type;
+                }
+            }
+            for(unsigned int i: this->CustomReactionList){
+                if(type == i){
                     return type;
                 }
             }

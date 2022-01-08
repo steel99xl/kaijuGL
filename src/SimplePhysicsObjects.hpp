@@ -10,7 +10,7 @@
 struct SimplePhysicsSphereObject : public SimplePhysics::SimplePhysicsObject{
 
 
-    SimplePhysicsSphereObject() : SimplePhysicsObject() {
+    explicit SimplePhysicsSphereObject(const char* UniqueID = nullptr, std::vector<unsigned int> *PhysicsTypeReactionList = nullptr) : SimplePhysicsObject(UniqueID, PhysicsTypeReactionList) {
         // Junk number that hopfully wont conflict with other peoples
         this->TYPE = 42069;
     };
@@ -21,7 +21,7 @@ struct SimplePhysicsSphereObject : public SimplePhysics::SimplePhysicsObject{
 };
 
 struct SimplePhysicsBoxObject : public SimplePhysics::SimplePhysicsObject{
-    SimplePhysicsBoxObject() : SimplePhysicsObject(){
+    explicit SimplePhysicsBoxObject(const char* UniqueID = nullptr, std::vector<unsigned int> *PhysicsTypeReactionList = nullptr) : SimplePhysicsObject(UniqueID, PhysicsTypeReactionList){
         // Junk number to identify type
         this->TYPE = 69420;
     };

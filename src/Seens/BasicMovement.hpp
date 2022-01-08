@@ -43,10 +43,18 @@ class TestWorld{
         SimpleObject Sun;
 
 
+
+
         //Elements for Physics Engine
         std::vector<SimplePhysics::ForceDirection> m_NewPlayerDirection;
         std::vector<SimplePhysics::ColisionInfo> m_ObjectColissions;
         std::vector<SimplePhysics::QuadPhysicsBody> PlayerPhysics, LandPhysics, TealBlockPhysics;
+
+        // The TealBlock on the new physics Engine
+        SimplePhysicsSphereObject TBPhysics;
+        SimplePhysicsSphereObject PlayerPObject;
+        // This is the Platform only being represented as the new objet
+        SimplePhysicsBoxObject PlatformPhysics;
 
         // Temp PlaceHolder for Object Posisons;
         std::vector<SimplePhysics::PhysicsPos> m_ObjectWorldPositions;

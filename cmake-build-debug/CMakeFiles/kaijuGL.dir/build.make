@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /app/extra/clion/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake
 
 # The command to remove a file.
-RM = /app/extra/clion/bin/cmake/linux/bin/cmake -E rm -f
+RM = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/steel99xl/Documents/Programing/C++/kaijuGL
+CMAKE_SOURCE_DIR = /Users/slishy/Documents/Programing/C++/kaijuGL
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/kaijuGL.dir/depend.make
@@ -72,226 +72,226 @@ include CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.o: ../src/Imports/glm/detail/glm.cpp
 CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Imports/glm/detail/glm.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/Imports/glm/detail/glm.cpp
 
 CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Imports/glm/detail/glm.cpp > CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/Imports/glm/detail/glm.cpp > CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Imports/glm/detail/glm.cpp -o CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/Imports/glm/detail/glm.cpp -o CMakeFiles/kaijuGL.dir/src/Imports/glm/detail/glm.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.o: ../src/Imports/stb_image/stb_image.cpp
 CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Imports/stb_image/stb_image.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/Imports/stb_image/stb_image.cpp
 
 CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Imports/stb_image/stb_image.cpp > CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/Imports/stb_image/stb_image.cpp > CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Imports/stb_image/stb_image.cpp -o CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/Imports/stb_image/stb_image.cpp -o CMakeFiles/kaijuGL.dir/src/Imports/stb_image/stb_image.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.o: ../src/Seens/BasicMovement.cpp
 CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Seens/BasicMovement.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/Seens/BasicMovement.cpp
 
 CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Seens/BasicMovement.cpp > CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/Seens/BasicMovement.cpp > CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Seens/BasicMovement.cpp -o CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/Seens/BasicMovement.cpp -o CMakeFiles/kaijuGL.dir/src/Seens/BasicMovement.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/Camera.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/Camera.cpp.o: ../src/Camera.cpp
 CMakeFiles/kaijuGL.dir/src/Camera.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/kaijuGL.dir/src/Camera.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Camera.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Camera.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Camera.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Camera.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/kaijuGL.dir/src/Camera.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Camera.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Camera.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Camera.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/Camera.cpp
 
 CMakeFiles/kaijuGL.dir/src/Camera.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/Camera.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Camera.cpp > CMakeFiles/kaijuGL.dir/src/Camera.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/Camera.cpp > CMakeFiles/kaijuGL.dir/src/Camera.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/Camera.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/Camera.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Camera.cpp -o CMakeFiles/kaijuGL.dir/src/Camera.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/Camera.cpp -o CMakeFiles/kaijuGL.dir/src/Camera.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.o: ../src/FrameBufferObject.cpp
 CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.o -MF CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/FrameBufferObject.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.o -MF CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/FrameBufferObject.cpp
 
 CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/FrameBufferObject.cpp > CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/FrameBufferObject.cpp > CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/FrameBufferObject.cpp -o CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/FrameBufferObject.cpp -o CMakeFiles/kaijuGL.dir/src/FrameBufferObject.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.o: ../src/IndexBuffer.cpp
 CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.o -MF CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/IndexBuffer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.o -MF CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/IndexBuffer.cpp
 
 CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/IndexBuffer.cpp > CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/IndexBuffer.cpp > CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/IndexBuffer.cpp -o CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/IndexBuffer.cpp -o CMakeFiles/kaijuGL.dir/src/IndexBuffer.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.o: ../src/KaijuWindow.cpp
 CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.o -MF CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/KaijuWindow.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.o -MF CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/KaijuWindow.cpp
 
 CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/KaijuWindow.cpp > CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/KaijuWindow.cpp > CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/KaijuWindow.cpp -o CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/KaijuWindow.cpp -o CMakeFiles/kaijuGL.dir/src/KaijuWindow.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/Renderer.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/Renderer.cpp.o: ../src/Renderer.cpp
 CMakeFiles/kaijuGL.dir/src/Renderer.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/kaijuGL.dir/src/Renderer.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Renderer.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Renderer.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Renderer.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Renderer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/kaijuGL.dir/src/Renderer.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Renderer.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Renderer.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Renderer.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/Renderer.cpp
 
 CMakeFiles/kaijuGL.dir/src/Renderer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/Renderer.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Renderer.cpp > CMakeFiles/kaijuGL.dir/src/Renderer.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/Renderer.cpp > CMakeFiles/kaijuGL.dir/src/Renderer.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/Renderer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/Renderer.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Renderer.cpp -o CMakeFiles/kaijuGL.dir/src/Renderer.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/Renderer.cpp -o CMakeFiles/kaijuGL.dir/src/Renderer.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/Shader.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/Shader.cpp.o: ../src/Shader.cpp
 CMakeFiles/kaijuGL.dir/src/Shader.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/kaijuGL.dir/src/Shader.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Shader.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Shader.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Shader.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Shader.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/kaijuGL.dir/src/Shader.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Shader.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Shader.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Shader.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/Shader.cpp
 
 CMakeFiles/kaijuGL.dir/src/Shader.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/Shader.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Shader.cpp > CMakeFiles/kaijuGL.dir/src/Shader.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/Shader.cpp > CMakeFiles/kaijuGL.dir/src/Shader.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/Shader.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/Shader.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Shader.cpp -o CMakeFiles/kaijuGL.dir/src/Shader.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/Shader.cpp -o CMakeFiles/kaijuGL.dir/src/Shader.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.o: ../src/SimpleObject.cpp
 CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.o -MF CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/SimpleObject.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.o -MF CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/SimpleObject.cpp
 
 CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/SimpleObject.cpp > CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/SimpleObject.cpp > CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/SimpleObject.cpp -o CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/SimpleObject.cpp -o CMakeFiles/kaijuGL.dir/src/SimpleObject.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.o: ../src/SimplePhysics.cpp
 CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.o -MF CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/SimplePhysics.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.o -MF CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/SimplePhysics.cpp
 
 CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/SimplePhysics.cpp > CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/SimplePhysics.cpp > CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/SimplePhysics.cpp -o CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/SimplePhysics.cpp -o CMakeFiles/kaijuGL.dir/src/SimplePhysics.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/Texture.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/Texture.cpp.o: ../src/Texture.cpp
 CMakeFiles/kaijuGL.dir/src/Texture.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/kaijuGL.dir/src/Texture.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Texture.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Texture.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Texture.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Texture.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/kaijuGL.dir/src/Texture.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/Texture.cpp.o -MF CMakeFiles/kaijuGL.dir/src/Texture.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/Texture.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/Texture.cpp
 
 CMakeFiles/kaijuGL.dir/src/Texture.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/Texture.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Texture.cpp > CMakeFiles/kaijuGL.dir/src/Texture.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/Texture.cpp > CMakeFiles/kaijuGL.dir/src/Texture.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/Texture.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/Texture.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/Texture.cpp -o CMakeFiles/kaijuGL.dir/src/Texture.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/Texture.cpp -o CMakeFiles/kaijuGL.dir/src/Texture.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.o: ../src/VertexArray.cpp
 CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.o -MF CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/VertexArray.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.o -MF CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/VertexArray.cpp
 
 CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/VertexArray.cpp > CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/VertexArray.cpp > CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/VertexArray.cpp -o CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/VertexArray.cpp -o CMakeFiles/kaijuGL.dir/src/VertexArray.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.o: ../src/VertexBuffer.cpp
 CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.o -MF CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/VertexBuffer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.o -MF CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/VertexBuffer.cpp
 
 CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/VertexBuffer.cpp > CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/VertexBuffer.cpp > CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/VertexBuffer.cpp -o CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/VertexBuffer.cpp -o CMakeFiles/kaijuGL.dir/src/VertexBuffer.cpp.s
 
 CMakeFiles/kaijuGL.dir/main.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/main.cpp.o: ../main.cpp
 CMakeFiles/kaijuGL.dir/main.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/kaijuGL.dir/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/main.cpp.o -MF CMakeFiles/kaijuGL.dir/main.cpp.o.d -o CMakeFiles/kaijuGL.dir/main.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/kaijuGL.dir/main.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/main.cpp.o -MF CMakeFiles/kaijuGL.dir/main.cpp.o.d -o CMakeFiles/kaijuGL.dir/main.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/main.cpp
 
 CMakeFiles/kaijuGL.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/main.cpp > CMakeFiles/kaijuGL.dir/main.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/main.cpp > CMakeFiles/kaijuGL.dir/main.cpp.i
 
 CMakeFiles/kaijuGL.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/main.cpp -o CMakeFiles/kaijuGL.dir/main.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/main.cpp -o CMakeFiles/kaijuGL.dir/main.cpp.s
 
 CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o: CMakeFiles/kaijuGL.dir/flags.make
 CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o: ../src/SimplePhysicsObjects.cpp
 CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o: CMakeFiles/kaijuGL.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o -MF CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o -c /home/steel99xl/Documents/Programing/C++/kaijuGL/src/SimplePhysicsObjects.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o -MF CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o.d -o CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o -c /Users/slishy/Documents/Programing/C++/kaijuGL/src/SimplePhysicsObjects.cpp
 
 CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/steel99xl/Documents/Programing/C++/kaijuGL/src/SimplePhysicsObjects.cpp > CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/slishy/Documents/Programing/C++/kaijuGL/src/SimplePhysicsObjects.cpp > CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.i
 
 CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/steel99xl/Documents/Programing/C++/kaijuGL/src/SimplePhysicsObjects.cpp -o CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/slishy/Documents/Programing/C++/kaijuGL/src/SimplePhysicsObjects.cpp -o CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.s
 
 # Object files for target kaijuGL
 kaijuGL_OBJECTS = \
@@ -333,7 +333,7 @@ kaijuGL: CMakeFiles/kaijuGL.dir/main.cpp.o
 kaijuGL: CMakeFiles/kaijuGL.dir/src/SimplePhysicsObjects.cpp.o
 kaijuGL: CMakeFiles/kaijuGL.dir/build.make
 kaijuGL: CMakeFiles/kaijuGL.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable kaijuGL"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable kaijuGL"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/kaijuGL.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -345,6 +345,6 @@ CMakeFiles/kaijuGL.dir/clean:
 .PHONY : CMakeFiles/kaijuGL.dir/clean
 
 CMakeFiles/kaijuGL.dir/depend:
-	cd /home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/steel99xl/Documents/Programing/C++/kaijuGL /home/steel99xl/Documents/Programing/C++/kaijuGL /home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug /home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug /home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles/kaijuGL.dir/DependInfo.cmake --color=$(COLOR)
+	cd /Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/slishy/Documents/Programing/C++/kaijuGL /Users/slishy/Documents/Programing/C++/kaijuGL /Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug /Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug /Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles/kaijuGL.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/kaijuGL.dir/depend
 

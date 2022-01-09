@@ -43,6 +43,7 @@ class TestWorld{
         SimpleObject Sun;
 
 
+        SimplePhysics::PhysicsEngine BasicPhysics = SimplePhysics::PhysicsEngine(2.0f ,0.0f,-1.0f,0.0f);
 
 
         //Elements for Physics Engine
@@ -65,7 +66,6 @@ class TestWorld{
 
         SimpleMaterialInfo BasicMetalCube;
 
-        SimplePhysics::PhysicsEngine BasicPhysics = SimplePhysics::PhysicsEngine(2.0f ,0.0f,-1.0f,0.0f);
 
         Camera2D SimpleCam;
         //SimpleObject Object;// = SimpleObject(1000);

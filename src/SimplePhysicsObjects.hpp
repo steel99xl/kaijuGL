@@ -8,8 +8,6 @@
 // Some basic physics objects useing the SimplePhysicsObject struct
 
 struct SimplePhysicsSphereObject : public SimplePhysics::SimplePhysicsObject{
-
-
     explicit SimplePhysicsSphereObject(const char* UniqueID = nullptr, std::vector<unsigned int> *PhysicsTypeReactionList = nullptr) : SimplePhysicsObject(UniqueID, PhysicsTypeReactionList) {
         // Junk number that hopfully wont conflict with other peoples
         this->TYPE = 42069;

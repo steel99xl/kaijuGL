@@ -1,3 +1,3 @@
-/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/steel99xl/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles/kaijuGL.dir
+/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/slishy/Documents/Programing/C++/kaijuGL/cmake-build-debug/CMakeFiles/kaijuGL.dir

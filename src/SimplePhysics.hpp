@@ -179,7 +179,7 @@ namespace SimplePhysics {
         void RemoveCollisionType(unsigned int type){
             this->CustomReactionList.erase(this->CustomReactionList.begin() + type);
         }
-        std::vector<unsigned int> *ExportCollisionTypes(){
+        const std::vector<unsigned int> *ExportCollisionTypes(){
            return this->TypeReactionList;
         }
 
@@ -212,11 +212,12 @@ namespace SimplePhysics {
 
         ForceDirection m_Gravity;
 
-        std::vector<SimplePhysicsObject *> Objects;
 
 
     public:
         inline void SetUpdateTime(float TimePassed) { m_DeltaTime = TimePassed; }
+
+        std::vector<SimplePhysicsObject *> Objects;
 
         inline float GetUpdateTime() { return m_DeltaTime; }
 

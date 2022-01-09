@@ -250,7 +250,7 @@ void TestWorld::Setup(){
     unsigned int NewTestInt;
     NewTestInt = PlayerBlock.GetObjectQuadID()->size();
 
-
+    BasicPhysics.Objects.push_back(new SimplePhysics::SimplePhysicsObject());
     // New Physics Preffintion stuff
     Land.SetPhysicsTypeID(1);
     Platform.SetPhysicsTypeID(3);
@@ -293,8 +293,6 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         // The finer detaild colision can be set along with the seize of the sphear colider
         // I also want the ability to limit all physics processing (including movment in the GeneralMovment) for objects outside some range of the player
 
-
-
         //glfwPostEmptyEvent();
         // camera stuff 
         BasicPhysics.SetUpdateTime(MaxUpdateSpeed);
@@ -302,6 +300,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         m_Projection = AdvancedCam.GetProj();
         m_View = AdvancedCam.GetView();
         m_3dCamPos = AdvancedCam.GetCurrentPos();
+
 
 
         //bool Test = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);

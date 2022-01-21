@@ -63,7 +63,7 @@ class Camera3D{
     void Update(float DeltaTime, float Ratio = 0.0f, float FOV = 0.0f, float ViewDistance = 0.0f);
     void Input();
     void Move(CamDirection direction, float Speed);
-    SimplePhysics::ForceDirection MoveDir(CamDirection directoin);
+    SimplePhysics::ForceDirection MoveDir(CamDirection direction, float Speed);
     void LookRelative(double xpos, double ypos);
     // Looks at a specific point in the world
     inline void LookAbsolute(float xpos, float ypos, float zpos){m_look[0] = xpos; m_look[1] = ypos; m_look[2] = zpos;};

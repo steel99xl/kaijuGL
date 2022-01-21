@@ -263,13 +263,13 @@ void TestWorld::Setup(){
     std::cout << "New Physics Stuff and DEBUG" << std::endl;
 
 
-    // Sense the Platform does not move (on its own) Im only going to make the TealCube Process the Physics Interatino
-    // NOTE : This would have a more reliable physics action if bouth objects had the PhysicsType for their onw colison
-    TBPhysics.AddCollisionType(PlatformPhysics);
+    // Sense the Platform does not move (on its own) Im only going to make the TealCube Process the Physics Interatiom
+    BasicPhysics.SetPhysicsPlayerID(m_PlayerObjectID);
+    // Just to show how 1 object is the main colision decider for the clones
+    BasePlayerandPushableObject.AddCollisionType(BaseNonMovableobjects);
 
-
-    std::cout << TBPhysics.TYPE << std::endl;
-
+    BasicPhysics.Objects.push_back(new SimplePhysicsSphereObject(m_PlayerObjectID, BasePlayerandPushableObject.ExportCollisionTypes()));
+    BasicPhysics.Objects.push_back(new SimplePhysicsSphereObject(m_Box, BasePlayerandPushableObject.ExportCollisionTypes()));
 
     m_running = true;
 }
@@ -301,6 +301,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         m_View = AdvancedCam.GetView();
         m_3dCamPos = AdvancedCam.GetCurrentPos();
 
+        //SimplePhysics::ForceDirection PlayerMovmentDirection = BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection);
 
 
         //bool Test = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);
@@ -537,37 +538,37 @@ void TestWorld::KeyInput(std::array<int,512> Keys){
         if(Keys[GLFW_KEY_W] == GLFW_PRESS){
             m_pos2D[2] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(FORWARD, SpeedStep);
-            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(FORWARD));
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(FORWARD, PlayerMovmentSpeed));
         }
 
         if(Keys[GLFW_KEY_S] == GLFW_PRESS){
             m_pos2D[2] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(BACK, SpeedStep);
-            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(BACK));
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(BACK, PlayerMovmentSpeed));
         }
 
         if(Keys[GLFW_KEY_A] == GLFW_PRESS){
             m_pos2D[0] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(LEFT, SpeedStep);
-            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(LEFT));
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(LEFT, PlayerMovmentSpeed));
         }
 
         if(Keys[GLFW_KEY_D] == GLFW_PRESS){
             m_pos2D[0] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(RIGHT, SpeedStep);
-            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(RIGHT));
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(RIGHT, PlayerMovmentSpeed));
         }
 
         if(Keys[GLFW_KEY_SPACE] == GLFW_PRESS){
             m_pos2D[1] += 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(UP, SpeedStep);
-            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(UP));
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(UP, PlayerMovmentSpeed));
         }
 
         if(Keys[GLFW_KEY_LEFT_SHIFT] == GLFW_PRESS){
             m_pos2D[1] -= 5 + PlayerMovmentSpeed;
             //AdvancedCam.Move(DOWN, SpeedStep);
-            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(DOWN));
+            m_NewPlayerDirection.push_back(AdvancedCam.MoveDir(DOWN, PlayerMovmentSpeed));
         }
 
         if(Keys[GLFW_KEY_UP] == GLFW_PRESS){

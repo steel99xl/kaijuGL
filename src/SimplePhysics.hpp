@@ -103,6 +103,55 @@ namespace SimplePhysics {
     };
 
 
+
+    PhysicsPos MovePhysicsObject(PhysicsPos Object, ForceDirection NormalDir, float Speed, float DeltaTime){
+        Speed *= DeltaTime;
+
+        NormalDir.X *= Speed;
+        NormalDir.Y *= Speed;
+        NormalDir.Z *= Speed;
+
+        Object.X += NormalDir.X;
+        Object.Y += NormalDir.Y;
+        Object.Z += NormalDir.Z;
+
+        return Object;
+    }
+
+
+    ForceDirection NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces){
+        ForceDirection Output;
+        // Speed is now used when normalizing the vector
+        int VectorSize = VectorOfForces.size();
+        float Temp;
+        Output.X = 0.0f;
+        Output.Y = 0.0f;
+        Output.Z = 0.0f;
+
+        if(!(VectorSize == 0)){
+            for(int i = 0; i < VectorSize; i ++){
+                Output.X += VectorOfForces[i].X * VectorOfForces[i].Speed;
+                Output.Y += VectorOfForces[i].Y * VectorOfForces[i].Speed;
+                Output.Z += VectorOfForces[i].Z * VectorOfForces[i].Speed;
+            }
+
+            Temp = std::sqrt(Output.X * Output.X + Output.Y * Output.Y + Output.Z * Output.Z);
+
+
+            if(Temp != 0.){
+                Output.X /= Temp;
+                Output.Y /= Temp;
+                Output.Z /= Temp;
+            }
+
+            Output.Speed = Temp;
+
+        }
+
+
+        return Output;
+    };
+
     struct MultiThreadPhysUpdate {
 
 
@@ -118,7 +167,11 @@ namespace SimplePhysics {
         SimplePhysics::PhysicsPos Position;
         SimplePhysics::PhysicsPos FuturePosition[4];
 
-        std::vector<unsigned int> *TypeReactionList;
+        std::vector<SimplePhysics::ForceDirection> AccumulatedAppliedForces;
+        SimplePhysics::ForceDirection FinalAppliedForce;
+        SimplePhysics::ForceDirection ForceStorageSlot;
+
+        const std::vector<unsigned int> *TypeReactionList;
         std::vector<unsigned int> CustomReactionList;
 
         std::vector<SimplePhysics::QuadPhysicsBody> QuadPhysicsBodyVector;
@@ -131,7 +184,7 @@ namespace SimplePhysics {
         float MinXPos, MinYPos, MaxXPos, MaxYPos;
 
         // This is just to normalize some expectec/ required inputs for and Physics Objects
-        SimplePhysicsObject(const char* UniqueID = nullptr, std::vector<unsigned int> *PhysicsTypeReactionList = nullptr){
+        SimplePhysicsObject(const char* UniqueID = nullptr, const std::vector<unsigned int> *PhysicsTypeReactionList = nullptr){
             UUID = UniqueID;
             this->TypeReactionList = PhysicsTypeReactionList;
         }
@@ -173,6 +226,10 @@ namespace SimplePhysics {
             this->SphearPhysicsBodyVector.erase(this->SphearPhysicsBodyVector.begin()+ID);
         }
 
+        void AddAppliedForce(SimplePhysics::ForceDirection Force){
+            this->AccumulatedAppliedForces.push_back(Force);
+        }
+
         void AddCollisionType(unsigned int type){
             this->CustomReactionList.push_back(type);
         }
@@ -180,7 +237,11 @@ namespace SimplePhysics {
             this->CustomReactionList.erase(this->CustomReactionList.begin() + type);
         }
         const std::vector<unsigned int> *ExportCollisionTypes(){
-           return this->TypeReactionList;
+           return &this->CustomReactionList;
+        }
+
+        void SetParentCollisionList(const std::vector<unsigned int> *TypeList){
+            this->TypeReactionList = TypeList;
         }
 
         unsigned int CollisionTypeComparison(unsigned int type){
@@ -197,8 +258,12 @@ namespace SimplePhysics {
             return -1;
         }
 
-        virtual void Update() {};
+        virtual void OnUpdate() {};
 
+        void Update(){
+            this->ForceStorageSlot = NormalizeVectorOfForceDirection(this->AccumulatedAppliedForces);
+
+        };
         // Generic colision type resoluton function and operation
         operator unsigned int(){return TYPE;}
         // This is to give a general idea of a physics update function
@@ -206,9 +271,14 @@ namespace SimplePhysics {
         //
     };
 
+
+
     class PhysicsEngine {
     protected:
         float m_DeltaTime;
+
+        // This is just so the engien know whot to pass user input to
+        const char *PlayerID;
 
         ForceDirection m_Gravity;
 
@@ -223,7 +293,7 @@ namespace SimplePhysics {
 
         inline ForceDirection GetGravity() { return m_Gravity; }
 
-        PhysicsPos MovePhysicsObject(PhysicsPos Object, ForceDirection NormalDir, float Speed);
+        inline void SetPhysicsPlayerID(const char *ID){ PlayerID = ID;}
 
         // Returns froce to move ObjectA to ObjectB
         ForceDirection MakeForceDirection(PhysicsPos ObjectA, PhysicsPos ObjectB);
@@ -294,7 +364,7 @@ namespace SimplePhysics {
 
         ColisionInfo SphearToPlane(SphearPhysicsBody ObjectA, QuadPhysicsBody ObjectB, PhysicsPos ObjectBPos);
 
-        ForceDirection NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces);
+
 
         void NormalizeForceDirection(ForceDirection ForceA, ForceDirection ForceB, ForceDirection *Output);
 
@@ -302,8 +372,7 @@ namespace SimplePhysics {
 
         ~PhysicsEngine();
 
-        // The reason this is not just "Update", because this may not be the final "Update" function
-        void StepPhysicsEnviroment();
+        void Update(std::vector<SimplePhysics::ForceDirection> UserInput);
 
 
         void SimpleThreadTest();

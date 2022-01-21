@@ -47,15 +47,22 @@ class TestWorld{
 
 
         //Elements for Physics Engine
+        const char *m_PlayerObjectID = "PlayerObject";
+        const char *m_Box = "Box";
+        // This is going to also be the 'walls' for now
+        const char *m_Gound = "Gound";
         std::vector<SimplePhysics::ForceDirection> m_NewPlayerDirection;
         std::vector<SimplePhysics::ColisionInfo> m_ObjectColissions;
         std::vector<SimplePhysics::QuadPhysicsBody> PlayerPhysics, LandPhysics, TealBlockPhysics;
 
         // The TealBlock on the new physics Engine
-        SimplePhysicsSphereObject TBPhysics;
-        SimplePhysicsSphereObject PlayerPObject;
+        SimplePhysicsSphereObject BasePlayerandPushableObject;
+        SimplePhysicsBoxObject BaseNonMovableobjects;
+        // One object of each type must exist for any duplicates to exist;
+        //SimplePhysicsSphereObject TBPhysics;
+        //SimplePhysicsSphereObject PlayerPObject;
         // This is the Platform only being represented as the new objet
-        SimplePhysicsBoxObject PlatformPhysics;
+        //SimplePhysicsBoxObject PlatformPhysics;
 
         // Temp PlaceHolder for Object Posisons;
         std::vector<SimplePhysics::PhysicsPos> m_ObjectWorldPositions;

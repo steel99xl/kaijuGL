@@ -128,7 +128,7 @@ int main(void){
     // just to test/show some options
     window.setWidth(720);
     window.setHeight(480);
-    window.setOSScale(2.0f);
+    window.setOSScale(1.0f);
     window.SetResolutionScale(1.0f);
     window.ChangeWindowTitle("Kijuw");
     window.SetMaxFrameRateTarget(70);
@@ -144,7 +144,7 @@ int main(void){
     World.Setup();
     //World.m_running = true;
     std::cout << "World Setup" << std::endl;
-    std::thread PhysicsThread(SecondThread,15);
+    std::thread PhysicsThread(SecondThread,12);
     PhysicsThread.detach();
     std::cout << "Physics Thread Running..." << std::endl;
 

@@ -56,19 +56,7 @@ std::vector<QuadPhysicsBody> PhysicsEngine::MakePhysicsQuads(std::vector<Physics
     return Output;
 }
 
-PhysicsPos PhysicsEngine::MovePhysicsObject(PhysicsPos Object, ForceDirection NormalDir, float Speed){
-    Speed *= m_DeltaTime;
 
-    NormalDir.X *= Speed;
-    NormalDir.Y *= Speed;
-    NormalDir.Z *= Speed;
-
-    Object.X += NormalDir.X;
-    Object.Y += NormalDir.Y;
-    Object.Z += NormalDir.Z;
-
-    return Object;
-}
 
 ForceDirection PhysicsEngine::MakeForceDirection(PhysicsPos ObjectA, PhysicsPos ObjectB){
     ForceDirection Output;
@@ -1302,36 +1290,6 @@ ColisionInfo PhysicsEngine::SphearToPlane(SphearPhysicsBody ObjectA, QuadPhysics
     return Output;
 }
 
-
-ForceDirection PhysicsEngine::NormalizeVectorOfForceDirection(std::vector<ForceDirection> VectorOfForces){
-    ForceDirection Output;
-    int VectorSize = VectorOfForces.size();
-    float Temp;
-    Output.X = 0.0f;
-    Output.Y = 0.0f;
-    Output.Z = 0.0f;
-
-    if(!(VectorSize == 0)){
-        for(int i = 0; i < VectorSize; i ++){
-            Output.X += VectorOfForces[i].X;
-            Output.Y += VectorOfForces[i].Y;
-            Output.Z += VectorOfForces[i].Z;
-        }
-
-        Temp = std::sqrt(Output.X * Output.X + Output.Y * Output.Y + Output.Z * Output.Z);
-        
-        if(Temp != 0.){
-            Output.X /= Temp;
-            Output.Y /= Temp;
-            Output.Z /= Temp;
-        }
-
-    }
-
-
-    return Output;
-}
-
 void PhysicsEngine::NormalizeForceDirection(ForceDirection ForceA, ForceDirection ForceB, ForceDirection *Output){
     ForceDirection TempA, TempB;
     float Temp;
@@ -1377,9 +1335,16 @@ void PhysicsEngine::NormalizeForceDirection(ForceDirection ForceA, ForceDirectio
     return;
 }
 
-void PhysicsEngine::StepPhysicsEnviroment() {
+void PhysicsEngine::Update(std::vector<SimplePhysics::ForceDirection> UserInput) {
     // For every Physics Object in the Game World(or just a limited type)
+    for(unsigned long i = 0; i < this->Objects.size(); i ++){
+        Objects[i]->AddAppliedForce(this->GetGravity());
+       if(this->Objects[i]->UUID == this->PlayerID){
+            this->Objects[i]->AddAppliedForce(NormalizeVectorOfForceDirection(UserInput));
+       }
 
+       //this->MovePhysicsObject()
+    }
     // Process Player Input
 
     // Attempt to move any objects that need to be moved

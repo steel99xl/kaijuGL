@@ -676,32 +676,22 @@ void SimpleObject::SumAllWeights(){
 
 // Oh boy the physics engien is creeping in to the object
 
-std::vector<SimplePhysics::PhysicsPos> SimpleObject::GetVertexPositions(){
-    std::vector<SimplePhysics::PhysicsPos> Output;
-    SimplePhysics::PhysicsPos Temp;
+void SimpleObject::GenerateSimplePhysicsInfo() {
+    SimplePhysics::PhysicsPos PosTemp, NormlTemp;
+    m_SPVertecxPositions.clear();
+    m_SPVertecxNormlPositions.clear();
     for(long unsigned int i = 0; i < m_Verticies.size(); i++){
-        Temp.X = m_Verticies[i].Pos.X;
-        Temp.Y = m_Verticies[i].Pos.Y;
-        Temp.Z = m_Verticies[i].Pos.Z;
+        PosTemp.X = m_Verticies[i].Pos.X;
+        PosTemp.Y = m_Verticies[i].Pos.Y;
+        PosTemp.Z = m_Verticies[i].Pos.Z;
 
-        Output.push_back(Temp);
+        NormlTemp.X = m_Verticies[i].NormalPos.X;
+        NormlTemp.Y = m_Verticies[i].NormalPos.Y;
+        NormlTemp.Z = m_Verticies[i].NormalPos.Z;
+
+        m_SPVertecxPositions.push_back(PosTemp);
+        m_SPVertecxNormlPositions.push_back(NormlTemp);
     }
-
-    return Output;
-}
-
-std::vector<SimplePhysics::PhysicsPos> SimpleObject::GetVertexNormlPositions(){
-    std::vector<SimplePhysics::PhysicsPos> Output;
-    SimplePhysics::PhysicsPos Temp;
-    for(long unsigned int i = 0; i < m_Verticies.size(); i++){
-        Temp.X = m_Verticies[i].NormalPos.X;
-        Temp.Y = m_Verticies[i].NormalPos.Y;
-        Temp.Z = m_Verticies[i].NormalPos.Z;
-
-        Output.push_back(Temp);
-    }
-
-    return Output;
 }
 
 void SimpleObject::SetShader(const std::string &filePath){

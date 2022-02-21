@@ -1,6 +1,20 @@
 #include "SimplePhysics.hpp"
 using namespace SimplePhysics;
-PhysicsEngine::PhysicsEngine(float GravityForce, float GravityX, float GravityY, float GravityZ){
+
+
+PhysicsEngine::PhysicsEngine(float GravityForce, float GravityX, float GravityY, float GravityZ, unsigned int ThreadPool){
+    if(ThreadPool == 0){
+        m_ThreadLimit = std::thread::hardware_concurrency() * 2;
+    } else {
+        m_ThreadLimit = ThreadPool;
+    }
+
+    for(unsigned int i = 0; i < m_ThreadLimit; i++){
+        m_ThreadRunTrack.push_back(this->SubThreadSwitchStarter(false));
+        m_ThreadKillTrack.push_back(this->SubThreadSwitchStarter(false));
+        //ThreadSkelington(&this->Objects, &this->m_Min, &this->m_Max, this->m_ThreadRunTrack[m_ThreadRunTrack.size()], this->m_ThreadKillTrack[m_ThreadKillTrack.size()]);
+    }
+
     float Length = std::sqrt(GravityX * GravityX + GravityY * GravityY + GravityZ * GravityZ);
 
     if(Length != 0.){
@@ -16,44 +30,11 @@ PhysicsEngine::PhysicsEngine(float GravityForce, float GravityX, float GravityY,
     m_Gravity.Speed = GravityForce;
 }
 
-PhysicsEngine::~PhysicsEngine(){}
-
-std::vector<QuadPhysicsBody> PhysicsEngine::MakePhysicsQuads(std::vector<PhysicsPos> Pos, std::vector<PhysicsPos> Normal, std::vector<float>Weights){
-    std::vector<QuadPhysicsBody> Output;
-
-    QuadPhysicsBody TempQuad;
-    PhysicsPoint PointA;
-    PhysicsPoint PointB;
-    PhysicsPoint PointC;
-    PhysicsPoint PointD;
-
-    for(long unsigned int i = 0; i < Pos.size(); i+=4){
-        PointA.Pos.Input(Pos[i].X, Pos[i].Y, Pos[i].Z);
-        PointA.Weight = Weights[i];
-
-        PointB.Pos.Input(Pos[i+1].X, Pos[i+1].Y, Pos[i+1].Z);
-        PointB.Weight = Weights[i+1];
-
-
-        PointC.Pos.Input(Pos[i+2].X, Pos[i+2].Y, Pos[i+2].Z);
-        PointC.Weight = Weights[i+2];
-
-
-        PointD.Pos.Input(Pos[i+3].X, Pos[i+3].Y, Pos[i+3].Z);
-        PointD.Weight = Weights[i+3];
-
-        TempQuad.PosA = PointA;
-        TempQuad.PosB = PointB;
-        TempQuad.PosC = PointC;
-        TempQuad.PosD = PointD;
-        TempQuad.PlaneNorm.X = Normal[i].X;
-        TempQuad.PlaneNorm.Y = Normal[i].Y;
-        TempQuad.PlaneNorm.Z = Normal[i].Z;
-        Output.push_back(TempQuad);
-
+PhysicsEngine::~PhysicsEngine(){
+    for(unsigned long i = 0; i < m_ThreadKillTrack.size(); i++){
+        m_ThreadKillTrack[i] = true;
     }
 
-    return Output;
 }
 
 
@@ -1335,19 +1316,58 @@ void PhysicsEngine::NormalizeForceDirection(ForceDirection ForceA, ForceDirectio
     return;
 }
 
+
+void PhysicsEngine::InternalUpdate(SimplePhysicsObject *Object ,std::vector<SimplePhysicsObject *> *Objects, unsigned long *Start, unsigned long *Stop) {
+    //for(unsigned long i = 0; i < Objects->size(); i++){
+    //    this->Objects[i]->Move(); // it should not need a peramiter passed to it unless to overide the defalut movment calculations so uwu
+    //}
+}
+
+
+void PhysicsEngine::ThreadSkelington(std::vector<SimplePhysicsObject *> *Objects, unsigned long *Start,unsigned long *End, bool *Run, bool *Kill) {
+    // pls add
+    while(!*Kill){
+        if(*Run){
+            for(unsigned int i = *Start; i <= *End; i++){
+                this->InternalUpdate(Objects->at(i), Objects, Start, End);
+            }
+            //Once done
+            *Run = false;
+        }
+        else {
+
+        }
+    }
+}
+
+
+
 void PhysicsEngine::Update(std::vector<SimplePhysics::ForceDirection> UserInput) {
     // For every Physics Object in the Game World(or just a limited type)
+    if(m_ObjectPoolSize == 0.0f){
+        m_ObjectPoolSize = Objects.size()/m_ThreadLimit;
+    }
+    // This loop is going to be on the main phys thread just to insure the player get its input
     for(unsigned long i = 0; i < this->Objects.size(); i ++){
+        // set up auto threading to the pool limit
         Objects[i]->AddAppliedForce(this->GetGravity());
        if(this->Objects[i]->UUID == this->PlayerID){
             this->Objects[i]->AddAppliedForce(NormalizeVectorOfForceDirection(UserInput));
        }
-
-       //this->MovePhysicsObject()
+       // This is the prestaged movment
+       this->Objects[i]->Move(); // This is to be removed once other threads care issued
     }
-    // Process Player Input
+    // Dispatch object pools per thread
 
-    // Attempt to move any objects that need to be moved
+
+    // Quick Range check for interactinos
+
+    // If colision only update futuer information for "owned" object
+
+    //Once All Threads Are Done!!!!
+    // Attempt to move any objects that need to be moved (applie all futuer positions)
+
+    //Dispatch threads again?
 
     // Check if their are any Simpile colisions befor moving the object
 

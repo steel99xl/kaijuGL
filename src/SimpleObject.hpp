@@ -145,6 +145,9 @@ class SimpleObject{
 
         std::vector<ObjectQuadID> m_SubObjectIDList;
 
+        std::vector<SimplePhysics::PhysicsPos> m_SPVertecxPositions;
+        std::vector<SimplePhysics::PhysicsPos> m_SPVertecxNormlPositions;
+
 
 
 
@@ -213,6 +216,7 @@ class SimpleObject{
         inline int GetMaxQuadCound() {return m_MaxQuadCount;}
         inline int GetUsedQuads() {return m_UsedQuads;}
         inline std::vector<float> GetWeights(){return m_Weights;}
+        inline std::vector<float> *GetWeightsPointer(){return &m_Weights;}
         inline SimpleMaterialInfo GetMaterialInfo() {return m_Material;}
         inline SimpleLightInfo GetLightInfo() {return m_Light;}
 
@@ -242,8 +246,13 @@ class SimpleObject{
 
         void SumAllWeights();
 
-        std::vector<SimplePhysics::PhysicsPos> GetVertexPositions();
-        std::vector<SimplePhysics::PhysicsPos> GetVertexNormlPositions();
+        void GenerateSimplePhysicsInfo();
+
+        inline std::vector<SimplePhysics::PhysicsPos> GetVertexPositions(){return m_SPVertecxPositions;};
+        inline std::vector<SimplePhysics::PhysicsPos> GetVertexNormlPositions(){return m_SPVertecxNormlPositions;};
+
+        inline std::vector<SimplePhysics::PhysicsPos> *GetVertexPositionsPointer(){return &m_SPVertecxPositions;};
+        inline std::vector<SimplePhysics::PhysicsPos> *GetVertexNormlPositionsPointer(){return &m_SPVertecxNormlPositions;};
 
         void SetShader(const std::string &filePath);
         void FinishShader();

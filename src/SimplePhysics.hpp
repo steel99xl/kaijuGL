@@ -2,6 +2,7 @@
 #include <cmath>
 #include <vector>
 #include <thread>
+#include <cstring>
 // THis is just for debuging
 #include <iostream>
 // This file should not really care about anything else in the engine, outside the data directly sent to it
@@ -209,7 +210,7 @@ namespace SimplePhysics {
     struct SimplePhysicsObject{
         // This Will mainly be used for the StepPhysicsEnviroment()
         // This can be anytihng but im calling it UUID cause idk its better than ID
-        const char* UUID;
+        std::string UUID;
         // so skelington 1 can be the same but diffrent form skelington 2
         const char* BaseID;
 
@@ -243,7 +244,7 @@ namespace SimplePhysics {
         float MinXPos, MinYPos, MaxXPos, MaxYPos;
 
         // This is just to normalize some expectec/ required inputs for and Physics Objects
-        SimplePhysicsObject(const char* UniqueID = nullptr, const char* TypeID = nullptr, const std::vector<unsigned int> *PhysicsTypeReactionList = nullptr, std::vector<PhysicsPos> *RenderObjPointsPos = nullptr, std::vector<PhysicsPos> *RenderObjPointsNormal = nullptr, std::vector<float> *RenderObjPointsWeight = nullptr){
+        SimplePhysicsObject(const char* UniqueID = "NULL", const char* TypeID = nullptr, const std::vector<unsigned int> *PhysicsTypeReactionList = nullptr, std::vector<PhysicsPos> *RenderObjPointsPos = nullptr, std::vector<PhysicsPos> *RenderObjPointsNormal = nullptr, std::vector<float> *RenderObjPointsWeight = nullptr){
             UUID = UniqueID;
             BaseID = TypeID;
 
@@ -261,6 +262,12 @@ namespace SimplePhysics {
                 this->FuturePosition = SimplePhysics::MovePhysicsObject(this->Position, OverrideForce, this->DeltaTime, OverrideForce.Speed);
             }
 
+            this->AccumulatedAppliedForces.clear();
+
+        }
+
+        void ApplyMovedPosition(){
+            this->Position = this->FuturePosition;
         }
 
         void AddQuadPhysicsBody(SimplePhysics::PhysicsPoint A, SimplePhysics::PhysicsPoint B , SimplePhysics::PhysicsPoint C, SimplePhysics::PhysicsPoint D, SimplePhysics::ForceDirection PlaneNormal){
@@ -299,7 +306,7 @@ namespace SimplePhysics {
             this->SphearPhysicsBodyVector.erase(this->SphearPhysicsBodyVector.begin()+ID);
         }
 
-        void AddAppliedForce(SimplePhysics::ForceDirection Force){
+        void AddAppliedForce(const SimplePhysics::ForceDirection &Force){
             this->AccumulatedAppliedForces.push_back(Force);
         }
 
@@ -352,7 +359,7 @@ namespace SimplePhysics {
         float m_DeltaTime;
 
         // This is just so the engien know whot to pass user input to
-        const char *PlayerID;
+        std::string PlayerID;
 
         ForceDirection m_Gravity;
 
@@ -463,7 +470,7 @@ namespace SimplePhysics {
         // Just so decliratinos can be copied an updated later
         inline bool SubThreadSwitchStarter(bool StartState){return StartState;};
 
-        void Update(std::vector<SimplePhysics::ForceDirection> UserInput);
+        void Update();
 
 
         void SimpleThreadTest();

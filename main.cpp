@@ -153,6 +153,7 @@ int main(void){
     // Draw LOOP
     float FPS = 0;
     /* Loop until the user closes the window */
+    std::cout << "Starting Update Loop..." << std::endl;
     while (window.IsOpen()) {
 
         //window.SetResolutionScale(ResolutionScale);

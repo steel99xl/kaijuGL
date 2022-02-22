@@ -302,6 +302,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         //glfwPostEmptyEvent();
         // camera stuff 
         BasicPhysics.SetUpdateTime(MaxUpdateSpeed);
+        BasicPhysics.Update();
         AdvancedCam.Update(MaxUpdateSpeed, (float)m_Width/m_Height, m_FOV);
         m_Projection = AdvancedCam.GetProj();
         m_View = AdvancedCam.GetView();
@@ -425,15 +426,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         }
 
         */
-        
 
-        // Move Player based on player input
-        if(PlayerBlock.ObjectPositionID == -1){
-            PlayerBlock.ObjectPositionID = m_ObjectWorldPositions.size();
-            m_ObjectWorldPositions.push_back(SimplePhysics::MovePhysicsObject(PlayerBlock.GetPhysicsPos(), SimplePhysics::NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed, BasicPhysics.GetUpdateTime()));
-        } else {
-            m_ObjectWorldPositions[PlayerBlock.ObjectPositionID] = SimplePhysics::MovePhysicsObject(PlayerBlock.GetPhysicsPos(), SimplePhysics::NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed, BasicPhysics.GetUpdateTime());
-        }
         //PlayerPos = BasicPhysics.MovePhysicsObject(PlayerBlock.GetPhysicsPos(), BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection), PlayerMovmentSpeed);
 
         //PlayerTOObject = BasicPhysics.AABBColision(Player, PlayerPos, PhysicsLand, Land.GetPhysicsPos());
@@ -442,7 +435,6 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
             //PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, PlayerMovmentSpeed);
         //    std::cout << PlayerTOObject.MovmentDirectionB.X << " | " << PlayerTOObject.MovmentDirectionB.Y << " | " << PlayerTOObject.MovmentDirectionB.Z << std::endl;
         //}
-        PlayerBlock.SetPosition(m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].X, m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].Y, m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].Z);
         AdvancedCam.SetPos(m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].X, m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].Y+0.9f, m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].Z);
 
         //BasicPhysics.FullQuadLineColisionVoid(TempPlayerLines, PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f, &PlayerTOObject);

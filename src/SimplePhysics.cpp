@@ -1321,6 +1321,7 @@ void PhysicsEngine::InternalUpdate(SimplePhysicsObject *Object ,std::vector<Simp
     //for(unsigned long i = 0; i < Objects->size(); i++){
     //    this->Objects[i]->Move(); // it should not need a peramiter passed to it unless to overide the defalut movment calculations so uwu
     //}
+    //Object->Move();
 }
 
 
@@ -1336,30 +1337,55 @@ void PhysicsEngine::ThreadSkelington(std::vector<SimplePhysicsObject *> *Objects
         }
         else {
 
+            // Currently just a empty point
+
         }
     }
 }
 
 
 
-void PhysicsEngine::Update(std::vector<SimplePhysics::ForceDirection> UserInput) {
+void PhysicsEngine::Update() {
     // For every Physics Object in the Game World(or just a limited type)
     if(m_ObjectPoolSize == 0.0f){
         m_ObjectPoolSize = Objects.size()/m_ThreadLimit;
     }
     // This loop is going to be on the main phys thread just to insure the player get its input
-    for(unsigned long i = 0; i < this->Objects.size(); i ++){
+    for(unsigned long i = 0; i <= this->Objects.size(); i ++){
         // set up auto threading to the pool limit
-        Objects[i]->AddAppliedForce(this->GetGravity());
+        //this->Objects[i]->AddAppliedForce(this->GetGravity());
        if(this->Objects[i]->UUID == this->PlayerID){
-            this->Objects[i]->AddAppliedForce(NormalizeVectorOfForceDirection(UserInput));
+           std::cout << this->Objects[i]->Position.X << " | " << this->Objects[i]->Position.Y << " | " << this->Objects[i]->Position.Z << std::endl;
+            //this->Objects[i]->AddAppliedForce(NormalizeVectorOfForceDirection(UserInput));
        }
        // This is the prestaged movment
        this->Objects[i]->Move(); // This is to be removed once other threads care issued
     }
     // Dispatch object pools per thread
 
+    /*
+    bool Dispatched = false;
+    while(!Dispatched){
+        // 1 casue i dont want to check the blank starter
+        for(unsigned long i = 1; i <=m_ThreadRunTrack.size(); i++){
+            if(!m_ThreadRunTrack[i]){
+                break;
+            } else {
+                if(i == m_ThreadRunTrack.size()){
+                    for(unsigned long j = 1; j <= m_ThreadRunTrack.size(); j++){
+                        m_ThreadRunTrack[i] = true;
+                        Dispatched = true;
+                    }
+                }
+            }
+        }
+    }
+     */
 
+
+    for(unsigned long i = 0; i <= this->Objects.size(); i++){
+        this->Objects[i]->ApplyMovedPosition();
+    }
     // Quick Range check for interactinos
 
     // If colision only update futuer information for "owned" object

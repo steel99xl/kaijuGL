@@ -8,7 +8,7 @@
 // Some basic physics objects useing the SimplePhysicsObject struct
 
 struct SimplePhysicsSphereObject : public SimplePhysics::SimplePhysicsObject{
-    explicit SimplePhysicsSphereObject(const char* UniqueID = nullptr, const char* TypeID = nullptr, const std::vector<unsigned int> *PhysicsTypeReactionList = nullptr, std::vector<SimplePhysics::PhysicsPos> *RenderObjPointsPos = nullptr, std::vector<SimplePhysics::PhysicsPos> *RenderObjPointsNormal = nullptr, std::vector<float> *RenderObjPointsWeight = nullptr) : SimplePhysicsObject(UniqueID, TypeID, PhysicsTypeReactionList, RenderObjPointsPos, RenderObjPointsNormal, RenderObjPointsWeight) {
+    explicit SimplePhysicsSphereObject(std::string UniqueID = "NULL", std::string TypeID = "NULL", const std::vector<unsigned int> *PhysicsTypeReactionList = nullptr, std::vector<SimplePhysics::PhysicsPos> *RenderObjPointsPos = nullptr, std::vector<SimplePhysics::PhysicsPos> *RenderObjPointsNormal = nullptr, std::vector<float> *RenderObjPointsWeight = nullptr) : SimplePhysicsObject(UniqueID, TypeID, PhysicsTypeReactionList, RenderObjPointsPos, RenderObjPointsNormal, RenderObjPointsWeight) {
         // Junk number that hopfully wont conflict with other peoples
         this->TYPE = 42069;
     };
@@ -19,7 +19,7 @@ struct SimplePhysicsSphereObject : public SimplePhysics::SimplePhysicsObject{
 };
 
 struct SimplePhysicsBoxObject : public SimplePhysics::SimplePhysicsObject{
-    explicit SimplePhysicsBoxObject(const char* UniqueID = nullptr, const char* TypeID = nullptr, const std::vector<unsigned int> *PhysicsTypeReactionList = nullptr, std::vector<SimplePhysics::PhysicsPos> *RenderObjPointsPos = nullptr, std::vector<SimplePhysics::PhysicsPos> *RenderObjPointsNormal = nullptr, std::vector<float> *RenderObjPointsWeight = nullptr) : SimplePhysicsObject(UniqueID, TypeID, PhysicsTypeReactionList, RenderObjPointsPos, RenderObjPointsNormal, RenderObjPointsWeight){
+    explicit SimplePhysicsBoxObject(std::string UniqueID = "NULL", std::string TypeID = "NULL", const std::vector<unsigned int> *PhysicsTypeReactionList = nullptr, std::vector<SimplePhysics::PhysicsPos> *RenderObjPointsPos = nullptr, std::vector<SimplePhysics::PhysicsPos> *RenderObjPointsNormal = nullptr, std::vector<float> *RenderObjPointsWeight = nullptr) : SimplePhysicsObject(UniqueID, TypeID, PhysicsTypeReactionList, RenderObjPointsPos, RenderObjPointsNormal, RenderObjPointsWeight){
         // Junk number to identify type
         this->TYPE = 69420;
     };

@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <utility>
 #include <vector>
 #include <thread>
 #include <cstring>
@@ -212,7 +213,7 @@ namespace SimplePhysics {
         // This can be anytihng but im calling it UUID cause idk its better than ID
         std::string UUID;
         // so skelington 1 can be the same but diffrent form skelington 2
-        const char* BaseID;
+        std::string BaseID;
 
         unsigned int TYPE{};
 
@@ -244,9 +245,9 @@ namespace SimplePhysics {
         float MinXPos, MinYPos, MaxXPos, MaxYPos;
 
         // This is just to normalize some expectec/ required inputs for and Physics Objects
-        SimplePhysicsObject(const char* UniqueID = "NULL", const char* TypeID = nullptr, const std::vector<unsigned int> *PhysicsTypeReactionList = nullptr, std::vector<PhysicsPos> *RenderObjPointsPos = nullptr, std::vector<PhysicsPos> *RenderObjPointsNormal = nullptr, std::vector<float> *RenderObjPointsWeight = nullptr){
-            UUID = UniqueID;
-            BaseID = TypeID;
+        SimplePhysicsObject(std::string UniqueID = "NULL", std::string TypeID = "NULL", const std::vector<unsigned int> *PhysicsTypeReactionList = nullptr, std::vector<PhysicsPos> *RenderObjPointsPos = nullptr, std::vector<PhysicsPos> *RenderObjPointsNormal = nullptr, std::vector<float> *RenderObjPointsWeight = nullptr){
+            UUID = std::move(UniqueID);
+            BaseID = std::move(TypeID);
 
             this->TypeReactionList = PhysicsTypeReactionList;
             RenderObjectPointPos = RenderObjPointsPos;
@@ -385,7 +386,7 @@ namespace SimplePhysics {
 
         inline ForceDirection GetGravity() { return m_Gravity; }
 
-        inline void SetPhysicsPlayerID(const char *ID){ PlayerID = ID;}
+        inline void SetPhysicsPlayerID(std::string ID){ PlayerID = std::move(ID);}
 
         // Returns froce to move ObjectA to ObjectB
         ForceDirection MakeForceDirection(PhysicsPos ObjectA, PhysicsPos ObjectB);

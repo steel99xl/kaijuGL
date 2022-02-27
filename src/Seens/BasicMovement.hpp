@@ -47,10 +47,10 @@ class TestWorld{
 
 
         //Elements for Physics Engine
-        const char *m_PlayerObjectID = "PlayerObject";
-        const char *m_Box = "Box";
+        std::string m_PlayerObjectID = "PlayerObject";
+        std::string m_Box = "Box";
         // This is going to also be the 'walls' for now
-        const char *m_Gound = "Gound";
+        std::string m_Gound = "Gound";
         std::vector<SimplePhysics::ForceDirection> m_NewPlayerDirection;
         std::vector<SimplePhysics::ColisionInfo> m_ObjectColissions;
         std::vector<SimplePhysics::QuadPhysicsBody> PlayerPhysics, LandPhysics, TealBlockPhysics;

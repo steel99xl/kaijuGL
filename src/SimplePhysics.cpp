@@ -1351,40 +1351,46 @@ void PhysicsEngine::Update() {
         m_ObjectPoolSize = Objects.size()/m_ThreadLimit;
     }
     // This loop is going to be on the main phys thread just to insure the player get its input
-    for(unsigned long i = 0; i <= this->Objects.size(); i ++){
+    std::vector<SimplePhysicsObject *>::iterator ob = this->Objects.begin();
+    for(; ob != this->Objects.end(); ob++){
         // set up auto threading to the pool limit
         //this->Objects[i]->AddAppliedForce(this->GetGravity());
-       if(this->Objects[i]->UUID == this->PlayerID){
-           std::cout << this->Objects[i]->Position.X << " | " << this->Objects[i]->Position.Y << " | " << this->Objects[i]->Position.Z << std::endl;
+       if(std::strcmp((*ob)->UUID.c_str(),this->PlayerID.c_str()) == 0){
+           std::cout << (*ob)->Position.X << " | " << (*ob)->Position.Y << " | " << (*ob)->Position.Z << std::endl;
             //this->Objects[i]->AddAppliedForce(NormalizeVectorOfForceDirection(UserInput));
        }
        // This is the prestaged movment
-       this->Objects[i]->Move(); // This is to be removed once other threads care issued
+        (*ob)->Move(); // This is to be removed once other threads care issued
     }
-    // Dispatch object pools per thread
+    // Dispatch object pools per thread and wait for them to finish
 
-    /*
     bool Dispatched = false;
+    unsigned long count;
+    std::vector<bool>::iterator Thread = m_ThreadRunTrack.begin();
+    for(; Thread != m_ThreadRunTrack.end(); Thread++){
+        (*Thread) = true;
+    }
     while(!Dispatched){
-        // 1 casue i dont want to check the blank starter
-        for(unsigned long i = 1; i <=m_ThreadRunTrack.size(); i++){
-            if(!m_ThreadRunTrack[i]){
-                break;
+        Thread = m_ThreadRunTrack.begin();
+        for(; Thread != m_ThreadRunTrack.end(); Thread++){
+            if(!(*Thread)){
+                count += 1;
             } else {
-                if(i == m_ThreadRunTrack.size()){
-                    for(unsigned long j = 1; j <= m_ThreadRunTrack.size(); j++){
-                        m_ThreadRunTrack[i] = true;
-                        Dispatched = true;
-                    }
-                }
+                // Lazy Count
+                count = 0;
+                //Testing Remove once done
+                (*Thread) = false;
+            }
+            if(count == m_ThreadRunTrack.size()){
+                Dispatched = true;
+                count = 0;
             }
         }
     }
-     */
 
-
-    for(unsigned long i = 0; i <= this->Objects.size(); i++){
-        this->Objects[i]->ApplyMovedPosition();
+    ob = this->Objects.begin();
+    for(; ob != this->Objects.end(); ob++){
+        (*ob)->ApplyMovedPosition();
     }
     // Quick Range check for interactinos
 

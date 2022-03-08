@@ -215,6 +215,8 @@ namespace SimplePhysics {
         // so skelington 1 can be the same but diffrent form skelington 2
         std::string BaseID;
 
+        bool IsPlayer;
+
         unsigned int TYPE{};
 
         //Used for Internaly updating the object (so an object can technicaly update at faster intervas than the engine if needed)
@@ -245,9 +247,10 @@ namespace SimplePhysics {
         float MinXPos, MinYPos, MaxXPos, MaxYPos;
 
         // This is just to normalize some expectec/ required inputs for and Physics Objects
-        SimplePhysicsObject(std::string UniqueID = "NULL", std::string TypeID = "NULL", const std::vector<unsigned int> *PhysicsTypeReactionList = nullptr, std::vector<PhysicsPos> *RenderObjPointsPos = nullptr, std::vector<PhysicsPos> *RenderObjPointsNormal = nullptr, std::vector<float> *RenderObjPointsWeight = nullptr){
+        SimplePhysicsObject(std::string UniqueID = "NULL", std::string TypeID = "NULL", const std::vector<unsigned int> *PhysicsTypeReactionList = nullptr, std::vector<PhysicsPos> *RenderObjPointsPos = nullptr, std::vector<PhysicsPos> *RenderObjPointsNormal = nullptr, std::vector<float> *RenderObjPointsWeight = nullptr, bool Player = false){
             UUID = std::move(UniqueID);
             BaseID = std::move(TypeID);
+            IsPlayer = Player;
 
             this->TypeReactionList = PhysicsTypeReactionList;
             RenderObjectPointPos = RenderObjPointsPos;
@@ -471,7 +474,7 @@ namespace SimplePhysics {
         // Just so decliratinos can be copied an updated later
         inline bool SubThreadSwitchStarter(bool StartState){return StartState;};
 
-        void Update();
+        void Update(SimplePhysics::ForceDirection UserInput);
 
 
         void SimpleThreadTest();

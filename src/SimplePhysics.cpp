@@ -1345,7 +1345,7 @@ void PhysicsEngine::ThreadSkelington(std::vector<SimplePhysicsObject *> *Objects
 
 
 
-void PhysicsEngine::Update() {
+void PhysicsEngine::Update(SimplePhysics::ForceDirection UserInput) {
     // For every Physics Object in the Game World(or just a limited type)
     if(m_ObjectPoolSize == 0.0f){
         m_ObjectPoolSize = Objects.size()/m_ThreadLimit;
@@ -1354,10 +1354,10 @@ void PhysicsEngine::Update() {
     std::vector<SimplePhysicsObject *>::iterator ob = this->Objects.begin();
     for(; ob != this->Objects.end(); ob++){
         // set up auto threading to the pool limit
-        //this->Objects[i]->AddAppliedForce(this->GetGravity());
-       if(std::strcmp((*ob)->UUID.c_str(),this->PlayerID.c_str()) == 0){
+        //(*ob)->AddAppliedForce(this->GetGravity());
+       if((*ob)->IsPlayer){
            std::cout << (*ob)->Position.X << " | " << (*ob)->Position.Y << " | " << (*ob)->Position.Z << std::endl;
-            //this->Objects[i]->AddAppliedForce(NormalizeVectorOfForceDirection(UserInput));
+           (*ob)->AddAppliedForce(UserInput);
        }
        // This is the prestaged movment
         (*ob)->Move(); // This is to be removed once other threads care issued

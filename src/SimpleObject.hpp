@@ -170,6 +170,8 @@ class SimpleObject{
         SimpleObject();
         ~SimpleObject();
 
+        unsigned int PhysicsObjectID; // this is to keepd treack of whick physics object is linked with each render object
+
         // if the buffer is a StaticBuffer then you only have to bind the buffer once outside the draw loop
         void Setup(int MaxQuads = 10000, SimpleObject::BufferType buffertype = DynamicBuffer);
 

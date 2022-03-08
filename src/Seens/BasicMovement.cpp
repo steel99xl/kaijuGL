@@ -265,7 +265,7 @@ void TestWorld::Setup(){
     std::cout << "New Physics Stuff and DEBUG" << std::endl;
 
     // Im Setting the BaseID for a player ID, the UUID can also beused if only 1 object is wanted for the player
-    BasicPhysics.SetPhysicsPlayerID(m_PlayerObjectID);
+    //BasicPhysics.SetPhysicsPlayerID(m_PlayerObjectID);
     // Just to show how 1 object is the main colision decider for the clones
     BasePlayerandPushableObject.AddCollisionType(BaseNonMovableobjects);
 
@@ -273,9 +273,9 @@ void TestWorld::Setup(){
     Land.GenerateSimplePhysicsInfo();
     TealBlock.GenerateSimplePhysicsInfo();
 
-    BasicPhysics.Objects.push_back(new SimplePhysicsSphereObject("BluePlayerBox",m_PlayerObjectID, BasePlayerandPushableObject.ExportCollisionTypes(), PlayerBlock.GetVertexPositionsPointer(),PlayerBlock.GetVertexNormlPositionsPointer(), PlayerBlock.GetWeightsPointer()));
-    BasicPhysics.Objects.push_back(new SimplePhysicsSphereObject("TealBox",m_Box, BasePlayerandPushableObject.ExportCollisionTypes(), TealBlock.GetVertexPositionsPointer(), TealBlock.GetVertexNormlPositionsPointer(), TealBlock.GetWeightsPointer()));
-    BasicPhysics.Objects.push_back(new SimplePhysicsBoxObject("CrapCloud",m_Gound, BaseNonMovableobjects.ExportCollisionTypes(), Land.GetVertexPositionsPointer(), Land.GetVertexNormlPositionsPointer(), Land.GetWeightsPointer()));
+    BasicPhysics.Objects.push_back(new SimplePhysicsSphereObject("BluePlayerBox",m_PlayerObjectID, BasePlayerandPushableObject.ExportCollisionTypes(), PlayerBlock.GetVertexPositionsPointer(),PlayerBlock.GetVertexNormlPositionsPointer(), PlayerBlock.GetWeightsPointer(), true));
+    BasicPhysics.Objects.push_back(new SimplePhysicsSphereObject("TealBox",m_Box, BasePlayerandPushableObject.ExportCollisionTypes(), TealBlock.GetVertexPositionsPointer(), TealBlock.GetVertexNormlPositionsPointer(), TealBlock.GetWeightsPointer(), false));
+    BasicPhysics.Objects.push_back(new SimplePhysicsBoxObject("CrapCloud",m_Gound, BaseNonMovableobjects.ExportCollisionTypes(), Land.GetVertexPositionsPointer(), Land.GetVertexNormlPositionsPointer(), Land.GetWeightsPointer(), false));
 
     m_running = true;
 }
@@ -302,7 +302,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         //glfwPostEmptyEvent();
         // camera stuff 
         BasicPhysics.SetUpdateTime(MaxUpdateSpeed);
-        BasicPhysics.Update();
+        BasicPhysics.Update(SimplePhysics::NormalizeVectorOfForceDirection(m_NewPlayerDirection));
         AdvancedCam.Update(MaxUpdateSpeed, (float)m_Width/m_Height, m_FOV);
         m_Projection = AdvancedCam.GetProj();
         m_View = AdvancedCam.GetView();

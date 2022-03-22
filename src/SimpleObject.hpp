@@ -4,90 +4,97 @@
 #include "Texture.hpp"
 #include "kaijuGL.hpp"
 
+namespace KaijuObject {
 
-struct VertexPos{
-    float X;
-    float Y;
-    float Z;
-    
-    VertexPos(){}
-    ~VertexPos(){}
-    void Input(float x, float y, float z){
-        X = x;
-        Y = y;
-        Z = z;
-    }
-    
+    struct VertexPos {
+        float X;
+        float Y;
+        float Z;
 
-};
+        VertexPos() {}
 
-struct VertexTexCord{
-    float X;
-    float Y;
-};
+        ~VertexPos() {}
 
-struct Vertex{
-    VertexPos Pos;
-    VertexPos NormalPos;
-    VertexTexCord TexCord;
-    float TexID;
-};
-
-struct ColorFloat{
-    float R;
-    float G;
-    float B;
-};
-
-struct SimpleLightInfo{
-    // Note that the Light Struct defined in the BasicShaders set needs position data as well
-    VertexPos lightDir; // might have to be limited to a range of -1 to 1
-    ColorFloat ambient;
-    ColorFloat diffuse;
-    ColorFloat specular;
-
-    float Angle;
-
-    float Const;
-    float Linear;
-    float Quadratic;
-};
-
-struct SimpleMaterialInfo{
-    ColorFloat ambient;
-    ColorFloat diffuse;
-    ColorFloat specular;
-    float shininess;
-};
-
-enum ObjectOriginType{SimpleQuad, SimpleCube};
-
-struct ObjectQuadID{
-    ObjectOriginType Type;
-    unsigned int ID = 0; // yes its unsigned even tho it can easily go negative when calculating
-    int GroupID;
-
-    std::array<int, 24> DrawElementPoint;
-    // In an effort to keep the physics self isolated this property will be provided by the physics engine
-    std::array<int, 6> PhysicsElementPoint;
-    std::array<int, 36> IndexBufferElement; // this is just used when deleting;
-
-    ObjectQuadID(){
-        for(int i = 0; i < IndexBufferElement.size(); i++){
-            IndexBufferElement[i] = -1;
-            DrawElementPoint[i%DrawElementPoint.size()] = -1;
-            PhysicsElementPoint[i%PhysicsElementPoint.size()] = -1;
+        void Input(float x, float y, float z) {
+            X = x;
+            Y = y;
+            Z = z;
         }
-    }
-};
 
 
+    };
+
+    struct VertexTexCord {
+        float X;
+        float Y;
+    };
+
+    struct Vertex {
+        VertexPos Pos;
+        VertexPos NormalPos;
+        VertexTexCord TexCord;
+        float TexID;
+    };
+
+    struct ColorFloat {
+        float R;
+        float G;
+        float B;
+    };
+
+    struct SimpleLightInfo {
+        // Note that the Light Struct defined in the BasicShaders set needs position data as well
+        VertexPos lightDir; // might have to be limited to a range of -1 to 1
+        ColorFloat ambient;
+        ColorFloat diffuse;
+        ColorFloat specular;
+
+        float Angle;
+
+        float Const;
+        float Linear;
+        float Quadratic;
+    };
+
+    struct SimpleMaterialInfo {
+        ColorFloat ambient;
+        ColorFloat diffuse;
+        ColorFloat specular;
+        float shininess;
+    };
+
+    enum ObjectOriginType {
+        SimpleQuad, SimpleCube
+    };
+
+    struct ObjectQuadID {
+        ObjectOriginType Type;
+        unsigned int ID = 0; // yes its unsigned even tho it can easily go negative when calculating
+        int GroupID;
+
+        std::array<int, 24> DrawElementPoint;
+        // In an effort to keep the physics self isolated this property will be provided by the physics engine
+        std::array<int, 6> PhysicsElementPoint;
+        std::array<int, 36> IndexBufferElement; // this is just used when deleting;
+
+        ObjectQuadID() {
+            for (int i = 0; i < IndexBufferElement.size(); i++) {
+                IndexBufferElement[i] = -1;
+                DrawElementPoint[i % DrawElementPoint.size()] = -1;
+                PhysicsElementPoint[i % PhysicsElementPoint.size()] = -1;
+            }
+        }
+    };
 
 
-class SimpleObject{
+    class SimpleObject {
     public:
-        enum FaceDir{F_UP, F_DOWN, F_EAST,F_WEST, F_NORTH,F_SOUTH, F_NONE};
-        enum BufferType{StaticBuffer, DynamicBuffer};
+        enum FaceDir {
+            F_UP, F_DOWN, F_EAST, F_WEST, F_NORTH, F_SOUTH, F_NONE
+        };
+        enum BufferType {
+            StaticBuffer, DynamicBuffer
+        };
     protected:
         int m_MaxQuadCount, m_MaxQuads, m_UsedQuads;
 
@@ -142,25 +149,20 @@ class SimpleObject{
         std::unique_ptr<Shader> m_ShadowShader;
 
 
-
         std::vector<ObjectQuadID> m_SubObjectIDList;
 
-        std::vector<SimplePhysics::PhysicsPos> m_SPVertecxPositions;
-        std::vector<SimplePhysics::PhysicsPos> m_SPVertecxNormlPositions;
+        //std::vector<KaijuPhysics::PhysicsPos> m_SPVertecxPositions;
+        //std::vector<KaijuPhysics::PhysicsPos> m_SPVertecxNormlPositions;
 
 
 
 
 
         glm::vec3 Rotatex(glm::vec3 Start, float Angle);
+
         glm::vec3 Rotatey(glm::vec3 Start, float Angle);
+
         glm::vec3 Rotatez(glm::vec3 Start, float Angle);
-        
-
-
-
-
-
 
 
     public:
@@ -168,6 +170,7 @@ class SimpleObject{
         int ObjectPositionPastID, ObjectPositionID, ObjectPositionFutureID;
 
         SimpleObject();
+
         ~SimpleObject();
 
         unsigned int PhysicsObjectID; // this is to keepd treack of whick physics object is linked with each render object
@@ -183,11 +186,13 @@ class SimpleObject{
 
         // This function needs to be rewriten to not take "target" from the user
         // Should append to the indexbuffer
-        void Create2dQuad(float X,float Y,float Z, float AngleX, float AngleY, float AngleZ, float sizeX, float sizeY, float Weight, float tX, float tY, float TX, float TY, float TextureID);
+        void Create2dQuad(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float sizeX, float sizeY,
+                          float Weight, float tX, float tY, float TX, float TY, float TextureID);
 
-        void CreateCube(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float SizeX, float SizeY, float SizeZ, float Weight, float tX, float tY, float TX, float TY, float TexuteID);
+        void CreateCube(float X, float Y, float Z, float AngleX, float AngleY, float AngleZ, float SizeX, float SizeY,
+                        float SizeZ, float Weight, float tX, float tY, float TX, float TY, float TexuteID);
 
-        
+
 
         // A function that takes a vector of vertexes and appends it to this objects (so one object can draw all objects like it)
         // A function that takes in a vector of Vertex and replaces the current vector of Vertex
@@ -197,76 +202,115 @@ class SimpleObject{
         // Layout what i want functions to do
 
         // Add Quad to object ( so an object can be multiple quads)
-            // Remove Quad from object
-            // This would have to go back and remove stuff from the index buffer
-        
+        // Remove Quad from object
+        // This would have to go back and remove stuff from the index buffer
+
 
         // Draw object
         // It is called paint for right now cause Renderer has a .Draw function
         // if all things drawn only read data, then the drawing could me moved to a seperate thread
         void Paint();
+
         void PaintShadow();
 
 
+        inline std::vector<Vertex> GetVerticies() { return m_Verticies; }
 
+        inline int GetVerticiesCount() { return m_UsedQuads * 4; }
 
-        inline std::vector<Vertex> GetVerticies(){ return m_Verticies;}
-        
-        inline int GetVerticiesCount() {return m_UsedQuads*4;}
-        inline std::vector<unsigned int> GetIndices(){return m_Indices;}
-        inline int GetIndicCount() {return (m_UsedQuads*4)*6;}
-        inline int GetMaxQuadCound() {return m_MaxQuadCount;}
-        inline int GetUsedQuads() {return m_UsedQuads;}
-        inline std::vector<float> GetWeights(){return m_Weights;}
-        inline std::vector<float> *GetWeightsPointer(){return &m_Weights;}
-        inline SimpleMaterialInfo GetMaterialInfo() {return m_Material;}
-        inline SimpleLightInfo GetLightInfo() {return m_Light;}
+        inline std::vector<unsigned int> GetIndices() { return m_Indices; }
 
-        inline void SetLightColor(float R, float G, float B) { m_LR = R; m_LG = G; m_LB = B;}
+        inline int GetIndicCount() { return (m_UsedQuads * 4) * 6; }
+
+        inline int GetMaxQuadCound() { return m_MaxQuadCount; }
+
+        inline int GetUsedQuads() { return m_UsedQuads; }
+
+        inline std::vector<float> GetWeights() { return m_Weights; }
+
+        inline std::vector<float> *GetWeightsPointer() { return &m_Weights; }
+
+        inline SimpleMaterialInfo GetMaterialInfo() { return m_Material; }
+
+        inline SimpleLightInfo GetLightInfo() { return m_Light; }
+
+        inline void SetLightColor(float R, float G, float B) {
+            m_LR = R;
+            m_LG = G;
+            m_LB = B;
+        }
 
         // Cause why would any one want a negative PhysicsTypeID?
-        inline void SetPhysicsTypeID(unsigned int TypeID){ m_PhysicsTypeID = TypeID;}
-        inline unsigned int GetPhysicsTypeID() {return m_PhysicsTypeID;}
-        inline glm::vec3 GetLightColor() { return glm::vec3(m_LR, m_LG, m_LB);}
-        inline void SetPosition(float X, float Y, float Z){m_OldX = m_X, m_OldY = m_Y, m_OldZ = m_Z, m_X = X; m_Y = Y; m_Z = Z;}
-        inline void SetFuturePosition(float X, float Y, float Z){m_FutureX = X; m_FutureY = Y; m_FutureZ = Z;}
+        inline void SetPhysicsTypeID(unsigned int TypeID) { m_PhysicsTypeID = TypeID; }
+
+        inline unsigned int GetPhysicsTypeID() { return m_PhysicsTypeID; }
+
+        inline glm::vec3 GetLightColor() { return glm::vec3(m_LR, m_LG, m_LB); }
+
+        inline void SetPosition(float X, float Y, float Z) {
+            m_OldX = m_X, m_OldY = m_Y, m_OldZ = m_Z, m_X = X;
+            m_Y = Y;
+            m_Z = Z;
+        }
+
+        inline void SetFuturePosition(float X, float Y, float Z) {
+            m_FutureX = X;
+            m_FutureY = Y;
+            m_FutureZ = Z;
+        }
+
         // this swaps the future position with the current postiton with no context for movment
-        inline void SwapFuturePosition(){m_X = m_FutureX; m_Y = m_FutureY; m_Z = m_FutureZ;}
-        inline void SetFuturePositionUpdate(bool enable){m_FuturePosition = enable;}
-        inline bool GetFuturePositionStatus(){return m_FuturePosition;}
-        inline glm::vec3 GetPos() {return glm::vec3(m_X,m_Y,m_Z);}
-        inline SimplePhysics::PhysicsPos GetPhysicsPos() {SimplePhysics::PhysicsPos Output; Output.Input(m_X, m_Y, m_Z); return Output;}
-        inline glm::vec3 GetPreviouPos(){return glm::vec3(m_OldX, m_OldY, m_OldZ);}
-        inline SimplePhysics::PhysicsPos GetPreviouPhysicsPos() {SimplePhysics::PhysicsPos Output; Output.Input(m_OldX, m_OldY, m_OldZ); return Output;}
+        inline void SwapFuturePosition() {
+            m_X = m_FutureX;
+            m_Y = m_FutureY;
+            m_Z = m_FutureZ;
+        }
 
-        inline void SetColision(bool basic){ SimpleColision = basic;}
-        inline bool GetColision(){return SimpleColision;}
+        inline void SetFuturePositionUpdate(bool enable) { m_FuturePosition = enable; }
 
-        inline std::vector<ObjectQuadID> *GetObjectQuadID(){return &m_SubObjectIDList;}
+        inline bool GetFuturePositionStatus() { return m_FuturePosition; }
 
-        inline float GetTotalWeight(){return m_TotalWeight;}
+        inline glm::vec3 GetPos() { return glm::vec3(m_X, m_Y, m_Z); }
+
+        //inline KaijuPhysics::PhysicsPos GetPhysicsPos() {KaijuPhysics::PhysicsPos Output; Output.Input(m_X, m_Y, m_Z); return Output;}
+        inline glm::vec3 GetPreviouPos() { return glm::vec3(m_OldX, m_OldY, m_OldZ); }
+        //inline KaijuPhysics::PhysicsPos GetPreviouPhysicsPos() {KaijuPhysics::PhysicsPos Output; Output.Input(m_OldX, m_OldY, m_OldZ); return Output;}
+
+        inline void SetColision(bool basic) { SimpleColision = basic; }
+
+        inline bool GetColision() { return SimpleColision; }
+
+        inline std::vector<ObjectQuadID> *GetObjectQuadID() { return &m_SubObjectIDList; }
+
+        inline float GetTotalWeight() { return m_TotalWeight; }
 
         void SumAllWeights();
 
-        void GenerateSimplePhysicsInfo();
+        //inline std::vector<KaijuPhysics::PhysicsPos> GetVertexPositions(){return m_SPVertecxPositions;};
+        //inline std::vector<KaijuPhysics::PhysicsPos> GetVertexNormlPositions(){return m_SPVertecxNormlPositions;};
 
-        inline std::vector<SimplePhysics::PhysicsPos> GetVertexPositions(){return m_SPVertecxPositions;};
-        inline std::vector<SimplePhysics::PhysicsPos> GetVertexNormlPositions(){return m_SPVertecxNormlPositions;};
-
-        inline std::vector<SimplePhysics::PhysicsPos> *GetVertexPositionsPointer(){return &m_SPVertecxPositions;};
-        inline std::vector<SimplePhysics::PhysicsPos> *GetVertexNormlPositionsPointer(){return &m_SPVertecxNormlPositions;};
+        //inline std::vector<KaijuPhysics::PhysicsPos> *GetVertexPositionsPointer(){return &m_SPVertecxPositions;};
+        //inline std::vector<KaijuPhysics::PhysicsPos> *GetVertexNormlPositionsPointer(){return &m_SPVertecxNormlPositions;};
 
         void SetShader(const std::string &filePath);
+
         void FinishShader();
+
         std::vector<unsigned int> ExportShaders();
+
         void ImportShaders(std::vector<unsigned int> Import);
+
         // This removes the indevidual compiled shaders and only keeps the final output for the object
         void ClearShaderCache();
 
         void SetShadowShader(const std::string &filePath);
+
         void FinishShadowShader();
+
         std::vector<unsigned int> ExportShadowShaders();
+
         void ImportShadowShaders(std::vector<unsigned int> Import);
+
         // This removes the indevidual compiled shaders and only keeps the final output for the object
         void ClearShadowShaderCache();
 
@@ -281,10 +325,14 @@ class SimpleObject{
 
         void SetMaterial(SimpleMaterialInfo &Material);
 
-        void MakeMaterial(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float Shininess);
+        void
+        MakeMaterial(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB,
+                     float SpecularR, float SpecularG, float SpecularB, float Shininess);
 
-        void MakeLight(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB, float SpecularR, float SpecularG, float SpecularB, float LightDirX, float LightDirY, float LightDirZ, float AngleSize, float Linear, float Quadratic);
-        
+        void MakeLight(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB,
+                       float SpecularR, float SpecularG, float SpecularB, float LightDirX, float LightDirY,
+                       float LightDirZ, float AngleSize, float Linear, float Quadratic);
+
         // This needs to match the number the shader expects
         void PreFillLights(int NumberOfLights);
 
@@ -302,6 +350,7 @@ class SimpleObject{
         void BindBufferData();
 
         void BindVertexBuffer();
+
         void BindIndexBuffer();
 
 
@@ -310,4 +359,6 @@ class SimpleObject{
         //inline std::unique_ptr<Shader> GetShader() {return m_Shader;}
 
 
-};
+    };
+
+}

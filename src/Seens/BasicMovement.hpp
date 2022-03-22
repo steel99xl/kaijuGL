@@ -23,7 +23,7 @@ class TestWorld{
         float m_Width, m_Height, m_Scale;
 
         FrameBufferObject m_FBO;
-        SimpleObject Frame;
+        KaijuObject::SimpleObject Frame;
 
         double m_MouseX = 0.0, m_MouseY = 0.0;
 
@@ -34,16 +34,16 @@ class TestWorld{
         //
 
 
-        SimpleObject PlayerBlock;
-        SimpleObject TealBlock;
+        KaijuObject::SimpleObject PlayerBlock;
+        KaijuObject::SimpleObject TealBlock;
         // Lol Voxl Land Test set back to about 5k when done
-        SimpleObject Land;
-        SimpleObject Platform;
-        SimpleObject OtherSuns;
-        SimpleObject Sun;
+        KaijuObject::SimpleObject Land;
+        KaijuObject::SimpleObject Platform;
+        KaijuObject::SimpleObject OtherSuns;
+        KaijuObject::SimpleObject Sun;
 
 
-        SimplePhysics::PhysicsEngine BasicPhysics = SimplePhysics::PhysicsEngine(2.0f ,0.0f,-1.0f,0.0f);
+        KaijuPhysics::PhysicsEngine BasicPhysics = KaijuPhysics::PhysicsEngine(2.0f ,0.0f,-1.0f,0.0f);
 
 
         //Elements for Physics Engine
@@ -51,9 +51,9 @@ class TestWorld{
         std::string m_Box = "Box";
         // This is going to also be the 'walls' for now
         std::string m_Gound = "Gound";
-        std::vector<SimplePhysics::ForceDirection> m_NewPlayerDirection;
-        std::vector<SimplePhysics::ColisionInfo> m_ObjectColissions;
-        std::vector<SimplePhysics::QuadPhysicsBody> PlayerPhysics, LandPhysics, TealBlockPhysics;
+        std::vector<KaijuPhysics::ForceDirection> m_NewPlayerDirection;
+        std::vector<KaijuPhysics::ColisionInfo> m_ObjectColissions;
+        std::vector<KaijuPhysics::QuadPhysicsBody> PlayerPhysics, LandPhysics, TealBlockPhysics;
 
         // The TealBlock on the new physics Engine
         SimplePhysicsSphereObject BasePlayerandPushableObject;
@@ -65,13 +65,13 @@ class TestWorld{
         //SimplePhysicsBoxObject PlatformPhysics;
 
         // Temp PlaceHolder for Object Posisons;
-        std::vector<SimplePhysics::PhysicsPos> m_ObjectWorldPositions;
+        std::vector<KaijuPhysics::PhysicsPos> m_ObjectWorldPositions;
 
 
 
         float PlayerMovmentSpeed;
 
-        SimpleMaterialInfo BasicMetalCube;
+        KaijuObject::SimpleMaterialInfo BasicMetalCube;
 
 
         Camera2D SimpleCam;
@@ -83,9 +83,6 @@ class TestWorld{
         bool m_running;
         TestWorld();
         ~TestWorld();
-
-
-        Vertex *CreateQuad(Vertex *target, float X, float Y, float sizeX, float sizeY, float TextureID);
 
 
         void Setup();

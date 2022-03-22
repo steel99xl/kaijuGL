@@ -4,11 +4,13 @@
 #include <vector>
 #include <thread>
 #include <cstring>
+#include "SimpleObject.hpp"
 // THis is just for debuging
 #include <iostream>
+//#include "SimpleObject.hpp"
 // This file should not really care about anything else in the engine, outside the data directly sent to it
 
-namespace SimplePhysics {
+namespace KaijuPhysics {
     struct ForceDirection {
         bool IsBlank;
         float X;
@@ -222,13 +224,13 @@ namespace SimplePhysics {
         //Used for Internaly updating the object (so an object can technicaly update at faster intervas than the engine if needed)
         float DeltaTime;
 
-        SimplePhysics::PhysicsPos Position;
-        SimplePhysics::PhysicsPos FuturePosition;
-        SimplePhysics::PhysicsPos ExtraPositionStorage[4];
+        KaijuPhysics::PhysicsPos Position;
+        KaijuPhysics::PhysicsPos FuturePosition;
+        KaijuPhysics::PhysicsPos ExtraPositionStorage[4];
 
-        std::vector<SimplePhysics::ForceDirection> AccumulatedAppliedForces;
-        SimplePhysics::ForceDirection FinalAppliedForce;
-        SimplePhysics::ForceDirection ForceStorageSlot;
+        std::vector<KaijuPhysics::ForceDirection> AccumulatedAppliedForces;
+        KaijuPhysics::ForceDirection FinalAppliedForce;
+        KaijuPhysics::ForceDirection ForceStorageSlot;
 
         const std::vector<unsigned int> *TypeReactionList;
         std::vector<unsigned int> CustomReactionList;
@@ -237,9 +239,9 @@ namespace SimplePhysics {
         std::vector<PhysicsPos> *RenderObjectPointNormal;
         std::vector<float> *RenderObjectPointWight;
 
-        std::vector<SimplePhysics::QuadPhysicsBody> QuadPhysicsBodyVector;
-        std::vector<SimplePhysics::PhysicsPoint> PhysicsPointVector;
-        std::vector<SimplePhysics::SphearPhysicsBody> SphearPhysicsBodyVector;
+        std::vector<KaijuPhysics::QuadPhysicsBody> QuadPhysicsBodyVector;
+        std::vector<KaijuPhysics::PhysicsPoint> PhysicsPointVector;
+        std::vector<KaijuPhysics::SphearPhysicsBody> SphearPhysicsBodyVector;
 
         // I might keep this just to force every Object to have a basic sphear colidor at first
         unsigned int RangeFromCenter{};
@@ -259,11 +261,11 @@ namespace SimplePhysics {
         }
         // Some feneric functons to minipulate the focibly included data
 
-        void Move(SimplePhysics::ForceDirection OverrideForce = true){
+        void Move(KaijuPhysics::ForceDirection OverrideForce = true){
             if(OverrideForce == true){
-                this->FuturePosition = SimplePhysics::MovePhysicsObject(this->Position, SimplePhysics::NormalizeVectorOfForceDirection(this->AccumulatedAppliedForces), this->DeltaTime);
+                this->FuturePosition = KaijuPhysics::MovePhysicsObject(this->Position, KaijuPhysics::NormalizeVectorOfForceDirection(this->AccumulatedAppliedForces), this->DeltaTime);
             } else {
-                this->FuturePosition = SimplePhysics::MovePhysicsObject(this->Position, OverrideForce, this->DeltaTime, OverrideForce.Speed);
+                this->FuturePosition = KaijuPhysics::MovePhysicsObject(this->Position, OverrideForce, this->DeltaTime, OverrideForce.Speed);
             }
 
             this->AccumulatedAppliedForces.clear();
@@ -274,8 +276,8 @@ namespace SimplePhysics {
             this->Position = this->FuturePosition;
         }
 
-        void AddQuadPhysicsBody(SimplePhysics::PhysicsPoint A, SimplePhysics::PhysicsPoint B , SimplePhysics::PhysicsPoint C, SimplePhysics::PhysicsPoint D, SimplePhysics::ForceDirection PlaneNormal){
-            SimplePhysics::QuadPhysicsBody Temp;
+        void AddQuadPhysicsBody(KaijuPhysics::PhysicsPoint A, KaijuPhysics::PhysicsPoint B , KaijuPhysics::PhysicsPoint C, KaijuPhysics::PhysicsPoint D, KaijuPhysics::ForceDirection PlaneNormal){
+            KaijuPhysics::QuadPhysicsBody Temp;
             Temp.PosA = A;
             Temp.PosB = B;
             Temp.PosC = C;
@@ -288,8 +290,8 @@ namespace SimplePhysics {
             this->QuadPhysicsBodyVector.erase(this->QuadPhysicsBodyVector.begin()+ID);
         }
 
-        void AddPhysicsPoint(SimplePhysics::PhysicsPos Pos, float Weight) {
-            SimplePhysics::PhysicsPoint Temp;
+        void AddPhysicsPoint(KaijuPhysics::PhysicsPos Pos, float Weight) {
+            KaijuPhysics::PhysicsPoint Temp;
             Temp.Pos = Pos;
             Temp.Weight = Weight;
 
@@ -299,8 +301,8 @@ namespace SimplePhysics {
             this->PhysicsPointVector.erase(this->PhysicsPointVector.begin()+ID);
         }
 
-        void AddSphearPhysicsBody(SimplePhysics::PhysicsPoint A, float Radius){
-            SimplePhysics::SphearPhysicsBody Temp;
+        void AddSphearPhysicsBody(KaijuPhysics::PhysicsPoint A, float Radius){
+            KaijuPhysics::SphearPhysicsBody Temp;
             Temp.PosA = A;
             Temp.Radius = Radius;
 
@@ -310,7 +312,7 @@ namespace SimplePhysics {
             this->SphearPhysicsBodyVector.erase(this->SphearPhysicsBodyVector.begin()+ID);
         }
 
-        void AddAppliedForce(const SimplePhysics::ForceDirection &Force){
+        void AddAppliedForce(const KaijuPhysics::ForceDirection &Force){
             this->AccumulatedAppliedForces.push_back(Force);
         }
 
@@ -381,7 +383,9 @@ namespace SimplePhysics {
     public:
         inline void SetUpdateTime(float TimePassed) { m_DeltaTime = TimePassed; }
 
-        std::vector<SimplePhysicsObject *> Objects;
+        // The idea is I can ask the rendre object what physics objects are apart of it
+        std::vector<KaijuObject::SimpleObject *> RenderObjects;
+        std::vector<SimplePhysicsObject *> PhysicsObjects;
 
         inline float GetUpdateTime() { return m_DeltaTime; }
 
@@ -390,6 +394,8 @@ namespace SimplePhysics {
         inline ForceDirection GetGravity() { return m_Gravity; }
 
         inline void SetPhysicsPlayerID(std::string ID){ PlayerID = std::move(ID);}
+
+        //inline void MakeRenderdPhysicsObject(SimpleObject* RenderObject) {};
 
         // Returns froce to move ObjectA to ObjectB
         ForceDirection MakeForceDirection(PhysicsPos ObjectA, PhysicsPos ObjectB);
@@ -474,7 +480,7 @@ namespace SimplePhysics {
         // Just so decliratinos can be copied an updated later
         inline bool SubThreadSwitchStarter(bool StartState){return StartState;};
 
-        void Update(SimplePhysics::ForceDirection UserInput);
+        void Update(KaijuPhysics::ForceDirection UserInput);
 
 
         void SimpleThreadTest();

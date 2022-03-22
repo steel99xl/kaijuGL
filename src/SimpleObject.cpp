@@ -1,4 +1,5 @@
 #include "SimpleObject.hpp"
+using namespace KaijuObject;
 
 SimpleObject::SimpleObject(){
         
@@ -675,9 +676,9 @@ void SimpleObject::SumAllWeights(){
 }
 
 // Oh boy the physics engien is creeping in to the object
-
+/*
 void SimpleObject::GenerateSimplePhysicsInfo() {
-    SimplePhysics::PhysicsPos PosTemp, NormlTemp;
+    KaijuPhysics::PhysicsPos PosTemp, NormlTemp;
     m_SPVertecxPositions.clear();
     m_SPVertecxNormlPositions.clear();
     for(long unsigned int i = 0; i < m_Verticies.size(); i++){
@@ -693,6 +694,7 @@ void SimpleObject::GenerateSimplePhysicsInfo() {
         m_SPVertecxNormlPositions.push_back(NormlTemp);
     }
 }
+ */
 
 void SimpleObject::SetShader(const std::string &filePath){
         m_Shader->SetShader(filePath);

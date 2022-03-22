@@ -123,7 +123,7 @@ int main(void){
     // just to test/show some options
     window.setWidth(720);
     window.setHeight(480);
-    window.setOSScale(2.0f);
+    window.setOSScale(1.0f);
     window.SetResolutionScale(1.0f);
     window.ChangeWindowTitle("Kijuw");
     window.SetMaxFrameRateTarget(70);

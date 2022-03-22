@@ -45,7 +45,7 @@ void TestWorld::Setup(){
     Sun.Setup(6, SimpleObject::StaticBuffer);
     TealBlock.Setup(6, SimpleObject::DynamicBuffer);
 
-    SimplePhysics::ColisionInfo TempColison;
+    KaijuPhysics::ColisionInfo TempColison;
     for(int i = 0; i < 5; i++){
         m_ObjectColissions.push_back(TempColison);
     }
@@ -252,7 +252,7 @@ void TestWorld::Setup(){
     std::cout << "Amount of threads for physics engine work" << std::endl;
     std::cout << "-----------------------------------------" << std::endl;
     std::cout << BasicPhysics.AllocatedThreads() << std::endl;
-    BasicPhysics.Objects.push_back(new SimplePhysics::SimplePhysicsObject());
+    BasicPhysics.Objects.push_back(new KaijuPhysics::SimplePhysicsObject());
     // New Physics Preffintion stuff
     Land.SetPhysicsTypeID(1);
     Platform.SetPhysicsTypeID(3);
@@ -269,9 +269,12 @@ void TestWorld::Setup(){
     // Just to show how 1 object is the main colision decider for the clones
     BasePlayerandPushableObject.AddCollisionType(BaseNonMovableobjects);
 
+    // This needsa an effective iplementation in the physics engine not the object
+    /*
     PlayerBlock.GenerateSimplePhysicsInfo();
     Land.GenerateSimplePhysicsInfo();
     TealBlock.GenerateSimplePhysicsInfo();
+    */
 
     BasicPhysics.Objects.push_back(new SimplePhysicsSphereObject("BluePlayerBox",m_PlayerObjectID, BasePlayerandPushableObject.ExportCollisionTypes(), PlayerBlock.GetVertexPositionsPointer(),PlayerBlock.GetVertexNormlPositionsPointer(), PlayerBlock.GetWeightsPointer(), true));
     BasicPhysics.Objects.push_back(new SimplePhysicsSphereObject("TealBox",m_Box, BasePlayerandPushableObject.ExportCollisionTypes(), TealBlock.GetVertexPositionsPointer(), TealBlock.GetVertexNormlPositionsPointer(), TealBlock.GetWeightsPointer(), false));
@@ -302,18 +305,18 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         //glfwPostEmptyEvent();
         // camera stuff 
         BasicPhysics.SetUpdateTime(MaxUpdateSpeed);
-        BasicPhysics.Update(SimplePhysics::NormalizeVectorOfForceDirection(m_NewPlayerDirection));
+        BasicPhysics.Update(KaijuPhysics::NormalizeVectorOfForceDirection(m_NewPlayerDirection));
         AdvancedCam.Update(MaxUpdateSpeed, (float)m_Width/m_Height, m_FOV);
         m_Projection = AdvancedCam.GetProj();
         m_View = AdvancedCam.GetView();
         m_3dCamPos = AdvancedCam.GetCurrentPos();
 
-        //SimplePhysics::ForceDirection PlayerMovmentDirection = BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection);
+        //KaijuPhysics::ForceDirection PlayerMovmentDirection = BasicPhysics.NormalizeVectorOfForceDirection(m_NewPlayerDirection);
 
 
         //bool Test = Object.AABBColision(CubeVertex, CubeVertexCount, CubePos, LandVertex, LandVertexCount,LandPos);
         // This is just to seperate the old colision system from the new one
-        SimplePhysics::ColisionInfo PlayerTOObject, TealBlockColision;
+        KaijuPhysics::ColisionInfo PlayerTOObject, TealBlockColision;
         PlayerTOObject.IsColision = false;
 
         //std::vector<QuadPhysicsBody> Player, PhysicsLand, OtherPhysicsLand, PhysicsTealBlock;
@@ -349,9 +352,9 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
         //LeftFromOrigion.Y = 0.0f;
         //LeftFromOrigion.Z = 0.0f;
 
-        PlayerPhysics = SimplePhysics::MakePhysicsQuads(PlayerBlock.GetVertexPositions(), PlayerBlock.GetVertexNormlPositions(), PlayerBlock.GetWeights());
-        LandPhysics = SimplePhysics::MakePhysicsQuads(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), Land.GetWeights());
-        TealBlockPhysics = SimplePhysics::MakePhysicsQuads(TealBlock.GetVertexPositions(), TealBlock.GetVertexNormlPositions(), TealBlock.GetWeights());
+        PlayerPhysics = KaijuPhysics::MakePhysicsQuads(PlayerBlock.GetVertexPositions(), PlayerBlock.GetVertexNormlPositions(), PlayerBlock.GetWeights());
+        LandPhysics = KaijuPhysics::MakePhysicsQuads(Land.GetVertexPositions(), Land.GetVertexNormlPositions(), Land.GetWeights());
+        TealBlockPhysics = KaijuPhysics::MakePhysicsQuads(TealBlock.GetVertexPositions(), TealBlock.GetVertexNormlPositions(), TealBlock.GetWeights());
 
         // Checking the Teal bocks current position for a colision incase it was missed
         BasicPhysics.AABBColision(TealBlockPhysics, m_ObjectWorldPositions[TealBlock.ObjectPositionID], LandPhysics, m_ObjectWorldPositions[Land.ObjectPositionID], &TealBlockColision);
@@ -359,10 +362,10 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
             if(TealBlock.ObjectPositionFutureID == -1){
                 // Makes and sets future posion
                 TealBlock.ObjectPositionFutureID = m_ObjectWorldPositions.size();
-                m_ObjectWorldPositions.push_back(SimplePhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionID], BasicPhysics.GetGravity(), BasicPhysics.GetGravity().Speed, BasicPhysics.GetUpdateTime()));
+                m_ObjectWorldPositions.push_back(KaijuPhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionID], BasicPhysics.GetGravity(), BasicPhysics.GetGravity().Speed, BasicPhysics.GetUpdateTime()));
             } else {
                 // Sets Future movment position;
-                m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = SimplePhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionID], BasicPhysics.GetGravity(), BasicPhysics.GetGravity().Speed, BasicPhysics.GetUpdateTime());
+                m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = KaijuPhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionID], BasicPhysics.GetGravity(), BasicPhysics.GetGravity().Speed, BasicPhysics.GetUpdateTime());
             }
             //TealBlockFuturePos = BasicPhysics.MovePhysicsObject(TealBlock.GetPhysicsPos(), BasicPhysics.GetGravity().Direction, BasicPhysics.GetGravity().Power);
         
@@ -371,7 +374,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
 
         // IF their is a colision we have the future position react to it;
             if(TealBlockColision){
-                m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = SimplePhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Speed, BasicPhysics.GetUpdateTime());
+                m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = KaijuPhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Speed, BasicPhysics.GetUpdateTime());
             //TealBlockFuturePos = BasicPhysics.MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Power);
             }
             // Finaly a Future position is set
@@ -379,7 +382,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
                 TealBlockColision.IsColision = false; // this is just to make sure the lower one isnt triped
         }
         if(TealBlockColision.IsColision){
-            m_ObjectWorldPositions[TealBlock.ObjectPositionID] = SimplePhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Speed, BasicPhysics.GetUpdateTime());
+            m_ObjectWorldPositions[TealBlock.ObjectPositionID] = KaijuPhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionB, BasicPhysics.GetGravity().Speed, BasicPhysics.GetUpdateTime());
             TealBlock.SetPosition(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID].X, m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID].Y, m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID].Z);
         }
 
@@ -435,7 +438,7 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
             //PlayerPos = BasicPhysics.MovePhysicsObject(PlayerPos, PlayerTOObject.MovmentDirectionB, PlayerMovmentSpeed);
         //    std::cout << PlayerTOObject.MovmentDirectionB.X << " | " << PlayerTOObject.MovmentDirectionB.Y << " | " << PlayerTOObject.MovmentDirectionB.Z << std::endl;
         //}
-        AdvancedCam.SetPos(m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].X, m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].Y+0.9f, m_ObjectWorldPositions[PlayerBlock.ObjectPositionID].Z);
+        AdvancedCam.SetPos(PlayerBlock.GetPhysicsPos().X, PlayerBlock.GetPhysicsPos().Y+0.9f, PlayerBlock.GetPhysicsPos().Z);
 
         //BasicPhysics.FullQuadLineColisionVoid(TempPlayerLines, PlayerPos, TempLandLines, Land.GetPhysicsPos(), 1.02f, &PlayerTOObject);
 
@@ -463,13 +466,13 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
             if(TealBlockColision){
                 //ForceDirection 
                 //ForceDirection NewTealBlockDirecton = BasicPhysics.MakeForceDirection(PlayerPos, TealBlockFuturePos);
-                m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = SimplePhysics::MovePhysicsObject(TealBlock.GetPhysicsPos(), TealBlockColision.MovmentDirectionA , PlayerMovmentSpeed, BasicPhysics.GetUpdateTime());
+                m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = KaijuPhysics::MovePhysicsObject(TealBlock.GetPhysicsPos(), TealBlockColision.MovmentDirectionA , PlayerMovmentSpeed, BasicPhysics.GetUpdateTime());
                 BasicPhysics.AABBColision(TealBlockPhysics, m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], LandPhysics, m_ObjectWorldPositions[Land.ObjectPositionID], &TealBlockColision);
                 if(TealBlockColision.IsColision){
                     TealBlockColision.PastMovmentDirectionA.Speed = PlayerMovmentSpeed;
                     TealBlockColision.MovmentDirectionA.Speed = BasicPhysics.GetGravity().Speed + PlayerMovmentSpeed;
                     BasicPhysics.NormalizeForceDirection(TealBlockColision.PastMovmentDirectionA, TealBlockColision.MovmentDirectionA, &TealBlockColision.CurentMovmentDirectionA);
-                    m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = SimplePhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.CurentMovmentDirectionA, TealBlockColision.CurentMovmentDirectionA.Speed, BasicPhysics.GetUpdateTime());
+                    m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = KaijuPhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.CurentMovmentDirectionA, TealBlockColision.CurentMovmentDirectionA.Speed, BasicPhysics.GetUpdateTime());
 
                 BasicPhysics.AABBColision(TealBlockPhysics, m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], LandPhysics, m_ObjectWorldPositions[Land.ObjectPositionID], &TealBlockColision);
                     if(TealBlockColision.IsColision){
@@ -477,10 +480,10 @@ void TestWorld::PhysicsUpdate(float MaxUpdateSpeed){
                     TealBlockColision.CurentMovmentDirectionA = BasicPhysics.GetGravity();
                     TealBlockColision.CurentMovmentDirectionA.Y = TealBlockColision.CurentMovmentDirectionA.Y * -1.0f; 
                     TealBlockColision.MovmentDirectionA.Speed = BasicPhysics.GetGravity().Speed + PlayerMovmentSpeed*2.0f;
-                    m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = SimplePhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.CurentMovmentDirectionA, TealBlockColision.CurentMovmentDirectionA.Speed, BasicPhysics.GetUpdateTime());
+                    m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = KaijuPhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.CurentMovmentDirectionA, TealBlockColision.CurentMovmentDirectionA.Speed, BasicPhysics.GetUpdateTime());
                     } 
                 }else {
-                    m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = SimplePhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionA, PlayerMovmentSpeed, BasicPhysics.GetUpdateTime());
+                    m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID] = KaijuPhysics::MovePhysicsObject(m_ObjectWorldPositions[TealBlock.ObjectPositionFutureID], TealBlockColision.MovmentDirectionA, PlayerMovmentSpeed, BasicPhysics.GetUpdateTime());
                 }
 
             }
@@ -521,7 +524,7 @@ void TestWorld::KeyInput(std::array<int,512> Keys){
         // Eventualy the movment will be forcebased
 
         if(Keys[GLFW_KEY_F] == GLFW_PRESS){
-            SimplePhysics::PhysicsPos Temp = PlayerBlock.GetPhysicsPos();
+            KaijuPhysics::PhysicsPos Temp = PlayerBlock.GetPhysicsPos();
             Temp.Y += 10.0f;
             TealBlock.SetFuturePositionUpdate(true);
             TealBlock.SetFuturePosition(Temp.X, Temp.Y, Temp.Z);

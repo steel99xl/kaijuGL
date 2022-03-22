@@ -1,5 +1,5 @@
 #include "SimplePhysics.hpp"
-using namespace SimplePhysics;
+using namespace KaijuPhysics;
 
 
 PhysicsEngine::PhysicsEngine(float GravityForce, float GravityX, float GravityY, float GravityZ, unsigned int ThreadPool){
@@ -37,7 +37,10 @@ PhysicsEngine::~PhysicsEngine(){
 
 }
 
-
+/*void PhysicsEngine::MakeRenderdPhysicsObject(SimpleObject *RenderObject) {
+    // junk just to check for compile
+    return;
+}*/
 
 ForceDirection PhysicsEngine::MakeForceDirection(PhysicsPos ObjectA, PhysicsPos ObjectB){
     ForceDirection Output;
@@ -1345,7 +1348,7 @@ void PhysicsEngine::ThreadSkelington(std::vector<SimplePhysicsObject *> *Objects
 
 
 
-void PhysicsEngine::Update(SimplePhysics::ForceDirection UserInput) {
+void PhysicsEngine::Update(KaijuPhysics::ForceDirection UserInput) {
     // For every Physics Object in the Game World(or just a limited type)
     if(m_ObjectPoolSize == 0.0f){
         m_ObjectPoolSize = Objects.size()/m_ThreadLimit;

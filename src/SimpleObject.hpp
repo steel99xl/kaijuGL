@@ -2,7 +2,17 @@
 //#include "VertexBuffer.hpp"
 //#include "VertexBufferLayout.hpp"
 #include "Texture.hpp"
-#include "kaijuGL.hpp"
+//#include "kaijuGL.hpp"
+#include "Imports/glm/glm.hpp"
+#include "Imports/glm/gtc/matrix_transform.hpp"
+#include "VertexArray.hpp"
+#include "VertexBuffer.hpp"
+#include "VertexBufferLayout.hpp"
+#include "Texture.hpp"
+#include "IndexBuffer.hpp"
+#include "Shader.hpp"
+#include "Renderer.hpp"
+//#include "Camera.hpp"
 
 namespace KaijuObject {
 

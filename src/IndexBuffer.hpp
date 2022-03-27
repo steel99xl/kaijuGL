@@ -2,8 +2,8 @@
 // Created by steel99xl on 6/14/21.
 //
 #pragma once
-#include "kaijuGL.hpp"
-
+#include <GL/glew.h>
+#include "KaijuRenderWarnings.hpp"
 class IndexBuffer{
 protected:
     unsigned int  m_RenderID;

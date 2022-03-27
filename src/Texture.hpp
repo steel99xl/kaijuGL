@@ -1,6 +1,8 @@
 #pragma once
-
-#include "kaijuGL.hpp"
+#include "Renderer.hpp"
+#include "Imports/stb_image/stb_image.h"
+#include "KaijuRenderWarnings.hpp"
+//#include "kaijuGL.hpp"
 
 class Texture{
     protected:

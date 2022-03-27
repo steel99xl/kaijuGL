@@ -38,12 +38,12 @@ void TestWorld::Setup(){
     Frame.SetFloatUniform("u_Size.height", m_Height);
     Frame.SetFloatUniform("u_Size.width", m_Width);
 
-    PlayerBlock.Setup(18, SimpleObject::DynamicBuffer);
-    Land.Setup(15000, SimpleObject::StaticBuffer);
-    Platform.Setup(6, SimpleObject::StaticBuffer);
-    OtherSuns.Setup(6, SimpleObject::DynamicBuffer);
-    Sun.Setup(6, SimpleObject::StaticBuffer);
-    TealBlock.Setup(6, SimpleObject::DynamicBuffer);
+    PlayerBlock.Setup(18, KaijuObject::SimpleObject::DynamicBuffer);
+    Land.Setup(15000, KaijuObject::SimpleObject::StaticBuffer);
+    Platform.Setup(6, KaijuObject::SimpleObject::StaticBuffer);
+    OtherSuns.Setup(6, KaijuObject::SimpleObject::DynamicBuffer);
+    Sun.Setup(6, KaijuObject::SimpleObject::StaticBuffer);
+    TealBlock.Setup(6, KaijuObject::SimpleObject::DynamicBuffer);
 
     KaijuPhysics::ColisionInfo TempColison;
     for(int i = 0; i < 5; i++){

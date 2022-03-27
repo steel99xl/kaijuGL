@@ -1,6 +1,9 @@
 #pragma once
-
-#include "kaijuGL.hpp"
+#include "VertexBuffer.hpp"
+#include <GL/glew.h>
+#include <vector>
+#include "KaijuRenderWarnings.hpp"
+//#include "kaijuGL.hpp"
 
 struct VertexBufferElements{
     unsigned int type;

@@ -1,7 +1,9 @@
 #pragma once
 
 #include "VertexBufferLayout.hpp"
-#include "kaijuGL.hpp"
+#include "KaijuRenderWarnings.hpp"
+
+//#include "kaijuGL.hpp"
 
 class VertexArray{
 protected:

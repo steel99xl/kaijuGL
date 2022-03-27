@@ -10,8 +10,10 @@
 #include <vector>
 #include <array>
 #include <thread>
+#include "KaijuRenderWarnings.hpp"
 #include "Imports/glm/glm.hpp"
 #include "Imports/glm/gtc/matrix_transform.hpp"
+#include "Imports/stb_image/stb_image.h"
 #include "VertexArray.hpp"
 #include "VertexBuffer.hpp"
 #include "VertexBufferLayout.hpp"

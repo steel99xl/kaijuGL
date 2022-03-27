@@ -4,7 +4,12 @@
 #include <cstring>
 #include <sstream>
 #include <unordered_map>
-#include "kaijuGL.hpp"
+#include <vector>
+#include <GL/glew.h>
+#include "KaijuRenderWarnings.hpp"
+#include "Imports/glm/glm.hpp"
+#include "Imports/glm/gtc/matrix_transform.hpp"
+//#include "kaijuGL.hpp"
 
 enum ShaderType{
     NONE = -1, VERTEX = 0, FRAGMENT = 1, GEOMETRY = 2

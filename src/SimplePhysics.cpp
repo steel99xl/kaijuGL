@@ -42,6 +42,14 @@ PhysicsEngine::~PhysicsEngine(){
     return;
 }*/
 
+PhysicsPos PhysicsEngine::GetRenderObjectPhysicsPos(KaijuObject::SimpleObject *Object){
+    PhysicsPos Temp;
+    Temp.X = Object->GetPosAlt().at(0);
+    Temp.Y = Object->GetPosAlt().at(1);
+    Temp.Z = Object->GetPosAlt().at(2);
+    return Temp;
+}
+
 ForceDirection PhysicsEngine::MakeForceDirection(PhysicsPos ObjectA, PhysicsPos ObjectB){
     ForceDirection Output;
     float Length;
@@ -1351,11 +1359,11 @@ void PhysicsEngine::ThreadSkelington(std::vector<SimplePhysicsObject *> *Objects
 void PhysicsEngine::Update(KaijuPhysics::ForceDirection UserInput) {
     // For every Physics Object in the Game World(or just a limited type)
     if(m_ObjectPoolSize == 0.0f){
-        m_ObjectPoolSize = Objects.size()/m_ThreadLimit;
+        m_ObjectPoolSize = PhysicsObjects.size()/m_ThreadLimit;
     }
     // This loop is going to be on the main phys thread just to insure the player get its input
-    std::vector<SimplePhysicsObject *>::iterator ob = this->Objects.begin();
-    for(; ob != this->Objects.end(); ob++){
+    std::vector<SimplePhysicsObject *>::iterator ob = this->PhysicsObjects.begin();
+    for(; ob != this->PhysicsObjects.end(); ob++){
         // set up auto threading to the pool limit
         //(*ob)->AddAppliedForce(this->GetGravity());
        if((*ob)->IsPlayer){
@@ -1391,8 +1399,8 @@ void PhysicsEngine::Update(KaijuPhysics::ForceDirection UserInput) {
         }
     }
 
-    ob = this->Objects.begin();
-    for(; ob != this->Objects.end(); ob++){
+    ob = this->PhysicsObjects.begin();
+    for(; ob != this->PhysicsObjects.end(); ob++){
         (*ob)->ApplyMovedPosition();
     }
     // Quick Range check for interactinos

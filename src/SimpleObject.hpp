@@ -282,6 +282,8 @@ namespace KaijuObject {
 
         inline glm::vec3 GetPos() { return glm::vec3(m_X, m_Y, m_Z); }
 
+        inline std::array<float,3> GetPosAlt(){std::array<float,3> Temp; Temp[0]=m_X;Temp[1]=m_Y;Temp[2]=m_Z; return Temp;}
+
         //inline KaijuPhysics::PhysicsPos GetPhysicsPos() {KaijuPhysics::PhysicsPos Output; Output.Input(m_X, m_Y, m_Z); return Output;}
         inline glm::vec3 GetPreviouPos() { return glm::vec3(m_OldX, m_OldY, m_OldZ); }
         //inline KaijuPhysics::PhysicsPos GetPreviouPhysicsPos() {KaijuPhysics::PhysicsPos Output; Output.Input(m_OldX, m_OldY, m_OldZ); return Output;}
@@ -335,8 +337,7 @@ namespace KaijuObject {
 
         void SetMaterial(SimpleMaterialInfo &Material);
 
-        void
-        MakeMaterial(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB,
+        void MakeMaterial(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB,
                      float SpecularR, float SpecularG, float SpecularB, float Shininess);
 
         void MakeLight(float AmbientR, float AmbientG, float AmbientB, float DiffuseR, float DiffuseG, float DiffuseB,

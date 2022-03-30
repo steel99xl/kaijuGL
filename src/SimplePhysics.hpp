@@ -395,6 +395,11 @@ namespace KaijuPhysics {
 
         inline void SetPhysicsPlayerID(std::string ID){ PlayerID = std::move(ID);}
 
+
+        // This is basically reading and writing the position data of the render object but converted to/from physics data
+        PhysicsPos GetRenderObjectPhysicsPos(KaijuObject::SimpleObject *Object);
+        inline void SetRenderObjectPhysicsPos(KaijuObject::SimpleObject *Object, PhysicsPos Pos) {Object->SetPosition(Pos.X, Pos.Y, Pos.Z);}
+
         //inline void MakeRenderdPhysicsObject(SimpleObject* RenderObject) {};
 
         // Returns froce to move ObjectA to ObjectB

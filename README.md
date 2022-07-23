@@ -1,4 +1,9 @@
-# kaijuGL V0.0.6
+#Discontinued.... Back under new name
+Moved to https://github.com/steel99xl/FlatFoxEngine
+
+
+
+#kaijuGL V0.0.6
 A "strange beast" of a game engine
 
 Hello, for this test branch main.cpp is only being used to build and manage the window/ input context. Everything you see and should need to interact with lives insise the file BasicMovment.cpp/hpp (and every other source file), but this file specifically affects what is drawn and bound or really exists...
